@@ -555,6 +555,79 @@ ul {
     margin-bottom: 25px;
     font-weight: 900;
 }
+.container-hero {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; /* Menyelaraskan bagian atas */
+    margin-top: 3em;
+    flex-wrap: wrap; /* Responsif untuk layar kecil */
+}
+
+.card {
+    position: relative;
+    width: 300px;
+    height: fit-content;
+    border-radius: 10px;
+    background-color: #f3f3f5;
+    text-align: center;
+    padding: 20px;
+}
+
+.circle {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+}
+
+.testimonials-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom dengan lebar setara */
+    gap: 20px; /* Jarak antar elemen */
+    max-width: 100%; /* Gunakan lebar penuh */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.testimonials-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tambahan opsional untuk estetika */
+    border-radius: 10px;
+}
+
+.content h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    color: #000;
+}
+
+.content p {
+    font-size: 14px;
+    color: #555;
+}
+
+.large-box {
+    width: 420px;
+    height: 100px;
+    background-color: #d3d3d3;
+    border-radius: 10px;
+    position: relative;
+}
+.card,
+.large-box {
+    border: none; /* Menghilangkan border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow hanya di bawah */
+}
 
 .h1-title span {
     color: #ff8243;
@@ -805,6 +878,10 @@ p {
     height: 25px;
     width: auto;
 }
+.icon-filter {
+    height: 25px;
+    width: auto;
+}
 .menu-tab ul li img {
     margin-right: 10px;
     position: relative;
@@ -873,6 +950,8 @@ p {
     box-shadow: 28px 28px 45px #d4d4d4, -28px -28px 45px #ffffff;
     border-radius: 50%;
     overflow: hidden;
+    width: 250px;
+    height: 250px;
 }
 
 .dish-rating {
@@ -1077,6 +1156,45 @@ p {
 .contact-info a:hover {
     color: #fcbc30;
 }
+
+.media-sosial {
+    text-align: center;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 20px;
+}
+
+.icon-medsos {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.icon-medsos img {
+    width: 30px;
+    height: 30px;
+}
+
+.icon-medsos:hover {
+    transform: scale(1.1);
+}
+
+.call-now-show {
+    border-left: 3px dotted rgb(13 13 37 /50%);
+    border-right: 3px dotted rgb(13 13 37 /50%);
+    padding: 15px 0;
+}
+
 
 #gallery {
     padding-top: 120px;
@@ -1626,7 +1744,7 @@ p {
     border-radius: 999px;
 }
 
-.sec-text-hero{
+.sec-text-hero {
     margin-top: 4em;
 }
 .address {
@@ -1672,7 +1790,7 @@ iframe {
 .sec-text-hero h3 {
     font-size: 20px;
     margin-bottom: 20px;
-    color: #C4C4C4;
+    color: #c4c4c4;
 }
 
 .sec-text-hero p {
@@ -1696,8 +1814,7 @@ iframe {
     display: flex; /* Change to flex for easier centering */
     flex-direction: column; /* Arrange elements vertically */
     align-items: start; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */ 
-
+    justify-content: center; /* Center items vertically */
 
     display: flow-root;
     position: relative;
@@ -1724,7 +1841,6 @@ iframe {
     height: 30px;
 }
 
-
 .testimonials-box-hero:hover {
     transform: scale(1.05);
     z-index: 2;
@@ -1735,7 +1851,6 @@ iframe {
     align-items: center;
     margin-bottom: 25px;
     justify-content: center; /* Center elements horizontally */
-
 }
 
 .testimonials-box-img-hero {
@@ -1869,6 +1984,10 @@ iframe {
     }
     .menu-img {
         width: 140px;
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
     }
 }
 
@@ -2013,6 +2132,14 @@ iframe {
     .footer-menu {
         margin-left: 0em;
     }
+    .dist-img img {
+        width: 200px;
+        height: 200px;
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
+    }
 }
 
 @media (max-width: 767px) {
@@ -2064,6 +2191,14 @@ iframe {
     }
     .menu-tab ul li {
         padding: 10px 20px;
+    }
+    .dist-img img {
+        width: 150px;
+        height: 150px;
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
     }
 }
 
@@ -2142,6 +2277,14 @@ iframe {
     .footer-menu {
         margin-left: 0em;
     }
+    .dist-img img {
+        width: 150px;
+        height: 150px;
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2150,6 +2293,10 @@ iframe {
     }
     .contact-icons a {
         font-size: 18px; /* Ukuran ikon lebih kecil pada layar sangat kecil */
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
     }
 }
 
@@ -2186,5 +2333,9 @@ iframe {
     }
     .footer-menu {
         margin-left: 0em;
+    }
+    .sec-img img {
+        width: fit-content;
+        height: fit-content;
     }
 }

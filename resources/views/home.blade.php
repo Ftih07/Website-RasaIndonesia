@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Website</title>
+    <title>Website Rasa Indonesia</title>
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
@@ -250,7 +250,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -296,7 +296,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -341,7 +341,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -387,7 +387,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -433,7 +433,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -478,7 +478,7 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('show') }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
@@ -497,7 +497,7 @@
                             </div>
 
                             <div class="button-container">
-                                <a href="#" class="view-all-button">View All</a>
+                                <a href="{{ route('tokorestoran') }}" class="view-all-button">View All</a>
                             </div>
                         </div>
                     </div>
@@ -536,31 +536,14 @@
                                 <div class="col-lg-10 m-auto">
                                     <div class="book-table-img-slider" id="icon">
                                         <div class="swiper-wrapper">
-                                            <a href="assets/images/bt1.jpg" data-fancybox="table-slider"
+                                            @foreach($galleries as $gallery)
+                                            <a href="{{ asset('storage/' . $gallery->image) }}" data-fancybox="table-slider"
                                                 class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt1.jpg)"></a>
-                                            <a href="assets/images/bt2.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt2.jpg)"></a>
-                                            <a href="assets/images/bt3.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt3.jpg)"></a>
-                                            <a href="assets/images/bt4.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt4.jpg)"></a>
-                                            <a href="assets/images/bt1.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt1.jpg)"></a>
-                                            <a href="assets/images/bt2.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt2.jpg)"></a>
-                                            <a href="assets/images/bt3.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt3.jpg)"></a>
-                                            <a href="assets/images/bt4.jpg" data-fancybox="table-slider"
-                                                class="book-table-img back-img swiper-slide"
-                                                style="background-image: url(assets/images/bt4.jpg)"></a>
+                                                style="background-image: url('{{ asset('storage/' . $gallery->image) }}')">
+                                            </a>
+                                            @endforeach
                                         </div>
+
 
                                         <div class="swiper-button-wp">
                                             <div class="swiper-button-prev swiper-button">
@@ -596,30 +579,12 @@
                             </div>
 
                             <div class="faq-row">
+                                @foreach($qna as $qna)
                                 <div class="faq-box">
-                                    <h4 class="h4-title">Apa itu Website Rasa Indonesia?</h4>
-                                    <p>Rasa Indonesia adalah platform yang menyediakan informasi lengkap tentang restoran, kafe, dan toko di Australia yang menjual kuliner khas Indonesia.</p>
+                                    <h4 class="h4-title">{{ $qna->question }}</h4>
+                                    <p>{{ $qna->answer }}</p>
                                 </div>
-                                <div class="faq-box">
-                                    <h4 class="h4-title">Apakah semua tempat yang terdaftar di website ini sudah diverifikasi?</h4>
-                                    <p>Ya, kami memastikan bahwa semua restoran dan toko yang tercantum telah diverifikasi agar sesuai dengan standar autentik kuliner Indonesia.</p>
-                                </div>
-                                <div class="faq-box">
-                                    <h4 class="h4-title">Apakah ada fitur pemesanan atau pengiriman makanan di website ini?</h4>
-                                    <p>Website Rasa Indonesia saat ini tidak menawarkan layanan pemesanan langsung, tetapi kami menyediakan informasi kontak dan tautan ke layanan pihak ketiga jika tersedia.</p>
-                                </div>
-                                <div class="faq-box">
-                                    <h4 class="h4-title">Apakah saya bisa menambahkan bisnis restoran atau toko saya disini?</h4>
-                                    <p>Tentu aja bisa, tinggal cari fitur "Ingin Menambahkan Bisnis Anda?" dibagian bawah dan hubungi kami lewat berbagai platform yang tersedia disana.</p>
-                                </div>
-                                <div class="faq-box">
-                                    <h4 class="h4-title">Apakah website ini hanya fokus pada makanan Indonesia?</h4>
-                                    <p>Website Rasa Indonesia memang fokus pada kuliner Indonesia, namun kami juga akan menampilkan beberapa pilihan minuman khas Indonesia atau produk lainnya yang terkait dengan budaya kuliner Nusantara.</p>
-                                </div>
-                                <div class="faq-box">
-                                    <h4 class="h4-title">Bagaimana cara mencari restoran atau toko disini?</h4>
-                                    <p>Anda bisa menggunakan fitur pencarian yang tersedia di halaman utama. Cukup ketikkan nama makanan, daerah, atau kata kunci terkait lainnya. Selain itu, kami juga menyediakan kategori untuk mempermudah pencarian Anda.</p>
-                                </div>
+                                @endforeach
                             </div>
 
                         </div>
@@ -631,7 +596,7 @@
                 <div class="bg-pattern bg-light repeat-img"
                     style="background-image: url(assets/images/blog-pattern-bg.png);">
 
-                    <section class="newsletter-sec section pt-0">
+                    <section class="newsletter-sec section pt-0" id="contact">
                         <div class="sec-wp">
                             <div class="container">
                                 <div class="row">
@@ -662,7 +627,7 @@
                 </div>
 
                 <!-- footer starts  -->
-                <footer class="site-footer" id="contact">
+                <footer class="site-footer">
                     <div class="top-footer section">
                         <div class="sec-wp">
                             <div class="container">
@@ -704,11 +669,11 @@
                                             <div class="footer-menu food-nav-menu">
                                                 <h3 class="h3-title">Site Navigasi</h3>
                                                 <ul class="column-2">
-                                                    <li><a href="#about">Home</a></li>
+                                                    <li><a href="#home" class="footer-active-menu">Home</a></li>
                                                     <li><a href="#about">Tentang Kami</a></li>
                                                     <li><a href="#menu">Toko & Restoran</a></li>
                                                     <li><a href="#gallery">Gallery</a></li>
-                                                    <li><a href="#blog">QnA</a></li>
+                                                    <li><a href="#qna">QnA</a></li>
                                                     <li><a href="#contact">Hubungi Kami</a></li>
                                                 </ul>
                                             </div>
@@ -716,18 +681,24 @@
                                                 <h3 class="h3-title">Contact Support</h3>
                                                 <ul>
                                                     <div class="info-container">
-                                                        <div class="info-item">
-                                                            <i class="uil uil-location-point"></i>
-                                                            <p>tanya-atdag.au</p>
-                                                        </div>
-                                                        <div class="info-item">
-                                                            <i class="uil uil-utensils"></i>
-                                                            <p>+62021858171</p>
-                                                        </div>
-                                                        <div class="info-item">
-                                                            <i class="uil uil-utensils"></i>
-                                                            <p>tanya-atdag.au@gmail.com</p>
-                                                        </div>
+                                                        <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                            <div class="info-item">
+                                                                <i class="uil uil-globe"></i>
+                                                                <p>tanya-atdag.au</p>
+                                                            </div>
+                                                        </a>
+                                                        <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                            <div class="info-item">
+                                                                <i class="uil uil-phone"></i>
+                                                                <p>+62021858171</p>
+                                                            </div>
+                                                        </a>
+                                                        <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                            <div class="info-item">
+                                                                <i class="uil uil-envelope"></i>
+                                                                <p>tanya-atdag.au@gmail.com</p>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                 </ul>
                                             </div>

@@ -39,12 +39,12 @@
                             <button class="menu-toggle"><span></span><span></span></button>
                             <nav class="header-menu">
                                 <ul class="menu food-nav-menu">
-                                    <li><a href="#home">Home</a></li>
-                                    <li><a href="#about">Tentang Kami</a></li>
-                                    <li><a href="#menu">Toko & Restoran</a></li>
-                                    <li><a href="#gallery">Gallery</a></li>
-                                    <li><a href="#qna">QnA</a></li>
-                                    <li><a href="#contact">Hubungi Kami</a></li>
+                                    <li><a href="{{ route('home') }}">Home</a></li>
+                                    <li><a href="{{ route('home') }}#about">Tentang Kami</a></li>
+                                    <li><a href="#">Toko & Restoran</a></li>
+                                    <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
+                                    <li><a href="{{ route('home') }}#qna">QnA</a></li>
+                                    <li><a href="{{ route('home') }}#contact">Hubungi Kami</a></li>
                                 </ul>
                             </nav>
                             <div class="header-right">
@@ -530,7 +530,7 @@
                 <div class="bg-pattern bg-light repeat-img"
                     style="background-image: url(assets/images/blog-pattern-bg.png);">
 
-                    <section class="newsletter-sec section pt-0">
+                    <section class="newsletter-sec section pt-0" id="contact">
                         <div class="sec-wp">
                             <div class="container">
                                 <div class="row">
@@ -561,7 +561,7 @@
                 </div>
 
                 <!-- footer starts  -->
-                <footer class="site-footer" id="contact">
+                <footer class="site-footer">
                     <div class="top-footer section">
                         <div class="sec-wp">
                             <div class="container">
@@ -603,12 +603,12 @@
                                             <div class="footer-menu food-nav-menu">
                                                 <h3 class="h3-title">Site Navigasi</h3>
                                                 <ul class="column-2">
-                                                    <li><a href="#about">Home</a></li>
-                                                    <li><a href="#about">Tentang Kami</a></li>
-                                                    <li><a href="#menu">Toko & Restoran</a></li>
-                                                    <li><a href="#gallery">Gallery</a></li>
-                                                    <li><a href="#blog">QnA</a></li>
-                                                    <li><a href="#contact">Hubungi Kami</a></li>
+                                                    <li><a href="{{ route('home') }}">Home</a></li>
+                                                    <li><a href="{{ route('home') }}#about">Tentang Kami</a></li>
+                                                    <li><a href="#" class="footer-active-menu">Toko & Restoran</a></li>
+                                                    <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
+                                                    <li><a href="{{ route('home') }}#blog">QnA</a></li>
+                                                    <li><a href="{{ route('home') }}#contact">Hubungi Kami</a></li>
                                                 </ul>
                                             </div>
                                             <div class="footer-menu">
