@@ -29,8 +29,8 @@
                 <div class="row">
                     <div class="col-lg-2">
                         <div class="header-logo">
-                            <a href="index.html" class="decoration-none">
-                                <span class="text-#FF8243">Rasa</span> Indonesia
+                            <a href="{{ route('home') }}" class="decoration-none">
+                                <span class="text-#FF8243">Taste</span> of Indonesia
                             </a>
                         </div>
                     </div>
@@ -40,11 +40,11 @@
                             <nav class="header-menu">
                                 <ul class="menu food-nav-menu">
                                     <li><a href="{{ route('home') }}">Home</a></li>
-                                    <li><a href="{{ route('home') }}#about">Tentang Kami</a></li>
-                                    <li><a href="#">Toko & Restoran</a></li>
+                                    <li><a href="{{ route('home') }}#about">About Us</a></li>
+                                    <li><a href="#">Store & Restaurant</a></li>
                                     <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
                                     <li><a href="{{ route('home') }}#qna">QnA</a></li>
-                                    <li><a href="{{ route('home') }}#contact">Hubungi Kami</a></li>
+                                    <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
                                 </ul>
                             </nav>
                             <div class="header-right">
@@ -72,8 +72,8 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="sec-title text-center mb-5">
-                                        <p class="sec-sub-title mb-3">Toko & Restoran</p>
-                                        <h2 class="h2-title">Temukan Daftar<span>Restoran & Toko Disini!</span></h2>
+                                        <p class="sec-sub-title mb-3">Store & Restaurant</p>
+                                        <h2 class="h2-title">Find List of<span>Store & Restaurant Here!</span></h2>
                                         <div class="sec-title-shape mb-4">
                                             <img src="assets/images/title-shape.svg" alt="">
                                         </div>
@@ -94,13 +94,13 @@
                                                 </li>
                                                 <li class="filter" data-filter=".breakfast">
                                                     <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                    Restoran
+                                                    Restaurant
                                                     <div class="arrow"></div>
 
                                                 </li>
                                                 <li class="filter" data-filter=".lunch">
                                                     <img src="assets/images/restoran.png" alt="Filter Restoran" class="icon-filter">
-                                                    Terbaru
+                                                    Newest
                                                     <div class="arrow"></div>
 
                                                 </li>
@@ -111,27 +111,32 @@
                             </div>
                             <div class="menu-list-row">
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
+                                    @foreach($businesses as $business)
                                     <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
                                         <div class="dish-box text-center">
                                             <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
+                                                <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
                                             </div>
                                             <div class="dish-rating">
-                                                5
+                                                {{ number_format($business->average_rating, 1) }}
                                                 <i class="uil uil-star"></i>
                                             </div>
                                             <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
+                                                <h3 class="h3-title">{{ $business->name }}</h3>
+                                                <p>{{ $business->type->title ?? 'N/A' }}</p> <!-- Asumsi ada relasi type -->
                                             </div>
                                             <div class="info-container">
                                                 <div class="info-item">
                                                     <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
+                                                    <p>{{ $business->address }}</p>
                                                 </div>
                                                 <div class="info-item">
                                                     <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
+                                                    <p>
+                                                        @foreach ($business->food_categories as $category)
+                                                        {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
+                                                        @endforeach
+                                                    </p>
                                                 </div>
                                             </div>
 
@@ -140,13 +145,13 @@
                                                 <ul class="">
                                                     <div class="filter-active"></div>
                                                     <li class="filter active">
-                                                        <a href="#">
+                                                        <a href="{{ route('business.show', $business->id) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#">
+                                                        <a href="{{ $business->location }}" target="_blank">
                                                             <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
                                                             Maps
                                                         </a>
@@ -155,371 +160,7 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- 2 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 3 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 4 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 5 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 6 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 4 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 5 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 6 -->
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
-                                        <div class="dish-box text-center">
-                                            <div class="dist-img">
-                                                <img src="assets/images/dish/1.jpg" alt="">
-                                            </div>
-                                            <div class="dish-rating">
-                                                5
-                                                <i class="uil uil-star"></i>
-                                            </div>
-                                            <div class="dish-title">
-                                                <h3 class="h3-title">Sataylicious</h3>
-                                                <p>Restoran</p>
-                                            </div>
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <i class="uil uil-location-point"></i>
-                                                    <p>Unit 17/417-419 Warrigal Rd, Cheltenham VIC 3192, Australia, Cheltenham, Victoria, Australia</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <i class="uil uil-utensils"></i>
-                                                    <p>Otentik, Halal</p>
-                                                </div>
-                                            </div>
-
-                                            <hr>
-                                            <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
-                                                        <a href="#">
-                                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                            Details
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                            Maps
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -540,8 +181,8 @@
                                             <div class="bg-overlay dark-overlay"></div>
                                             <div class="sec-wp">
                                                 <div class="newsletter-box-text">
-                                                    <h2 class="h2-title">Ingin Menambahkan Bisnis Anda?</h2>
-                                                    <p>Silahkan hubungi kami dan beritahu kami secara detail mengenai bisnis anda</p>
+                                                    <h2 class="h2-title">Want to add your business?</h2>
+                                                    <p>Please contact us and tell us details about your business.</p>
                                                 </div>
                                                 <div class="contact-icons">
                                                     <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
@@ -571,11 +212,11 @@
                                             <div class="footer-logo">
                                                 <div class="header-logo">
                                                     <a href="index.html" class="decoration-none">
-                                                        <span class="text-#FF8243">Rasa</span> Indonesia
+                                                        <span class="text-#FF8243">Taste</span> of Indonesia
                                                     </a>
                                                 </div>
                                             </div>
-                                            <p>Rasa Indonesia adalah panduan kuliner yang dirancang khusus untuk memperkenalkan kekayaan cita rasa Indonesia di Australia. Website ini menjadi jembatan bagi pecinta kuliner Nusantara yang merindukan masakan autentik di negeri Kangguru.
+                                            <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.
                                             </p>
                                             <div class="social-icon">
                                                 <ul>
@@ -601,14 +242,14 @@
                                     <div class="col-lg-8">
                                         <div class="footer-flex-box">
                                             <div class="footer-menu food-nav-menu">
-                                                <h3 class="h3-title">Site Navigasi</h3>
+                                                <h3 class="h3-title">Site Navigation</h3>
                                                 <ul class="column-2">
                                                     <li><a href="{{ route('home') }}">Home</a></li>
-                                                    <li><a href="{{ route('home') }}#about">Tentang Kami</a></li>
-                                                    <li><a href="#" class="footer-active-menu">Toko & Restoran</a></li>
+                                                    <li><a href="{{ route('home') }}#about">About Us</a></li>
+                                                    <li><a href="#" class="footer-active-menu">Store & Restaurant</a></li>
                                                     <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
                                                     <li><a href="{{ route('home') }}#blog">QnA</a></li>
-                                                    <li><a href="{{ route('home') }}#contact">Hubungi Kami</a></li>
+                                                    <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
                                                 </ul>
                                             </div>
                                             <div class="footer-menu">
@@ -641,7 +282,7 @@
                             <div class="row">
                                 <div class="col-lg-12 text-center">
                                     <div class="copyright-text">
-                                        <p>Copyright &copy; 2025 <span class="name">Rasa</span> Indonesia. All Rights Reserved.
+                                        <p>Copyright &copy; 2025 <span class="name">Taste</span> of Indonesia. All Rights Reserved.
                                         </p>
                                     </div>
                                 </div>
