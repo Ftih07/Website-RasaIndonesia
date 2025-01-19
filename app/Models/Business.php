@@ -50,8 +50,9 @@ class Business extends Model
 
     public function food_categories()
     {
-        return $this->belongsToMany(FoodCategory::class, 'business_food_category');
+        return $this->belongsToMany(FoodCategory::class, 'business_food_category', 'business_id', 'food_category_id');
     }
+    
 
     // Di dalam model Business
     public function getAverageRatingAttribute()

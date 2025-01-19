@@ -205,40 +205,12 @@ document.addEventListener("DOMContentLoaded", function () {
     updateActiveMenu();
 });
 
-$(document).ready(function ($) {
+$(document).ready(function () {
     "use strict";
 
-
-    jQuery(".filters-business").on("click", function () {
-        jQuery("#menu-dish-business").removeClass("bydefault_show");
-    });
-    $(function () {
-        var filterList = {
-            init: function () {
-                $("#menu-dish-business").mixItUp({
-                    selectors: {
-                        target: ".dish-box-wp",
-                        filter: ".filter-business",
-                    },
-                    animation: {
-                        effects: "fade",
-                        easing: "ease-in-out",
-                    },
-                    load: {
-                        filter: ".all, .breakfast, .lunch, .dinner",
-                    },
-                });
-            },
-        };
-        filterList.init();
-    });
-    $('body').removeClass('body-fixed');
-
-    //activating tab of filter
-    let targets = document.querySelectorAll(".filter-business");
+    // GSAP animation setup
+    let targets = document.querySelectorAll(".filter");
     let activeTab = 0;
-    let old = 0;
-    let dur = 0.4;
     let animation;
 
     for (let i = 0; i < targets.length; i++) {
@@ -246,39 +218,111 @@ $(document).ready(function ($) {
         targets[i].addEventListener("click", moveBar);
     }
 
-    // initial position on first === All 
-    gsap.set(".filter-active-business", {
+    // Initial GSAP setup
+    gsap.set(".filter-active", {
         x: targets[0].offsetLeft,
         width: targets[0].offsetWidth
     });
 
     function moveBar() {
-        if (this.index != activeTab) {
+        if (this.index !== activeTab) {
             if (animation && animation.isActive()) {
                 animation.progress(1);
             }
-            animation = gsap.timeline({
-                defaults: {
-                    duration: 0.4
-                }
-            });
-            old = activeTab;
+            animation = gsap.timeline({ defaults: { duration: 0.4 } });
+            let oldTab = activeTab;
             activeTab = this.index;
-            animation.to(".filter-active-business", {
+
+            animation.to(".filter-active", {
                 x: targets[activeTab].offsetLeft,
                 width: targets[activeTab].offsetWidth
             });
 
-            animation.to(targets[old], {
-                color: "#0d0d25",
-                ease: "none"
-            }, 0);
-            animation.to(targets[activeTab], {
-                color: "#fff",
-                ease: "none"
-            }, 0);
+            animation.to(targets[oldTab], { color: "#0d0d25", ease: "none" }, 0);
+            animation.to(targets[activeTab], { color: "#fff", ease: "none" }, 0);
+        }
+    }
 
+    // Filtering logic using MixItUp
+    var filterList = {
+        init: function () {
+            $("#menu-dish").mixItUp({
+                selectors: {
+                    target: ".dish-box-wp",
+                    filter: ".filter",
+                },
+                animation: {
+                    effects: "fade scale",
+                    easing: "ease-in-out",
+                },
+                load: {
+                    filter: ".all",
+                },
+            });
+        },
+    };
+    filterList.init();
+});
+
+$(document).ready(function () {
+    const menuItems = $("#menu-dish .dish-box-wp");
+
+    $("#filter-search").on("click", function () {
+        const selectedCategory = $("#food-category").val().toLowerCase();
+        const selectedType = $("#business-type").val().toLowerCase();
+        const sortOrder = $("#sort-order").val();
+        const keyword = $("#search-keyword").val().toLowerCase();
+
+        // Filtering
+        menuItems.hide().filter(function () {
+            const itemCategory = $(this).data("category");
+            const itemType = $(this).data("cat");
+            const itemName = $(this).data("name");
+
+            const matchesCategory = selectedCategory === "all" || itemCategory === selectedCategory;
+            const matchesType = selectedType === "all" || itemType === selectedType;
+            const matchesKeyword = !keyword || itemName.includes(keyword);
+
+            return matchesCategory && matchesType && matchesKeyword;
+        }).show();
+
+        // Sorting
+        const sortedItems = menuItems.sort(function (a, b) {
+            const timeA = $(a).data("created-at");
+            const timeB = $(b).data("created-at");
+
+            return sortOrder === "newest" ? new Date(timeB) - new Date(timeA) : new Date(timeA) - new Date(timeB);
+        });
+
+        $("#menu-dish").html(sortedItems);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const foodCategory = document.getElementById('food-category');
+    const sortOrder = document.getElementById('sort-order');
+    const businessType = document.getElementById('business-type');
+    const searchKeyword = document.getElementById('search-keyword');
+    const searchButton = document.getElementById('search-button');
+
+    searchButton.addEventListener('click', function () {
+        const selectedCategory = foodCategory.value;
+        const selectedSort = sortOrder.value;
+        const selectedType = businessType.value;
+        const keyword = searchKeyword.value.trim();
+
+        // Construct URL with query parameters
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', selectedCategory);
+        url.searchParams.set('sort', selectedSort);
+        url.searchParams.set('type', selectedType);
+        if (keyword) {
+            url.searchParams.set('keyword', keyword);
+        } else {
+            url.searchParams.delete('keyword'); // Remove keyword if empty
         }
 
-    }
+        // Reload page with updated filters
+        window.location.href = url;
+    });
 });

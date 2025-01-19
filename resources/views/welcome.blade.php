@@ -1206,3 +1206,109 @@
         </div>
     </div>
 </div>
+
+
+
+<section style="background-image: url(assets/images/menu-bg.png);"
+    class="our-menu section bg-light repeat-img" id="menu">
+    <div class="sec-wp">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sec-title text-center mb-5">
+                        <p class="sec-sub-title mb-3">Store & Restaurant</p>
+                        <h2 class="h2-title">Find List of<span>Store & Restaurant Here!</span></h2>
+                        <div class="sec-title-shape mb-4">
+                            <img src="assets/images/title-shape.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Category Filters-->
+            <div class="menu-tab-wp-business">
+                <div class="row">
+                    <div class="col-lg-12 m-auto">
+                        <div class="menu-tab-business text-center">
+                            <ul class="filters-business">
+                                <div class="filter-active-business"></div>
+
+                                <li class="filter-business" data-filter=".all, .breakfast, .lunch, .dinner">
+                                    <img src="assets/images/icon-all.png" alt="" class="icon-filter">
+                                    All
+                                </li>
+                                <li class="filter-business" data-filter=".breakfast">
+                                    <img src="assets/images/toko.png" alt="" class="icon-filter">
+                                    Store
+                                </li>
+                                <li class="filter-business" data-filter=".lunch">
+                                    <img src="assets/images/restoran.png" alt="" class="icon-filter">
+                                    Restaurant
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-list-row">
+                <div class="row g-xxl-5 bydefault_show" id="menu-dish">
+                    @foreach($businesses as $business)
+                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
+                        <div class="dish-box text-center">
+                            <div class="dist-img">
+                                <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
+                            </div>
+                            <div class="dish-rating">
+                                {{ number_format($business->average_rating, 1) }}
+                                <i class="uil uil-star"></i>
+                            </div>
+                            <div class="dish-title">
+                                <h3 class="h3-title">{{ $business->name }}</h3>
+                                <p>{{ $business->type->title ?? 'N/A' }}</p> <!-- Asumsi ada relasi type -->
+                            </div>
+                            <div class="info-container">
+                                <div class="info-item">
+                                    <i class="uil uil-location-point"></i>
+                                    <p>{{ $business->address }}</p>
+                                </div>
+                                <div class="info-item">
+                                    <i class="uil uil-utensils"></i>
+                                    <p>
+                                        @foreach ($business->food_categories as $category)
+                                        {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
+                                        @endforeach
+                                    </p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="menu-tab text-center">
+                                <ul class="">
+                                    <div class="filter-active"></div>
+                                    <li class="filter active">
+                                        <a href="{{ route('business.show', $business->id) }}">
+                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
+                                            Details
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="{{ $business->location }}" target="_blank">
+                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
+                                            Maps
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="{{ route('tokorestoran') }}" class="view-all-button">View All</a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -893,6 +893,35 @@ p {
     background: linear-gradient(145deg, #e3a92b, #ffc933);
 }
 
+.menu-tab ul li,
+.menu-tab ul .filter-active-data {
+    display: inline-flex;
+    text-transform: capitalize;
+    font-size: 18px;
+    line-height: normal;
+    cursor: pointer;
+    padding: 10px 26px;
+    border-radius: 30px;
+    transition: 0.3s;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-active-data {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    min-height: 50px;
+    z-index: -1;
+    width: 50%;
+    margin-left: 4%;
+}
+
+.menu-tab ul .filter-active-data {
+    color: #ffffff;
+    background: linear-gradient(145deg, #e3a92b, #ffc933);
+}
+
 .menu-list-row .bydefault_show .dish-box-wp {
     display: inline-block !important;
 }

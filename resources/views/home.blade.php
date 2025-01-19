@@ -197,23 +197,22 @@
                                 </div>
                             </div>
 
-                            <!--Category Filters-->
-                            <div class="menu-tab-wp-business">
+                            <!-- Category Filters -->
+                            <div class="menu-tab-wp">
                                 <div class="row">
                                     <div class="col-lg-12 m-auto">
-                                        <div class="menu-tab-business text-center">
-                                            <ul class="filters-business">
-                                                <div class="filter-active-business"></div>
-
-                                                <li class="filter-business" data-filter=".all, .breakfast, .lunch, .dinner">
+                                        <div class="menu-tab text-center">
+                                            <ul class="filters">
+                                                <div class="filter-active"></div>
+                                                <li class="filter" data-filter=".all">
                                                     <img src="assets/images/icon-all.png" alt="" class="icon-filter">
                                                     All
                                                 </li>
-                                                <li class="filter-business" data-filter=".breakfast">
+                                                <li class="filter" data-filter=".store">
                                                     <img src="assets/images/toko.png" alt="" class="icon-filter">
                                                     Store
                                                 </li>
-                                                <li class="filter-business" data-filter=".lunch">
+                                                <li class="filter" data-filter=".restaurant">
                                                     <img src="assets/images/restoran.png" alt="" class="icon-filter">
                                                     Restaurant
                                                 </li>
@@ -223,10 +222,12 @@
                                 </div>
                             </div>
 
+                            <!-- Store and Restaurant Items -->
                             <div class="menu-list-row">
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                     @foreach($businesses as $business)
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
+                                    <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}"
+                                        data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
                                             <div class="dist-img">
                                                 <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
@@ -256,9 +257,9 @@
 
                                             <hr>
                                             <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
+                                                <ul>
+                                                    <div class="filter-active-data"></div>
+                                                    <li class="filter-data active">
                                                         <a href="{{ route('business.show', $business->id) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
@@ -284,6 +285,7 @@
                         </div>
                     </div>
                 </section>
+
 
                 <!-- Gallery  -->
                 <section class="book-table section bg-light" id="gallery">

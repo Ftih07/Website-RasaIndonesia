@@ -540,7 +540,7 @@
                                             <hr>
                                             <div class="menu-tab text-center">
                                                 <ul class="">
-                                                    <li class="filter active">
+                                                    <li class="filter-data active">
                                                         <a href="{{ route('business.show', $otherBusiness->id) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details

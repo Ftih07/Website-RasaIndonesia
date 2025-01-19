@@ -65,8 +65,7 @@
         <div id="viewport">
             <div id="js-scroll-content">
 
-                <section style="background-image: url(assets/images/menu-bg.png);"
-                    class="our-menu section bg-light repeat-img" id="menu">
+                <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
                     <div class="sec-wp">
                         <div class="container">
                             <div class="row">
@@ -80,39 +79,71 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Filters -->
                             <div class="menu-tab-wp">
                                 <div class="row">
                                     <div class="col-lg-12 m-auto">
                                         <div class="menu-tab text-center">
                                             <ul class="filters">
-                                                <div class="filter-active"></div>
-                                                <li class="filter" data-filter=".all, .breakfast, .lunch, .dinner">
-                                                    <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                    Halal
-                                                    <div class="arrow"></div>
-
+                                                <!-- Dropdown for Food Categories -->
+                                                <li class="filter">
+                                                    <select id="food-category" class="form-select">
+                                                        <option value="all" {{ request('category') == 'all' ? 'selected' : '' }}>All Categories</option>
+                                                        @foreach ($foodCategories as $category)
+                                                        <option value="{{ strtolower($category->title) }}"
+                                                            {{ request('category') == strtolower($category->title) ? 'selected' : '' }}>
+                                                            {{ $category->title }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
                                                 </li>
-                                                <li class="filter" data-filter=".breakfast">
-                                                    <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                    Restaurant
-                                                    <div class="arrow"></div>
 
+                                                <!-- Dropdown for Sorting -->
+                                                <li class="filter">
+                                                    <select id="sort-order" class="form-select">
+                                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                                    </select>
                                                 </li>
-                                                <li class="filter" data-filter=".lunch">
-                                                    <img src="assets/images/restoran.png" alt="Filter Restoran" class="icon-filter">
-                                                    Newest
-                                                    <div class="arrow"></div>
 
+                                                <!-- Dropdown for Types -->
+                                                <li class="filter">
+                                                    <select id="business-type" class="form-select">
+                                                        <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>All Types</option>
+                                                        @foreach ($businessTypes as $type)
+                                                        <option value="{{ strtolower($type->title) }}"
+                                                            {{ request('type') == strtolower($type->title) ? 'selected' : '' }}>
+                                                            {{ $type->title }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </li>
+
+                                                <!-- Search Field -->
+                                                <li class="filter">
+                                                    <input type="text" id="search-keyword" class="form-control" placeholder="Search Here"
+                                                        value="{{ request('keyword') }}">
+                                                </li>
+
+                                                <!-- Search Button -->
+                                                <li class="filter">
+                                                    <button id="search-button" class="btn btn-primary">Search Data</button>
                                                 </li>
                                             </ul>
                                         </div>
+
+
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Store and Restaurant Items -->
                             <div class="menu-list-row">
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                     @foreach($businesses as $business)
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp breakfast" data-cat="breakfast">
+                                    <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}"
+                                        data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
                                             <div class="dist-img">
                                                 <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
@@ -142,9 +173,9 @@
 
                                             <hr>
                                             <div class="menu-tab text-center">
-                                                <ul class="">
-                                                    <div class="filter-active"></div>
-                                                    <li class="filter active">
+                                                <ul>
+                                                    <div class="filter-active-data"></div>
+                                                    <li class="filter-data active">
                                                         <a href="{{ route('business.show', $business->id) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
@@ -166,6 +197,7 @@
                         </div>
                     </div>
                 </section>
+
 
 
                 <div class="bg-pattern bg-light repeat-img"
