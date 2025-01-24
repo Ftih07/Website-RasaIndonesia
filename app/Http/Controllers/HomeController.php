@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     //
+    public function show()
+    {
+        // Kirim data ke view
+        return view('show');
+    }
+
     public function home(Request $request)
     {
         $galleries = Gallery::all();
@@ -81,11 +87,5 @@ class HomeController extends Controller
         $businessTypes = Type::all();
 
         return view('tokorestoran', compact('businesses', 'foodCategories', 'businessTypes'));
-    }
-
-
-    public function show()
-    {
-        return view('show');
     }
 }

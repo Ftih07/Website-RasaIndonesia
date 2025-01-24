@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // Guard for testimonial user
+        'testimonial' => [
+            'driver' => 'session',
+            'provider' => 'testimonial_users',
+        ],
     ],
 
     /*
@@ -64,7 +69,11 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-
+        // Testimonial Users
+        'testimonial_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\TestimonialUser::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

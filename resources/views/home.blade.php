@@ -47,14 +47,38 @@
                                     <li><a href="#contact">Contact Us</a></li>
                                 </ul>
                             </nav>
+
                             <div class="header-right">
-                                <form action="#" class="header-search-form for-des">
-                                    <input type="search" class="form-input" placeholder="Search Here...">
-                                    <button type="submit">
-                                        <i class="uil uil-search"></i>
-                                    </button>
-                                </form>
+                                @guest('testimonial')
+                                <!-- Jika belum login -->
+                                <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                    Login
+                                </button>
+                                @else
+                                <!-- Jika sudah login -->
+                                <div class="profile-dropdown">
+                                    <!-- Foto Profil -->
+                                    <div class="profile-image" onclick="toggleDropdown()">
+                                        <img src="{{ auth('testimonial')->user()->profile_picture 
+                ? asset('storage/' . auth('testimonial')->user()->profile_picture) 
+                : asset('assets/images/default-profile.png') }}"
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
+                                    </div>
+
+
+                                    <!-- Dropdown Menu -->
+                                    <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+                                        <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
+                                        <form method="POST" action="{{ route('testimonial.logout') }}">
+                                            @csrf
+                                            <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">Logout</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                @endguest
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -550,8 +574,21 @@
         <!-- custom js  -->
         <script src="assets/main.js"></script>
         <script>
+            function toggleDropdown() {
+                const menu = document.getElementById('dropdownMenu');
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            }
 
+            // Menutup dropdown saat klik di luar area dropdown
+            window.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('dropdownMenu');
+                const profileImage = document.querySelector('.profile-image');
+                if (!profileImage.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
         </script>
+
 
     </body>
 </body>

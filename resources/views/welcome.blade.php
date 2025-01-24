@@ -1312,3 +1312,25 @@
         </div>
     </div>
 </section>
+
+<div class="menu-tab text-center">
+    <form action="{{ route('business.show', $business->id) }}" method="GET">
+        <ul class="filters">
+            <li>
+                <button type="submit" name="type" value="all" class="{{ $typeFilter === 'all' ? 'active' : '' }}">
+                    <img src="assets/images/icon-all.png" alt="All" class="icon-filter"> All
+                </button>
+            </li>
+            <li>
+                <button type="submit" name="type" value="store" class="{{ $typeFilter === 'store' ? 'active' : '' }}">
+                    <img src="assets/images/toko.png" alt="Store" class="icon-filter"> Store
+                </button>
+            </li>
+            <li>
+                <button type="submit" name="type" value="restaurant" class="{{ $typeFilter === 'restaurant' ? 'active' : '' }}">
+                    <img src="assets/images/restoran.png" alt="Restaurant" class="icon-filter"> Restaurant
+                </button>
+            </li>
+        </ul>
+    </form>
+</div>

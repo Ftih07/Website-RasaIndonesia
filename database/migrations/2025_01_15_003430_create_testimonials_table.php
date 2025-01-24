@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations.w
      */
     public function up(): void
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
+            $table->foreignId('testimonial_user_id')->constrained('testimonial_users')->cascadeOnDelete();
             $table->string('name');
             $table->text('description');
             $table->integer('rating')->unsigned();

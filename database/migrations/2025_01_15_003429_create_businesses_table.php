@@ -18,8 +18,10 @@ return new class extends Migration
             $table->text('description');
             $table->string('logo')->nullable();
             $table->text('address');
+            $table->string('iframe_url', 500);
             $table->json('open_hours');
             $table->json('services');
+            $table->string('menu')->nullable(); 
             $table->json('media_social');
             $table->string('location')->nullable();
             $table->json('contact');

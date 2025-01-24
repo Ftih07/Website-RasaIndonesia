@@ -23,6 +23,13 @@ class TestimonialResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('testimonial_user_id')
+                    ->label('User')
+                    ->relationship('testimonial_user', 'username') // Sesuaikan dengan kolom username di TestimonialUser
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
                 Forms\Components\TextInput::make('business_id')
                     ->required()
                     ->numeric(),

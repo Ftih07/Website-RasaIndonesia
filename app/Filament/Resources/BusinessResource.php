@@ -65,6 +65,10 @@ class BusinessResource extends Resource
                     ])
                     ->required(),
 
+                Forms\Components\FileUpload::make('menu')
+                    ->label('Menu List')
+                    ->directory('menu'),
+
                 Forms\Components\Repeater::make('media_social')
                     ->label('Social Media')
                     ->schema([
@@ -87,6 +91,11 @@ class BusinessResource extends Resource
 
                 Forms\Components\TextInput::make('location')
                     ->label('Business Location'),
+
+                Forms\Components\TextInput::make('iframe_url')
+                    ->label('Iframe Business Location')
+                    ->maxLength(2048) // Mengatur panjang maksimum karakter
+                    ->required(), // Opsional
 
                 Forms\Components\Repeater::make('contact')
                     ->label('Contact')
@@ -120,31 +129,6 @@ class BusinessResource extends Resource
                             ->label('Image')
                             ->directory('gallery-images')
                             ->required(),
-                    ])
-                    ->columns(1),
-
-                // Testimonial Business Form
-                Forms\Components\Repeater::make('testimonials')
-                    ->label('Testimonials')
-                    ->relationship('testimonials')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Name')
-                            ->required(),
-                        Forms\Components\Textarea::make('description')
-                            ->label('Testimonial')
-                            ->required(),
-                        Forms\Components\Select::make('rating')
-                            ->label('Rating')
-                            ->options([
-                                1 => '1',
-                                2 => '2',
-                                3 => '3',
-                                4 => '4',
-                                5 => '5',
-                            ])
-                            ->required(),
-
                     ])
                     ->columns(1),
 
