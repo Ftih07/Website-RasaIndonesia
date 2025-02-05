@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
             $table->string('name');
             $table->string('image');
-            $table->enum('type', ['makanan', 'minuman']);
+            $table->enum('type', ['food', 'drink']);
             $table->string('serving')->nullable();
             $table->decimal('price', 10, 2);
             $table->timestamps();

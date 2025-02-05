@@ -6,140 +6,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        /* Reset default styles */
-        body {
+        @import url();
+
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            padding: 0;
+            font-family: 'poppins', sans-serif;
+        }
+
+        section {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-        }
-
-        /* Container for the form */
-        .form-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
             width: 100%;
-            max-width: 400px;
-            padding: 20px;
+
+            background: url('https://www.astronauts.id/blog/wp-content/uploads/2022/08/Makanan-Khas-Daerah-tiap-Provinsi-di-Indonesia-Serta-Daerah-Asalnya-1024x683.jpg')no-repeat;
+            background-position: center;
+            background-size: cover;
         }
 
-        /* Form title */
-        .form-title {
+        .form-box {
+            position: relative;
+            width: 400px;
+            height: 450px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #fff;
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
         }
 
-        /* Form inputs */
-        .form-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+        .inputbox {
+            position: relative;
+            margin: 30px 0;
+            width: 310px;
+            border-bottom: 2px solid #fff;
         }
 
-        /* Button styling */
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
+        .inputbox label {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        input:focus~label,
+        input:valid~label {
+            top: -5px;
+        }
+
+        .inputbox {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .inputbox input {
+            padding-right: 30px;
+            /* Ruang untuk ikon mata */
+        }
+
+        .inputbox ion-icon {
+            position: absolute;
+            right: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        /* Button hover effect */
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Placeholder styling */
-        input::placeholder {
-            color: #999;
-            font-size: 14px;
-        }
-
-        /* Add focus effect to inputs */
-        .form-container input:focus {
-            border-color: #007BFF;
+        .inputbox input {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: none;
             outline: none;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+            font-size: 1em;
+            padding: 0 35px 0 5px;
+            color: #fff;
         }
 
-        /* Link styling */
-        .form-container .forgot-password {
-            text-align: center;
-            margin-top: 10px;
+        .inputbox ion-icon {
+            position: absolute;
+            right: 8px;
+            color: #fff;
+            font-size: 1.2em;
+            top: 20px;
         }
 
-        .form-container .forgot-password a {
-            color: #007BFF;
+        .forget {
+            margin: -15px 0 -15px;
+            font-size: .9em;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+
+        .forget label input {
+            margin-right: 3px;
+        }
+
+        .forget label a {
+            color: #fff;
             text-decoration: none;
         }
 
-        .form-container .forgot-password a:hover {
+        .forget label a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            height: 40px;
+            border-radius: 40px;
+            background: #fff;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .register {
+            font-size: .9em;
+            color: #fff;
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .register p a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .register p a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <div class="form-container">
-        <h2 class="form-title">Login</h2>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                <form method="POST" action="{{ route('testimonial.login') }}">
+                    <h2>Login</h2>
 
-        <!-- Display error or success messages -->
-        @if ($errors->any())
-        <div style="color: red; text-align: center; margin-bottom: 10px;">
-            {{ $errors->first() }}
-        </div>
-        @endif
+                    <!-- Display error or success messages -->
+                    @if ($errors->any())
+                    <div style="color: red; text-align: center; margin-bottom: 10px">
+                        {{ $errors->first() }}
+                    </div>
+                    @endif @if (session('success'))
+                    <div style="color: green; text-align: center; margin-bottom: 10px">
+                        {{ session('success') }}
+                    </div>
+                    @endif @csrf
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input
+                            type="text"
+                            name="username"
+                            required
+                            value="{{ old('username') }}" />
+                        <label for="">Username</label>
+                    </div>
+ 
+                    <div class="inputbox">
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            required />
+                        <label for="">Password</label>
+                        <ion-icon
+                            name="eye-off-outline"
+                            id="togglePassword"
+                            onclick="togglePassword()"></ion-icon>
+                    </div>
 
-        @if (session('success'))
-        <div style="color: green; text-align: center; margin-bottom: 10px;">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        <form method="POST" action="{{ route('testimonial.login') }}">
-            @csrf
-            <input type="text" name="username" placeholder="Enter your username" required value="{{ old('username') }}">
-            <input type="password" name="password" id="password" placeholder="Enter your password" required>
-
-            <!-- Checkbox untuk menunjukkan password -->
-            <input type="checkbox" id="show-password"> Show Password
-
-            <button type="submit">Login</button>
-
-            <div class="forgot-password">
-                Don't have an account? <a href="{{ route('testimonial.register') }}">Register</a>
+                    <button type="submit">Log in</button>
+                    <div class="register">
+                        <p>
+                            Don't have a account
+                            <a href="{{ route('testimonial.register') }}">Register</a>
+                        </p>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
+        </div>
+    </section>
 
+    <script
+        type="module"
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script
+        nomodule
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
     <script>
-        // Mendapatkan elemen input password dan checkbox show password
-        const passwordInput = document.getElementById('password');
-        const showPasswordCheckbox = document.getElementById('show-password');
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePassword");
 
-        // Menambahkan event listener untuk checkbox
-        showPasswordCheckbox.addEventListener('change', function() {
-            if (showPasswordCheckbox.checked) {
-                passwordInput.type = 'text'; // Mengubah tipe input menjadi text
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.setAttribute("name", "eye-outline"); // Mata terbuka
             } else {
-                passwordInput.type = 'password'; // Mengubah kembali tipe input menjadi password
+                passwordInput.type = "password";
+                toggleIcon.setAttribute("name", "eye-off-outline"); // Mata tertutup
             }
-        });
+        }
     </script>
 </body>
 

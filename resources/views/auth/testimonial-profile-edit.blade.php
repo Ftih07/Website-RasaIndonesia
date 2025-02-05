@@ -8,91 +8,227 @@
 </head>
 
 <body>
-    <div class="form-container">
-        <h2 class="form-title">Edit Profile</h2>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                @if (session('success'))
+                <div style="color: green; text-align: center; margin-bottom: 10px">
+                    {{ session('success') }}
+                </div>
+                @endif
+                <form
+                    method="POST"
+                    action="{{ route('testimonial.profile.update') }}"
+                    enctype="multipart/form-data">
+                    @csrf
 
-        @if (session('success'))
-        <div style="color: green; text-align: center; margin-bottom: 10px;">
-            {{ session('success') }}
-        </div>
-        @endif
+                    <h2>Edit Profile</h2>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input
+                            type="text"
+                            name="username"
+                            value="{{ $user->username }}"
+                            required
+                            class="form-input" />
+                        <label for="">Username</label>
+                    </div>
 
-        <form method="POST" action="{{ route('testimonial.profile.update') }}" enctype="multipart/form-data">
-            @csrf
+                    <div class="inputbox">
+                        <input type="password" name="password" class="form-input" id="password" />
+                        <label for="">Password</label>
+                        <ion-icon
+                            name="eye-off-outline"
+                            id="togglePassword"
+                            onclick="togglePassword()"></ion-icon>
+                    </div>
 
-            <input type="text" name="username" value="{{ $user->username }}" required placeholder="Enter new username" class="form-input">
+                    <div class="inputbox">
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            class="form-input" />
+                        <label for="">Confirm Password</label>
+                        <ion-icon
+                            name="eye-off-outline"
+                            id="togglePassword"
+                            onclick="togglePassword()"></ion-icon>
+                    </div>
+                    <label for="profile_picture" class="label">Update Profile Picture</label>
 
-            <input type="password" name="password" placeholder="Enter new password (optional)" class="form-input">
-            <input type="password" name="password_confirmation" placeholder="Confirm new password (optional)" class="form-input">
+                    <!-- Preview Image -->
+                    <div class="image-preview-container">
+                        <img
+                            id="profilePreview"
+                            src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'default-profile.jpg' }}"
+                            alt="Profile Picture"
+                            class="profile-preview" />
+                    </div>
 
-            <label for="profile_picture" class="label">Update Profile Picture</label>
+                    <input
+                        type="file"
+                        name="profile_picture"
+                        accept="image/*"
+                        id="profile_picture"
+                        class="form-input-file"
+                        onchange="previewImage(event)" />
 
-            <!-- Preview Image -->
-            <div class="image-preview-container">
-                <img id="profilePreview" src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'default-profile.jpg' }}" alt="Profile Picture" class="profile-preview">
+                    <button type="submit" class="btn-submit">Update Profile</button>
+                </form>
             </div>
-
-            <input type="file" name="profile_picture" accept="image/*" id="profile_picture" class="form-input-file" onchange="previewImage(event)">
-
-            <button type="submit" class="btn-submit">Update Profile</button>
-
-            <button type="button" onclick="window.location.href='{{ route('home') }}'">
-                Home
-            </button>
-        </form>
-    </div>
+        </div>
+    </section>
 
     <!-- Styling -->
     <style>
-        .form-container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        @import url();
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'poppins', sans-serif;
         }
 
-        .form-title {
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+
+            background: url('https://www.astronauts.id/blog/wp-content/uploads/2022/08/Makanan-Khas-Daerah-tiap-Provinsi-di-Indonesia-Serta-Daerah-Asalnya-1024x683.jpg')no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .form-box {
+            position: relative;
+            width: 600px;
+            height: 650px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #fff;
             text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 15%;
         }
 
-        .form-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: #fff;
+        .inputbox {
+            position: relative;
+            margin: 30px 0;
+            width: 310px;
+            border-bottom: 2px solid #fff;
         }
 
-        .label {
-            font-size: 16px;
-            margin-top: 10px;
-            display: block;
+        .inputbox label {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .5s;
         }
 
-        .form-input-file {
-            margin-top: 10px;
+        input:focus~label,
+        input:valid~label {
+            top: -5px;
         }
 
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
+        .inputbox {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .inputbox input {
+            padding-right: 30px;
+            /* Ruang untuk ikon mata */
+        }
+
+        .inputbox ion-icon {
+            position: absolute;
+            right: 10px;
             cursor: pointer;
         }
 
-        .btn-submit:hover {
-            background-color: #45a049;
+        .inputbox input {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            padding: 0 35px 0 5px;
+            color: #fff;
+        }
+
+        .inputbox ion-icon {
+            position: absolute;
+            right: 8px;
+            color: #fff;
+            font-size: 1.2em;
+            top: 20px;
+        }
+
+        .forget {
+            margin: -15px 0 -15px;
+            font-size: .9em;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+
+        .forget label input {
+            margin-right: 3px;
+        }
+
+        .forget label a, .label {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .forget label a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            margin-top: 8%;
+            width: 100%;
+            height: 40px;
+            border-radius: 40px;
+            background: #fff;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .register {
+            font-size: .9em;
+            color: #fff;
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .register p a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .register p a:hover {
+            text-decoration: underline;
         }
 
         .image-preview-container {
@@ -134,7 +270,26 @@
         }
     </script>
 
+    <script
+        type="module"
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script
+        nomodule
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePassword");
 
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.setAttribute("name", "eye-outline"); // Mata terbuka
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.setAttribute("name", "eye-off-outline"); // Mata tertutup
+            }
+        }
+    </script>
 
 </body>
 

@@ -60,7 +60,7 @@ class BusinessResource extends Resource
                 Forms\Components\CheckboxList::make('services')
                     ->label('Services')
                     ->options([
-                        'Makan Di Tempat' => 'Makan Di Tempat',
+                        'Dine In' => 'Dine In',
                         'Delivery' => 'Delivery',
                     ])
                     ->required(),
@@ -147,8 +147,8 @@ class BusinessResource extends Resource
                         Forms\Components\Select::make('type')
                             ->label('Type')
                             ->options([
-                                'makanan' => 'Makanan',
-                                'minuman' => 'Minuman',
+                                'food' => 'Food',
+                                'drink' => 'Drink',
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('serving')

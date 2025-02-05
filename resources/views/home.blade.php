@@ -45,39 +45,38 @@
                                     <li><a href="#gallery">Gallery</a></li>
                                     <li><a href="#qna">QnA</a></li>
                                     <li><a href="#contact">Contact Us</a></li>
-                                </ul>
-                            </nav>
-
-                            <div class="header-right">
-                                @guest('testimonial')
-                                <!-- Jika belum login -->
-                                <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
-                                    Login
-                                </button>
-                                @else
-                                <!-- Jika sudah login -->
-                                <div class="profile-dropdown">
-                                    <!-- Foto Profil -->
-                                    <div class="profile-image" onclick="toggleDropdown()">
-                                        <img src="{{ auth('testimonial')->user()->profile_picture 
+                                    <li>
+                                            @guest('testimonial')
+                                            <!-- Jika belum login -->
+                                            <button class="button-login" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                                Login
+                                            </button>
+                                            @else
+                                            <!-- Jika sudah login -->
+                                            <div class="profile-dropdown">
+                                                <!-- Foto Profil -->
+                                                <div class="profile-image" onclick="toggleDropdown()">
+                                                    <img src="{{ auth('testimonial')->user()->profile_picture 
                 ? asset('storage/' . auth('testimonial')->user()->profile_picture) 
                 : asset('assets/images/default-profile.png') }}"
-                                            alt="Profile"
-                                            style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
-                                    </div>
+                                                        alt="Profile"
+                                                        style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
+                                                </div>
 
 
-                                    <!-- Dropdown Menu -->
-                                    <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
-                                        <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
-                                        <form method="POST" action="{{ route('testimonial.logout') }}">
-                                            @csrf
-                                            <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">Logout</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                @endguest
-                            </div>
+                                                <!-- Dropdown Menu -->
+                                                <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+                                                    <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
+                                                    <form method="POST" action="{{ route('testimonial.logout') }}">
+                                                        @csrf
+                                                        <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-align: center;">Logout</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            @endguest
+                                    </li>
+                                </ul>
+                            </nav>
 
                         </div>
                     </div>
@@ -107,7 +106,7 @@
                                             <span>Taste</span>
                                             <br> of Indonesia.
                                         </h1>
-                                        <p>Find a shop or restaurant that serves Indonesian food in Australia.</p>
+                                        <p>Find a store or restaurant that serves Indonesian foods in Australia.</p>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -136,7 +135,7 @@
                                 <div class="col-lg-12">
                                     <div class="sec-title text-center mb-5">
                                         <p class="sec-sub-title mb-3">category</p>
-                                        <h2 class="h2-title">Find Category<br>Food Easily</h2>
+                                        <h2 class="h2-title">Find Food<br>Category Easily</h2>
                                         <div class="sec-title-shape mb-4">
                                             <img src="assets/images/title-shape.svg" alt="">
                                         </div>
@@ -182,7 +181,7 @@
                                     <div class="about_us">
                                         <h2>What is</h2>
                                         <h2>
-                                            Website <span class="rasa-text">Taste </span>of Indonesia?
+                                            <span class="rasa-text">Taste </span>of Indonesia?
                                         </h2>
                                     </div>
                                     <div class="sec-title-shape mb-4">
@@ -330,7 +329,7 @@
                                         <div class="about_us">
                                             <h2>Here is the</h2>
                                             <h2>
-                                                Gallery <span class="rasa-text">Taste </span>of Indonesia
+                                                Gallery of <span class="rasa-text"> Taste </span>of Indonesia
                                             </h2>
                                         </div>
                                         <div class="sec-title-shape mb-4">
@@ -415,7 +414,7 @@
                                             <div class="sec-wp">
                                                 <div class="newsletter-box-text">
                                                     <h2 class="h2-title">Want to add your business?</h2>
-                                                    <p>Please contact us and tell us details about your business.
+                                                    <p>Please contact us and tell us the details of your business.
                                                     </p>
                                                 </div>
                                                 <div class="contact-icons">

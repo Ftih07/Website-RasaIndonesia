@@ -281,6 +281,9 @@ ul {
 }
 
 @media (max-width: 991px) {
+    .header-right {
+        display: none;
+    }
     .section {
         padding-top: 85px;
         padding-bottom: 85px;
@@ -631,7 +634,6 @@ ul {
 .dropdown-menu button {
     display: block;
     padding: 10px;
-    text-align: left;
     text-decoration: none;
     color: #333;
     background: none;
@@ -872,6 +874,12 @@ p {
     margin-bottom: 80px;
 }
 
+.catalogue-list {
+    margin-bottom: 30px;
+    margin-top: -30px;
+    z-index: 999;
+}
+
 .menu-tab ul {
     padding: 10px;
     display: inline-block;
@@ -1106,7 +1114,45 @@ p {
     background: linear-gradient(145deg, #ffc954, #ffbc00);
     box-shadow: inset 4px 4px 8px #d6a029, inset -4px -4px 8px #ffd837;
 }
-
+.button-filter {
+    width: max-content;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    transition: 0.3s;
+    background: linear-gradient(145deg, #ffc954, #ffbc00);
+    box-shadow: inset 4px 4px 8px #d6a029, inset -4px -4px 8px #ffd837;
+    font-size: medium;
+    padding: 0px 20px; /* Tambahkan padding agar teks tidak terlalu rapat dengan tepi */
+}
+.button-filter:hover, .button-add-testimonial:hover, .button-add:hover{
+    background: linear-gradient(145deg, #e3a92b, #ffc933);
+}
+.button-add {
+    width: max-content;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    transition: 0.3s;
+    background: linear-gradient(145deg, #ffc954, #ffbc00);
+    box-shadow: inset 4px 4px 8px #d6a029, inset -4px -4px 8px #ffd837;
+    font-size: large;
+    padding: 15px 20px; /* Tambahkan padding agar teks tidak terlalu rapat dengan tepi */
+}
+.button-add-testimonial {
+    width: max-content;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    transition: 0.3s;
+    background: linear-gradient(145deg, #ffc954, #ffbc00);
+    box-shadow: inset 4px 4px 8px #d6a029, inset -4px -4px 8px #ffd837;
+    font-size: large;
+    padding: 0px 20px; /* Tambahkan padding agar teks tidak terlalu rapat dengan tepi */
+}
 .dish-add-btn i {
     color: #ffffff;
     font-size: 22px;
@@ -1256,7 +1302,6 @@ p {
     border-right: 3px dotted rgb(13 13 37 /50%);
     padding: 15px 0;
 }
-
 
 #gallery {
     padding-top: 120px;
@@ -2053,7 +2098,7 @@ iframe {
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 991px) {      
     .js-parallax-scene {
         display: none;
     }
@@ -2402,8 +2447,6 @@ iframe {
     }
 }
 
-
-
 .menu-tab-wp-business {
     margin-bottom: 80px;
 }
@@ -2418,7 +2461,8 @@ iframe {
     z-index: 2;
 }
 
-.menu-tab-business ul li, .menu-tab-business ul .filter-active-business {
+.menu-tab-business ul li,
+.menu-tab-business ul .filter-active-business {
     display: inline-flex;
     text-transform: capitalize;
     font-size: 18px;
@@ -2453,7 +2497,6 @@ iframe {
 .menu-list-row .bydefault_show .dish-box-wp {
     display: inline-block !important;
 }
-
 
 @media (max-width: 1199px) {
     .main-banner {
@@ -2501,7 +2544,7 @@ iframe {
     .newsletter-box-text {
         padding: 0;
     }
-    .footer-flex-box>div {
+    .footer-flex-box > div {
         padding: 0 10px;
     }
     .star-rating {
@@ -2558,7 +2601,11 @@ iframe {
         pointer-events: none;
         opacity: 0.2;
         border-radius: 0 60px 60px 0;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 1) 100%);
+        background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(0, 0, 0, 1) 100%
+        );
     }
     .sec-text {
         margin-top: 40px;
@@ -2598,7 +2645,7 @@ iframe {
         display: block;
         margin: 0;
     }
-    .footer-flex-box>div {
+    .footer-flex-box > div {
         padding: 0;
         margin-bottom: 30px;
     }
@@ -2606,7 +2653,7 @@ iframe {
         margin: 0;
         margin-bottom: 30px;
     }
-    .footer-flex-box>div:last-child {
+    .footer-flex-box > div:last-child {
         margin: 0;
     }
     .scrolltop {
@@ -2702,7 +2749,8 @@ iframe {
 }
 
 @media (max-width: 575px) {
-    .container, .container-fluid {
+    .container,
+    .container-fluid {
         padding: 0 30px;
     }
     .h1-title {
@@ -2781,7 +2829,8 @@ iframe {
 }
 
 @media (max-width: 400px) {
-    .container, .container-fluid {
+    .container,
+    .container-fluid {
         padding: 0 15px;
     }
     .section {
@@ -2858,8 +2907,15 @@ label {
     font-weight: bold;
     margin-bottom: 5px;
 }
+.sort {
+    display: flex;
+    align-items: center; /* Menyelaraskan teks dengan dropdown */
+    gap: 10px; /* Beri jarak antara teks dan dropdown */
+    white-space: nowrap; /* Mencegah teks turun ke bawah */
+}
 
-textarea, input[type="number"] {
+textarea,
+input[type="number"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -2873,27 +2929,42 @@ textarea, input[type="number"] {
     gap: 10px;
 }
 
-.cancel-button, .submit-button {
+.cancel-button,
+.submit-button {
     padding: 10px 15px;
-    border: none;
+    border-color: #ffbc00;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .cancel-button {
-    background-color: #ccc;
-    color: #333;
+    background: transparent;
+    color: #ffbc00;
 }
 
 .submit-button {
-    background-color: #007bff;
+    background-color: #ffbc00;
     color: #fff;
 }
 
 .cancel-button:hover {
-    background-color: #bbb;
+    background-color: #ffbc00;
+    color: #fff
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background-color: #ecad00;
+}
+
+.catalogue-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffbc00;
+    text-decoration: none;
+    gap: 5px;
+    font-size: 17px;
+}
+.catalogue-link:hover {
+    color: #ecad00;
 }

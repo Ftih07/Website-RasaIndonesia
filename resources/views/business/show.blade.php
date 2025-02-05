@@ -54,38 +54,36 @@
                                 <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
                                 <li><a href="{{ route('home') }}#qna">QnA</a></li>
                                 <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
-                            </ul>
-                        </nav>
-                        <div class="header-right">
-                            @guest('testimonial')
-                            <!-- Jika belum login -->
-                            <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
-                                Login
-                            </button>
-                            @else
-                            <!-- Jika sudah login -->
-                            <div class="profile-dropdown">
-                                <!-- Foto Profil -->
-                                <div class="profile-image" onclick="toggleDropdown()">
-                                    <img src="{{ auth('testimonial')->user()->profile_picture 
+                                <li> @guest('testimonial')
+                                    <!-- Jika belum login -->
+                                    <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                        Login
+                                    </button>
+                                    @else
+                                    <!-- Jika sudah login -->
+                                    <div class="profile-dropdown">
+                                        <!-- Foto Profil -->
+                                        <div class="profile-image" onclick="toggleDropdown()">
+                                            <img src="{{ auth('testimonial')->user()->profile_picture 
                 ? asset('storage/' . auth('testimonial')->user()->profile_picture) 
                 : asset('assets/images/default-profile.png') }}"
-                                        alt="Profile"
-                                        style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
-                                </div>
+                                                alt="Profile"
+                                                style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
+                                        </div>
 
-
-                                <!-- Dropdown Menu -->
-                                <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
-                                    <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
-                                    <form method="POST" action="{{ route('testimonial.logout') }}">
-                                        @csrf
-                                        <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">Logout</button>
-                                    </form>
-                                </div>
-                            </div>
-                            @endguest
-                        </div>
+                                        <!-- Dropdown Menu -->
+                                        <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+                                            <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
+                                            <form method="POST" action="{{ route('testimonial.logout') }}">
+                                                @csrf
+                                                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-align: center;">Logout</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @endguest
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -149,7 +147,7 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                            <h2 class="h2-title">Bussines Overview</h2>
+                            <h2 class="h2-title">Business Overview</h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>
@@ -244,23 +242,19 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                            <h2 class="h2-title">Menu Catalog</h2>
+                            <h2 class="h2-title">Catalogue Menu</h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>
                         </div>
                     </div>
-                    <a href="{{ asset('storage/' . $business->menu) }}" target="_blank">View PDF</a>
                 </div>
 
-                <div id="pdfModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-                    <div style="background:#fff; padding:20px; border-radius:8px; width:80%; height:80%;">
-                        <button id="closeModalButton" style="float:right; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">Close</button>
-                        <iframe id="pdfViewer" src="" style="width:100%; height:90%; border:none;"></iframe>
-                    </div>
+                <div class="catalogue-list">
+                    <a href="{{ asset('storage/' . $business->menu) }}" target="_blank" class="catalogue-link">
+                        <ion-icon name="document-outline"></ion-icon> Catalogue List
+                    </a>
                 </div>
-
-
                 <div class="menu-tab-wp">
                     <div class="row">
                         <div class="col-lg-12 m-auto">
@@ -271,11 +265,11 @@
                                         <img src="{{ asset('assets/images/menu-1.png') }}" alt="" class="icon-filter">
                                         All
                                     </li>
-                                    <li class="filter" data-filter=".makanan">
+                                    <li class="filter" data-filter=".food">
                                         <img src="{{ asset('assets/images/icon/makanan.png') }}" alt="" class="icon-filter">
                                         Foods
                                     </li>
-                                    <li class="filter" data-filter=".minuman">
+                                    <li class="filter" data-filter=".drink">
                                         <img src="{{ asset('assets/images/icon/minuman.png') }}" alt="" class="icon-filter">
                                         Drinks
                                     </li>
@@ -400,9 +394,9 @@
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
                             <div class="about_us">
-                                <h2>Berikut adalah</h2>
+                                <h2>Here is the</h2>
                                 <h2>
-                                    Galeri dari <span class="rasa-text">{{ $business->type->title ?? 'N/A' }}</span> {{ $business->name }}
+                                    Gallery of <span class="rasa-text"> {{ $business->name }}</span>
                                 </h2>
                             </div>
                             <div class="sec-title-shape mb-4">
@@ -457,27 +451,41 @@
 
                     </div>
                 </div>
-                <form method="GET" action="{{ route('business.show', ['id' => $business->id]) }}">
-                    <div>
-                        <label for="rating">Filter by Rating:</label>
-                        <select name="rating" id="rating">
-                            <option value="">All</option>
-                            @for($i = 1; $i <= 5; $i++)
-                                <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>{{ $i }} Star</option>
-                                @endfor
-                        </select>
-                    </div>
+                <div class="menu-tab-wp">
+                    <div class="row">
+                        <div class="col-lg-12 m-auto">
+                            <div class="menu-tab text-center">
+                                <ul class="filters">
+                                    <form method="GET" action="{{ route('business.show', ['id' => $business->id]) }}">
+                                        <li class="sort">
+                                            <label for="rating" class="label">Filter by Rating:</label>
+                                            <select name="rating" id="rating" class="form-select">
+                                                <option value="">All</option>
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>{{ $i }} Star</option>
+                                                    @endfor
+                                            </select>
+                                        </li>
 
-                    <div>
-                        <label for="order">Sort by:</label>
-                        <select name="order" id="order">
-                            <option value="newest" {{ request('order') == 'newest' ? 'selected' : '' }}>Newest</option>
-                            <option value="oldest" {{ request('order') == 'oldest' ? 'selected' : '' }}>Oldest</option>
-                        </select>
-                    </div>
+                                        <li class="sort">
+                                            <label for="order" class="label">Sort by:</label>
+                                            <select name="order" id="order" class="form-select">
+                                                <option value="newest" {{ request('order') == 'newest' ? 'selected' : '' }}>Newest</option>
+                                                <option value="oldest" {{ request('order') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                            </select>
+                                        </li>
 
-                    <button type="submit">Apply Filter</button>
-                </form>
+                                        <li class="sort">
+                                            <button type="submit" class="button-filter">Apply Filter</button>
+                                        </li>
+                                    </form>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         @foreach($testimonials as $testimonial)
@@ -517,13 +525,13 @@
                 </div>
             </div>
         </div>
-        <div class="text-center mt-4">
+        <div class="text-center mt-0">
             @if(auth('testimonial')->check())
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTestimonialModal">
+            <button class="button-add-testimonial" data-bs-toggle="modal" data-bs-target="#addTestimonialModal">
                 Add Your Testimonial
             </button>
             @else
-            <a href="{{ route('testimonial.login') }}" class="btn btn-primary">Login to Add Testimonial</a>
+            <a href="{{ route('testimonial.login') }}" class="button-add">Login to Add Testimonial</a>
             @endif
         </div>
 
@@ -781,7 +789,12 @@
     </footer>
 
 
-
+    <script
+        type="module"
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script
+        nomodule
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -866,7 +879,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('customModal');
-            const openButton = document.querySelector('.btn-primary'); // Tombol untuk membuka modal
+            const openButton = document.querySelector('.button-add-testimonial'); // Tombol untuk membuka modal
             const closeButton = modal.querySelector('.close-button');
             const cancelButton = modal.querySelector('.cancel-button');
 
