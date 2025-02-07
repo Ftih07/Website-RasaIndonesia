@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Rasa Indonesia</title>
@@ -46,34 +49,34 @@
                                     <li><a href="#qna">QnA</a></li>
                                     <li><a href="#contact">Contact Us</a></li>
                                     <li>
-                                            @guest('testimonial')
-                                            <!-- Jika belum login -->
-                                            <button class="button-login" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
-                                                Login
-                                            </button>
-                                            @else
-                                            <!-- Jika sudah login -->
-                                            <div class="profile-dropdown">
-                                                <!-- Foto Profil -->
-                                                <div class="profile-image" onclick="toggleDropdown()">
-                                                    <img src="{{ auth('testimonial')->user()->profile_picture 
+                                        @guest('testimonial')
+                                        <!-- Jika belum login -->
+                                        <button class="button-filter" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                            Login
+                                        </button>
+                                        @else
+                                        <!-- Jika sudah login -->
+                                        <div class="profile-dropdown">
+                                            <!-- Foto Profil -->
+                                            <div class="profile-image" onclick="toggleDropdown()">
+                                                <img src="{{ auth('testimonial')->user()->profile_picture 
                 ? asset('storage/' . auth('testimonial')->user()->profile_picture) 
                 : asset('assets/images/default-profile.png') }}"
-                                                        alt="Profile"
-                                                        style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
-                                                </div>
-
-
-                                                <!-- Dropdown Menu -->
-                                                <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
-                                                    <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
-                                                    <form method="POST" action="{{ route('testimonial.logout') }}">
-                                                        @csrf
-                                                        <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-align: center;">Logout</button>
-                                                    </form>
-                                                </div>
+                                                    alt="Profile"
+                                                    style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
                                             </div>
-                                            @endguest
+
+
+                                            <!-- Dropdown Menu -->
+                                            <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+                                                <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
+                                                <form method="POST" action="{{ route('testimonial.logout') }}">
+                                                    @csrf
+                                                    <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-align: center;">Logout</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        @endguest
                                     </li>
                                 </ul>
                             </nav>
@@ -99,6 +102,11 @@
                     <div class="sec-wp">
                         <div class="container">
                             <div class="row">
+                                <div class="col-lg-12 mb-4 logo">
+                                    <!-- Tambahkan logo di sini -->
+                                    <img src="assets/images/logo/Logo-ICAV.png" alt="Logo 1" class="logo mx-3" style="width: 160px; height: auto;">
+                                    <img src="assets/images/logo/Logo-Atdag-Canberra.png" alt="Logo 2" class="logo mx-3" style="width: 240px; height: auto;">
+                                </div>
                                 <div class="col-lg-6">
                                     <div class="banner-text">
                                         <h1 class="h1-title">
@@ -219,6 +227,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <section class="about-sec section" id="about">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-8 m-auto">
+                                            <div class="about-video">
+                                                <div class="scrapping-map">
+                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29728377.412354566!2d111.77457453068746!3d-24.556309703217245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2b2bfd076787c5df%3A0x538267a1955b1352!2sAustralia!5e0!3m2!1sid!2sid!4v1738851741815!5m2!1sid!2sid" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
 
                             <!-- Category Filters -->
                             <div class="menu-tab-wp">
@@ -253,7 +274,8 @@
                                         data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
                                             <div class="dist-img">
-                                                <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
+                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
+                                                    alt="{{ $business->name_business }}">
                                             </div>
                                             <div class="dish-rating">
                                                 {{ number_format($business->average_rating, 1) }}
@@ -329,7 +351,7 @@
                                         <div class="about_us">
                                             <h2>Here is the</h2>
                                             <h2>
-                                                Gallery of <span class="rasa-text"> Taste </span>of Indonesia
+                                                Gallery <span class="rasa-text"> Taste </span>of Indonesia
                                             </h2>
                                         </div>
                                         <div class="sec-title-shape mb-4">

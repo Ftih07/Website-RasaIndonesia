@@ -8,7 +8,7 @@ use App\Models\Type;
 use Illuminate\Http\Request;
 
 class BusinessController extends Controller
-{
+{ 
     /**
      * Menampilkan detail bisnis, tipe, dan testimonial
      */

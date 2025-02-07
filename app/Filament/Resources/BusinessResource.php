@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
+
 
 class BusinessResource extends Resource
 {
@@ -32,6 +34,7 @@ class BusinessResource extends Resource
                     ->label('Food Categories in Business')
                     ->relationship('food_categories', 'title') // Menggunakan relasi many-to-many
                     ->multiple() // Mendukung multi-select
+                    ->preload()
                     ->required(),
 
 
@@ -174,6 +177,16 @@ class BusinessResource extends Resource
             ])
             ->filters([
                 //
+                SelectFilter::make('type_id')
+                    ->label('Type Business')
+                    ->relationship('type', 'title')
+                    ->preload()
+                    ->searchable(),
+                SelectFilter::make('food_categories')
+                    ->label('Food Categories')
+                    ->relationship('food_categories', 'title')
+                    ->preload()
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

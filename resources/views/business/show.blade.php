@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Rasa Indonesia</title>
@@ -50,13 +52,13 @@
                             <ul class="menu food-nav-menu">
                                 <li><a href="{{ route('home') }}">Home</a></li>
                                 <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                <li><a href="{{ route('home') }}#menu">Store & Restaurant</a></li>
+                                <li><a href="#">Store & Restaurant</a></li>
                                 <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
                                 <li><a href="{{ route('home') }}#qna">QnA</a></li>
                                 <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
                                 <li> @guest('testimonial')
                                     <!-- Jika belum login -->
-                                    <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                    <button class="button-filter" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
                                         Login
                                     </button>
                                     @else
@@ -70,6 +72,7 @@
                                                 alt="Profile"
                                                 style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
                                         </div>
+
 
                                         <!-- Dropdown Menu -->
                                         <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
@@ -96,7 +99,8 @@
             <div class="row align-items-center">
                 <div class="col-lg-5">
                     <div class="sec-img mt-5">
-                        <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}" class="w-5 h-5 rounded-full">
+                        <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
+                            alt="{{ $business->name_business }}">
                     </div>
                 </div>
                 <div class="col-lg-7">
@@ -144,6 +148,12 @@
         <div class="sec-wp">
             <div class="container">
                 <div class="row">
+                    <div class="col-lg-12 text-center mb-4">
+                        <div class="logo-container">
+                            <img src="{{ asset('assets/images/logo/Logo-ICAV.png') }}" alt="Logo 1" class="logo mx-3" style="width: 80px; height: auto;">
+                            <img src="{{ asset('assets/images/logo/Logo-Atdag-Canberra.png') }}" alt="Logo 2" class="logo mx-3" style="width: 120px; height: auto;">
+                        </div>
+                    </div>
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
@@ -209,7 +219,7 @@
                                         @endif
                                     </div>
 
-                                    <h3>Media Sosial</h3>
+                                    <h3>Media Social</h3>
                                 </div>
                             </div>
                         </div>
@@ -295,8 +305,9 @@
                                     <ul>
                                         <li>
                                             <p>Type</p>
-                                            <b>{{ $menu->type }}</b>
+                                            <b>{{ ucfirst($menu->type) }}</b>
                                         </li>
+
                                         <li>
                                             <p>Serving</p>
                                             <b>{{ $menu->serving }}</b>
@@ -486,7 +497,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="swiper-container">
+                <div class="swiper-container team-slider">
+                    @if($testimonials->isEmpty())
+                    <div class="alert alert-warning text-center">
+                        Data not found
+                    </div>
+                    @else
                     <div class="swiper-wrapper">
                         @foreach($testimonials as $testimonial)
                         <div class="swiper-slide">
@@ -508,9 +524,9 @@
                             </div>
                         </div>
                         @endforeach
-
-
                     </div>
+                    @endif
+
                     <!-- Add Pagination -->
                     <div class="swiper-pagination"></div>
                     <!-- Add Navigation -->

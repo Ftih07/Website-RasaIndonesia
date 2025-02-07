@@ -546,7 +546,6 @@ ul {
 }
 .sec-wp {
     position: relative;
-    margin-top: 50px;
     margin-bottom: 50px;
     z-index: 4;
 }
@@ -791,6 +790,28 @@ p {
 .sub-title span {
     display: block;
 }
+.scrapping-map {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: fit-content;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgb(36 39 37 / 30%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid rgb(237, 237, 237); /* Border besar */
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    margin-top: -10%;
+}
+
+.scrapping-map:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Shadow saat hover */
+    transform: scale(1.02); /* Sedikit memperbesar efek */
+}
+
 
 .about-video-img {
     position: relative;
@@ -1126,7 +1147,9 @@ p {
     font-size: medium;
     padding: 0px 20px; /* Tambahkan padding agar teks tidak terlalu rapat dengan tepi */
 }
-.button-filter:hover, .button-add-testimonial:hover, .button-add:hover{
+.button-filter:hover,
+.button-add-testimonial:hover,
+.button-add:hover {
     background: linear-gradient(145deg, #e3a92b, #ffc933);
 }
 .button-add {
@@ -1174,6 +1197,7 @@ p {
 /* ****************** */
 
 .book-table {
+    margin-top: 100px;
     overflow: hidden;
 }
 
@@ -2098,7 +2122,14 @@ iframe {
     }
 }
 
-@media (max-width: 991px) {      
+@media (max-width: 991px) {
+    .book-table {
+        margin-top: 200px;
+        overflow: hidden;
+    }
+    .dropdown-menu {
+        left: 0;
+    }
     .js-parallax-scene {
         display: none;
     }
@@ -2829,6 +2860,9 @@ iframe {
 }
 
 @media (max-width: 400px) {
+    .header-logo a {
+        font-size: 20px;
+    }
     .container,
     .container-fluid {
         padding: 0 15px;
@@ -2949,7 +2983,7 @@ input[type="number"] {
 
 .cancel-button:hover {
     background-color: #ffbc00;
-    color: #fff
+    color: #fff;
 }
 
 .submit-button:hover {

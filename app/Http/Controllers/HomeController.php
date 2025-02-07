@@ -35,6 +35,7 @@ class HomeController extends Controller
                     $q->where('title', $typeFilter);
                 });
             })
+            ->take(6)
             ->get();
 
         // Hitung rata-rata rating untuk setiap bisnis

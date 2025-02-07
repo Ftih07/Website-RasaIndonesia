@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +49,7 @@
                                     <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
                                     <li> @guest('testimonial')
                                         <!-- Jika belum login -->
-                                        <button type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
+                                        <button class="button-filter" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
                                             Login
                                         </button>
                                         @else
@@ -90,6 +92,12 @@
                     <div class="sec-wp">
                         <div class="container">
                             <div class="row">
+                                <div class="col-lg-12 text-center mb-4">
+                                    <div class="logo-container">
+                                        <img src="{{ asset('assets/images/logo/Logo-ICAV.png') }}" alt="Logo 1" class="logo mx-3" style="width: 80px; height: auto;">
+                                        <img src="{{ asset('assets/images/logo/Logo-Atdag-Canberra.png') }}" alt="Logo 2" class="logo mx-3" style="width: 100px; height: auto;">
+                                    </div>
+                                </div>
                                 <div class="col-lg-12">
                                     <div class="sec-title text-center mb-5">
                                         <p class="sec-sub-title mb-3">Store & Restaurant</p>
@@ -161,13 +169,19 @@
 
                             <!-- Store and Restaurant Items -->
                             <div class="menu-list-row">
+                                @if($businesses->isEmpty())
+                                <div class="alert alert-warning text-center">
+                                    Data not found
+                                </div>
+                                @else
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                     @foreach($businesses as $business)
                                     <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}"
                                         data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
                                             <div class="dist-img">
-                                                <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->name_business }}">
+                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
+                                                    alt="{{ $business->name_business }}">
                                             </div>
                                             <div class="dish-rating">
                                                 {{ number_format($business->average_rating, 1) }}
@@ -214,7 +228,9 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                @endif
                             </div>
+
                         </div>
                     </div>
                 </section>
