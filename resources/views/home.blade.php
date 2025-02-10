@@ -624,8 +624,8 @@
             function initMap() {
                 // Inisialisasi peta dengan posisi default
                 const defaultLocation = {
-                    lat: -6.889836,
-                    lng: 109.675185
+                    lat: -37.827920,
+                    lng: 144.960900
                 }; // Sesuaikan dengan lokasi default Anda
                 const map = new google.maps.Map(document.getElementById("map"), {
                     center: DEFAULT_LOCATION,
@@ -653,29 +653,57 @@
                                     // Tambahkan InfoWindow
                                     const infoWindow = new google.maps.InfoWindow({
                                         content: `
-        <div class="card-marker">
-            <img src="image.png" alt="${business.name}">
-            <div class="card-content">
-                <div class="card-title">${business.name}</div>
-                <div class="rating">
-                    ${renderStars(business.average_rating)} 
-                    <span>${business.average_rating.toFixed(1)}</span>
-                    <span>(${business.total_responses} reviews)</span> <!-- Tambahkan jumlah respon -->
-                </div>
-                <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
-                <div class="debug">${JSON.stringify(business)}</div>
-            </div>
-        </div>
-    `,
+                                            <div class="card-marker">
+                                                <div class="gallery-swiper">
+                                                    <div class="swiper-container">
+                                                        <div class="swiper-wrapper">
+                                                            ${business.galleries.map(gallery => `
+                                                                <div class="swiper-slide">
+                                                                    <img src="${gallery.image}" alt="${gallery.title}" />
+                                                                </div>
+                                                            `).join('')}
+                                                        </div>
+                                                        <!-- Tombol navigasi -->
+                                                        <div class="swiper-button-next"></div>
+                                                        <div class="swiper-button-prev"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-title">${business.name}</div>
+                                                    <div class="rating">
+                                                        ${renderStars(business.average_rating)}
+                                                        <span>${business.average_rating.toFixed(1)}</span>
+                                                        <span>(${business.total_responses} reviews)</span>
+                                                    </div>
+                                                    <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
+                                                </div>
+                                            </div>
+                                        `,
+                                        maxWidth: 300,
                                     });
+
+                                    // Inisialisasi Swiper setelah info window terbuka
+                                    new google.maps.event.addListener(marker, 'click', function() {
+                                        setTimeout(() => {
+                                            new Swiper('.swiper-container', {
+                                                navigation: {
+                                                    nextEl: '.swiper-button-next',
+                                                    prevEl: '.swiper-button-prev',
+                                                },
+                                                loop: true,
+                                            });
+                                        }, 500); // Tunggu hingga DOM tersedia
+                                    });
+
 
                                     // Helper function untuk render bintang
                                     function renderStars(rating) {
-                                        const stars = Math.round(rating); // Bulatkan rating ke integer
-                                        const fullStars = '&#9733;'.repeat(stars); // Bintang penuh
-                                        const emptyStars = '&#9734;'.repeat(5 - stars); // Sisa bintang kosong
-                                        return `${fullStars}${emptyStars}`; // Gabungkan
+                                        const stars = Math.round(rating);
+                                        const fullStars = '&#9733;'.repeat(stars);
+                                        const emptyStars = '&#9734;'.repeat(5 - stars);
+                                        return `${fullStars}${emptyStars}`;
                                     }
+
 
 
 

@@ -49,7 +49,7 @@ class HomeController extends Controller
 
     public function getNearbyBusinesses()
     {
-        $businesses = Business::with(['type', 'testimonials']) // Load relasi
+        $businesses = Business::with(['type', 'testimonials', 'galleries']) // Load relasi
             ->get()
             ->map(function ($business) {
                 $averageRating = $business->testimonials->count() > 0
@@ -67,6 +67,13 @@ class HomeController extends Controller
                     ],
                     'average_rating' => round($averageRating, 1), // Format angka desimal
                     'total_responses' => $business->testimonials->count(), // Tambahkan jumlah respon
+                    'galleries' => $business->galleries->map(function ($gallery) {
+                        return [
+                            'title' => $gallery->title,
+                            'image_path' => $gallery->image, // Periksa apa yang disimpan di kolom ini
+                            'image' => asset('storage/' . $gallery->image), // Ganti 'storage' sesuai lokasi gambar
+                        ];
+                    }),
                 ];
             });
 
