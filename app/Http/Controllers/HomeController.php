@@ -47,6 +47,32 @@ class HomeController extends Controller
         return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter'));
     }
 
+    public function getNearbyBusinesses()
+    {
+        $businesses = Business::with(['type', 'testimonials']) // Load relasi
+            ->get()
+            ->map(function ($business) {
+                $averageRating = $business->testimonials->count() > 0
+                    ? $business->testimonials->avg('rating') // Hitung rata-rata rating
+                    : 0; // Default 0 jika tidak ada rating
+
+                return [
+                    'id' => $business->id,
+                    'name' => $business->name,
+                    'latitude' => $business->latitude,
+                    'longitude' => $business->longitude,
+                    'type' => [
+                        'id' => optional($business->type)->id,
+                        'title' => optional($business->type)->title ?? 'N/A',
+                    ],
+                    'average_rating' => round($averageRating, 1), // Format angka desimal
+                    'total_responses' => $business->testimonials->count(), // Tambahkan jumlah respon
+                ];
+            });
+
+        return response()->json($businesses);
+    }
+
     public function tokorestoran(Request $request)
     {
         $query = Business::with('testimonials', 'food_categories', 'type');

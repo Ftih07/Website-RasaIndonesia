@@ -21,6 +21,8 @@ class Business extends Model
         'media_social',
         'location',
         'contact',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
@@ -32,12 +34,12 @@ class Business extends Model
 
     public function galleries()
     {
-        return $this->hasMany(GalleryBusiness::class);
+        return $this->hasMany(GalleryBusiness::class, 'business_id');
     }
 
     public function testimonials()
     {
-        return $this->hasMany(Testimonial::class);
+        return $this->hasMany(Testimonial::class, 'business_id');
     }
 
     public function products()
@@ -47,7 +49,7 @@ class Business extends Model
 
     public function type()
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsTo(Type::class, 'type_id');
     }
 
     public function food_categories()

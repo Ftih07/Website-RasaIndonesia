@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
@@ -227,13 +228,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <section class="about-sec section" id="about">
+                            <section class="about-sec section">
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-lg-8 m-auto">
                                             <div class="about-video">
                                                 <div class="scrapping-map">
-                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29728377.412354566!2d111.77457453068746!3d-24.556309703217245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2b2bfd076787c5df%3A0x538267a1955b1352!2sAustralia!5e0!3m2!1sid!2sid!4v1738851741815!5m2!1sid!2sid" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                                    <div id="map" style="width: 100%; height: 500px;"></div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -610,6 +612,94 @@
             });
         </script>
 
+        <script>
+            const GOOGLE_MAPS_API_KEY = "{{ config('services.google_maps.key') }}";
+            const DEFAULT_LOCATION = {
+                lat: -25.2744,
+                lng: 133.7751
+            }; // Lokasi default Australia
+
+            // Pastikan Anda sudah memuat Google Maps API sebelum menjalankan script ini
+
+            function initMap() {
+                // Inisialisasi peta dengan posisi default
+                const defaultLocation = {
+                    lat: -6.889836,
+                    lng: 109.675185
+                }; // Sesuaikan dengan lokasi default Anda
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    center: DEFAULT_LOCATION,
+                    zoom: 4,
+                });
+
+                // Fetch data bisnis dari API
+                fetch('/api/nearby-businesses')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('API Response:', data); // Debug seluruh respons dari API
+                        if (Array.isArray(data)) {
+                            data.forEach(business => {
+                                console.log('Adding marker for:', business.name); // Debug nama bisnis
+                                if (business.latitude && business.longitude) {
+                                    const marker = new google.maps.Marker({
+                                        position: {
+                                            lat: parseFloat(business.latitude),
+                                            lng: parseFloat(business.longitude),
+                                        },
+                                        map: map,
+                                        title: business.name,
+                                    });
+
+                                    // Tambahkan InfoWindow
+                                    const infoWindow = new google.maps.InfoWindow({
+                                        content: `
+        <div class="card-marker">
+            <img src="image.png" alt="${business.name}">
+            <div class="card-content">
+                <div class="card-title">${business.name}</div>
+                <div class="rating">
+                    ${renderStars(business.average_rating)} 
+                    <span>${business.average_rating.toFixed(1)}</span>
+                    <span>(${business.total_responses} reviews)</span> <!-- Tambahkan jumlah respon -->
+                </div>
+                <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
+                <div class="debug">${JSON.stringify(business)}</div>
+            </div>
+        </div>
+    `,
+                                    });
+
+                                    // Helper function untuk render bintang
+                                    function renderStars(rating) {
+                                        const stars = Math.round(rating); // Bulatkan rating ke integer
+                                        const fullStars = '&#9733;'.repeat(stars); // Bintang penuh
+                                        const emptyStars = '&#9734;'.repeat(5 - stars); // Sisa bintang kosong
+                                        return `${fullStars}${emptyStars}`; // Gabungkan
+                                    }
+
+
+
+                                    // Tampilkan InfoWindow saat marker diklik
+                                    marker.addListener("click", () => {
+                                        infoWindow.open(map, marker);
+                                    });
+                                } else {
+                                    console.warn('Skipping business without coordinates:', business);
+                                }
+                            });
+                        } else {
+                            console.error('Invalid response format:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching businesses:', error);
+                    });
+            }
+
+            // Inisialisasi peta setelah halaman dimuat
+            window.onload = initMap;
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&callback=initMap"></script>
 
     </body>
 </body>

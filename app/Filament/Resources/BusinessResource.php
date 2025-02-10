@@ -93,7 +93,22 @@ class BusinessResource extends Resource
                     ->required(),
 
                 Forms\Components\TextInput::make('location')
-                    ->label('Business Location'),
+                    ->label('Google Maps Link')
+                    ->required()
+                    ->reactive(),
+                    
+                Forms\Components\TextInput::make('latitude')
+                    ->label('Latitude')
+                    ->nullable()
+                    ->reactive()
+                    ->placeholder('Enter latitude manually'),
+
+                Forms\Components\TextInput::make('longitude')
+                    ->label('Longitude')
+                    ->nullable()
+                    ->reactive()
+                    ->placeholder('Enter longitude manually'),
+
 
                 Forms\Components\TextInput::make('iframe_url')
                     ->label('Iframe Business Location')
