@@ -29,7 +29,9 @@ Route::get('/nearby-businesses', function (Request $request) {
         $businesses = DB::table('businesses')
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->get();
+            ->get()
+            ->toArray(); // Pastikan data dikonversi ke array
+
     }
 
     return response()->json($businesses);

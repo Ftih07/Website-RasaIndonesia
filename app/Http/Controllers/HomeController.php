@@ -47,38 +47,46 @@ class HomeController extends Controller
         return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter'));
     }
 
-    public function getNearbyBusinesses()
+    public function getNearbyBusinesses(Request $request)
     {
-        $businesses = Business::with(['type', 'testimonials', 'galleries']) // Load relasi
-            ->get()
-            ->map(function ($business) {
-                $averageRating = $business->testimonials->count() > 0
-                    ? $business->testimonials->avg('rating') // Hitung rata-rata rating
-                    : 0; // Default 0 jika tidak ada rating
-
-                return [
-                    'id' => $business->id,
-                    'name' => $business->name,
-                    'latitude' => $business->latitude,
-                    'longitude' => $business->longitude,
-                    'type' => [
-                        'id' => optional($business->type)->id,
-                        'title' => optional($business->type)->title ?? 'N/A',
-                    ],
-                    'average_rating' => round($averageRating, 1), // Format angka desimal
-                    'total_responses' => $business->testimonials->count(), // Tambahkan jumlah respon
-                    'galleries' => $business->galleries->map(function ($gallery) {
-                        return [
-                            'title' => $gallery->title,
-                            'image_path' => $gallery->image, // Periksa apa yang disimpan di kolom ini
-                            'image' => asset('storage/' . $gallery->image), // Ganti 'storage' sesuai lokasi gambar
-                        ];
-                    }),
-                ];
-            });
-
+        $latitude = $request->query('lat');
+        $longitude = $request->query('lng');
+    
+        $query = Business::with(['type', 'testimonials', 'galleries']);
+    
+        if ($latitude && $longitude) {
+            $query->selectRaw("
+                *, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) 
+                * cos(radians(longitude) - radians(?)) + sin(radians(?)) 
+                * sin(radians(latitude)))) AS distance", [$latitude, $longitude, $latitude])
+                ->having('distance', '<', 10)
+                ->orderBy('distance');
+        }
+    
+        $businesses = $query->get()->map(function ($business) {
+            return [
+                'id' => $business->id,
+                'name' => $business->name,
+                'latitude' => $business->latitude,
+                'longitude' => $business->longitude,
+                'type' => [
+                    'id' => optional($business->type)->id,
+                    'title' => optional($business->type)->title ?? 'N/A',
+                ],
+                'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1),
+                'total_responses' => $business->testimonials->count(),
+                'galleries' => $business->galleries->map(function ($gallery) {
+                    return [
+                        'title' => $gallery->title,
+                        'image' => asset('storage/' . $gallery->image),
+                    ];
+                }),
+            ];
+        });
+    
         return response()->json($businesses);
     }
+    
 
     public function tokorestoran(Request $request)
     {

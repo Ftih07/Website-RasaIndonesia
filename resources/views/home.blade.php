@@ -596,6 +596,7 @@
         <script src="assets/js/smooth-scroll.js"></script>
         <!-- custom js  -->
         <script src="assets/main.js"></script>
+
         <script>
             function toggleDropdown() {
                 const menu = document.getElementById('dropdownMenu');
@@ -613,115 +614,251 @@
         </script>
 
         <script>
-            const GOOGLE_MAPS_API_KEY = "{{ config('services.google_maps.key') }}";
-            const DEFAULT_LOCATION = {
-                lat: -25.2744,
-                lng: 133.7751
-            }; // Lokasi default Australia
-
-            // Pastikan Anda sudah memuat Google Maps API sebelum menjalankan script ini
-
             function initMap() {
-                // Inisialisasi peta dengan posisi default
+                // Inisialisasi peta dengan posisi default (Melbourne)
                 const defaultLocation = {
-                    lat: -37.827920,
-                    lng: 144.960900
-                }; // Sesuaikan dengan lokasi default Anda
+                    lat: -25.6545305,
+                    lng: 133.9214759
+                };
+
                 const map = new google.maps.Map(document.getElementById("map"), {
-                    center: DEFAULT_LOCATION,
+                    center: defaultLocation,
                     zoom: 4,
                 });
 
-                // Fetch data bisnis dari API
-                fetch('/api/nearby-businesses')
+                addLocationButton(map);
+
+                function addLocationButton(map) {
+                    const locationButton = document.createElement("button");
+
+                    locationButton.textContent = "📍 Lokasi Saya";
+                    locationButton.classList.add("custom-map-control-button");
+
+                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
+
+                    locationButton.addEventListener("click", () => {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const userLocation = {
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude,
+                                    };
+
+                                    map.setCenter(userLocation);
+                                    map.setZoom(15);
+                                },
+                                () => {
+                                    alert("Gagal mendapatkan lokasi.");
+                                }
+                            );
+                        } else {
+                            alert("Browser Anda tidak mendukung geolokasi.");
+                        }
+                    });
+                }
+
+
+                // Coba dapatkan lokasi pengguna
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        console.log("User Location:", userLocation);
+
+                        // Pindahkan peta ke lokasi pengguna
+                        map.setCenter(userLocation);
+                        map.setZoom(14);
+
+                        // Tambahkan marker biru untuk lokasi pengguna
+                        const userMarker = new google.maps.Marker({
+                            position: userLocation,
+                            map: map,
+                            title: "Your Location",
+                            icon: {
+                                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Marker biru
+                            }
+                        });
+
+                        // Tambahkan lingkaran transparan di sekitar lokasi pengguna
+                        const userCircle = new google.maps.Circle({
+                            strokeColor: "#007bff",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: "#007bff",
+                            fillOpacity: 0.35,
+                            map,
+                            center: userLocation,
+                            radius: 300, // Radius dalam meter
+                        });
+
+                        // Ambil data bisnis terdekat dari backend
+                        fetchNearbyBusinesses(userLocation, map);
+
+                    }, () => {
+                        console.warn("Lokasi pengguna tidak dapat diakses, menggunakan lokasi default.");
+                        fetchNearbyBusinesses(null, map);
+                    });
+                } else {
+                    console.warn("Geolocation tidak didukung oleh browser ini.");
+                    fetchNearbyBusinesses(null, map);
+                }
+            }
+
+            // Fungsi untuk mengambil bisnis terdekat berdasarkan lokasi
+            function fetchNearbyBusinesses(location, map) {
+                let url = "/api/nearby-businesses";
+
+                // Cek apakah location tersedia
+                if (location && location.lat && location.lng) {
+                    url += `?lat=${location.lat}&lng=${location.lng}`;
+                }
+
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        console.log('API Response:', data); // Debug seluruh respons dari API
-                        if (Array.isArray(data)) {
-                            data.forEach(business => {
-                                console.log('Adding marker for:', business.name); // Debug nama bisnis
-                                if (business.latitude && business.longitude) {
-                                    const marker = new google.maps.Marker({
-                                        position: {
-                                            lat: parseFloat(business.latitude),
-                                            lng: parseFloat(business.longitude),
-                                        },
-                                        map: map,
-                                        title: business.name,
-                                    });
+                        console.log("Data dari API:", data); // Debugging
 
-                                    // Tambahkan InfoWindow
-                                    const infoWindow = new google.maps.InfoWindow({
-                                        content: `
-                                            <div class="card-marker">
-                                                <div class="gallery-swiper">
-                                                    <div class="swiper-container">
-                                                        <div class="swiper-wrapper">
-                                                            ${business.galleries.map(gallery => `
-                                                                <div class="swiper-slide">
-                                                                    <img src="${gallery.image}" alt="${gallery.title}" />
-                                                                </div>
-                                                            `).join('')}
-                                                        </div>
-                                                        <!-- Tombol navigasi -->
-                                                        <div class="swiper-button-next"></div>
-                                                        <div class="swiper-button-prev"></div>
+                        if (!Array.isArray(data) || data.length === 0) {
+                            console.warn("Data restoran kosong atau format tidak sesuai");
+                            return;
+                        }
+
+                        data.forEach(business => {
+                            if (business.latitude && business.longitude) {
+                                console.log("Menambahkan marker:", business.name); // Debugging
+
+                                const marker = new google.maps.Marker({
+                                    position: {
+                                        lat: parseFloat(business.latitude),
+                                        lng: parseFloat(business.longitude),
+                                    },
+                                    map: map,
+                                    title: business.name,
+                                    label: {
+                                        text: business.name, // Nama bisnis di samping marker
+                                        color: "#fff", // Warna merah (bisa diganti)
+                                        fontSize: "14px",
+                                        fontWeight: "bold",
+                                        className: "marker-label", // Tambahkan kelas CSS untuk styling tambahan
+                                    },
+                                });
+
+
+
+                                // Pastikan ini ada di bagian paling atas atau sebelum tombol digunakan
+                                window.getDirections = function(lat, lng) {
+                                    if ("geolocation" in navigator) {
+                                        navigator.geolocation.getCurrentPosition(
+                                            (position) => {
+                                                const userLat = position.coords.latitude;
+                                                const userLng = position.coords.longitude;
+                                                const url = `https://www.google.com/maps/dir/${userLat},${userLng}/${lat},${lng}`;
+                                                window.open(url, "_blank");
+                                            },
+                                            (error) => {
+                                                console.error("Error mendapatkan lokasi: ", error);
+                                                alert("Gagal mendapatkan lokasi Anda. Pastikan izin lokasi diaktifkan.");
+                                            }
+                                        );
+                                    } else {
+                                        alert("Geolokasi tidak didukung di browser Anda.");
+                                    }
+                                };
+
+
+                                const infoWindow = new google.maps.InfoWindow({
+                                    content: `
+                                        <div class="card-marker">
+                                            <div class="gallery-swiper">
+                                                <div class="swiper-container">
+                                                    <div class="swiper-wrapper">
+                                                        ${business.galleries.map(gallery => `
+                                                            <div class="swiper-slide">
+                                                                <img src="${gallery.image}" alt="${gallery.title}" />
+                                                            </div>
+                                                        `).join('')}
                                                     </div>
-                                                </div>
-                                                <div class="card-content">
-                                                    <div class="card-title">${business.name}</div>
-                                                    <div class="rating">
-                                                        ${renderStars(business.average_rating)}
-                                                        <span>${business.average_rating.toFixed(1)}</span>
-                                                        <span>(${business.total_responses} reviews)</span>
-                                                    </div>
-                                                    <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
+                                                    <!-- Tombol navigasi -->
+                                                    <div class="swiper-button-next"></div>
+                                                    <div class="swiper-button-prev"></div>
                                                 </div>
                                             </div>
-                                        `,
-                                        maxWidth: 300,
-                                    });
+                                            <div class="card-content">
+                                                <div class="card-title">${business.name}</div>
+                                                <div class="rating">
+                                                    ${renderStars(business.average_rating)}
+                                                    <span>${business.average_rating.toFixed(1)}</span>
+                                                    <span>(${business.total_responses} reviews)</span>
+                                                </div>
+                                                <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
+                                                <div class="details-button">
+                                                    <a href="/business/${business.id}" target="_blank" class="btn-details">
+                                                        Details
+                                                    </a>
+                                                </div>
+                                                <div class="map-buttons">
+                                                    <!-- Tombol untuk rute dari lokasi user ke bisnis -->
+                                                    <button onclick="getDirections(${business.latitude}, ${business.longitude})" class="btn-route">
+                                                        Rute ke sini
+                                                    </button>
+                                                    <!-- Tombol untuk lihat lokasi di Google Maps -->
+                                                    <a href="https://www.google.com/maps?q=${business.latitude},${business.longitude}" target="_blank" class="btn-view-map">
+                                                        Lihat di Google Maps
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `,
+                                    maxWidth: 300,
+                                });
 
-                                    // Inisialisasi Swiper setelah info window terbuka
-                                    new google.maps.event.addListener(marker, 'click', function() {
-                                        setTimeout(() => {
-                                            new Swiper('.swiper-container', {
-                                                navigation: {
-                                                    nextEl: '.swiper-button-next',
-                                                    prevEl: '.swiper-button-prev',
-                                                },
-                                                loop: true,
-                                            });
-                                        }, 500); // Tunggu hingga DOM tersedia
-                                    });
-
-
-                                    // Helper function untuk render bintang
-                                    function renderStars(rating) {
-                                        const stars = Math.round(rating);
-                                        const fullStars = '&#9733;'.repeat(stars);
-                                        const emptyStars = '&#9734;'.repeat(5 - stars);
-                                        return `${fullStars}${emptyStars}`;
-                                    }
+                                // Fungsi untuk mendapatkan rute ke lokasi bisnis
 
 
 
 
-                                    // Tampilkan InfoWindow saat marker diklik
-                                    marker.addListener("click", () => {
-                                        infoWindow.open(map, marker);
-                                    });
-                                } else {
-                                    console.warn('Skipping business without coordinates:', business);
+                                // Inisialisasi Swiper setelah info window terbuka
+                                new google.maps.event.addListener(marker, 'click', function() {
+                                    setTimeout(() => {
+                                        new Swiper('.swiper-container', {
+                                            navigation: {
+                                                nextEl: '.swiper-button-next',
+                                                prevEl: '.swiper-button-prev',
+                                            },
+                                            loop: true,
+                                        });
+                                    }, 500); // Tunggu hingga DOM tersedia
+                                });
+
+
+                                // Helper function untuk render bintang
+                                function renderStars(rating) {
+                                    const stars = Math.round(rating);
+                                    const fullStars = '&#9733;'.repeat(stars);
+                                    const emptyStars = '&#9734;'.repeat(5 - stars);
+                                    return `${fullStars}${emptyStars}`;
                                 }
-                            });
-                        } else {
-                            console.error('Invalid response format:', data);
-                        }
+
+                                marker.addListener("click", () => {
+                                    infoWindow.open(map, marker);
+                                });
+                            }
+                        });
                     })
                     .catch(error => {
-                        console.error('Error fetching businesses:', error);
+                        console.error("Error mengambil data restoran:", error);
                     });
+            }
+
+
+            // Fungsi render rating bintang
+            function renderStars(rating) {
+                const stars = Math.round(rating);
+                return "★".repeat(stars) + "☆".repeat(5 - stars);
             }
 
             // Inisialisasi peta setelah halaman dimuat
