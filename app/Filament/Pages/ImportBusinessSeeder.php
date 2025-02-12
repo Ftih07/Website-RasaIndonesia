@@ -6,6 +6,7 @@ use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use App\Models\Business;
+use App\Models\Type;
 
 class ImportBusinessSeeder extends Page
 {
@@ -17,11 +18,22 @@ class ImportBusinessSeeder extends Page
     protected static ?string $title = 'Import Business Data';
 
     public $json_file;
+    public $selectedTypeId;
+
+    public function mount()
+    {
+        $this->selectedTypeId = null;
+    }
 
     public function importData()
     {
         if (!$this->json_file) {
             session()->flash('message', 'Please upload a JSON file first.');
+            return;
+        }
+
+        if (!$this->selectedTypeId) {
+            session()->flash('message', 'Please select a business type.');
             return;
         }
 
@@ -40,7 +52,7 @@ class ImportBusinessSeeder extends Page
         // Import data ke database
         foreach ($data as $row) {
             Business::create([
-                'type_id' => 1,
+                'type_id' => $this->selectedTypeId,
                 'name' => $row['Place_name'] ?? 'Unknown',
                 'address' => $row['Address1'] ?? null,
                 'location' => $row['Location'] ?? null,
@@ -58,5 +70,10 @@ class ImportBusinessSeeder extends Page
         }
 
         session()->flash('message', 'Data imported successfully!');
+    }
+
+    public function getTypesProperty()
+    {
+        return Type::all();
     }
 }
