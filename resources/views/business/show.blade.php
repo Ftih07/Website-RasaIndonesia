@@ -509,8 +509,13 @@
                             <div class="testimonials-box">
                                 <div class="testimonial-box-top">
                                     <div class="testimonials-box-img back-img"
-                                        style="background-image: url({{ $testimonial->testimonial_user->profile_picture ? Storage::url($testimonial->testimonial_user->profile_picture) : asset('assets/images/testimonials/t1.jpg') }});">
+                                        style="background-image: url({{ 
+        isset($testimonial->testimonial_user) && $testimonial->testimonial_user->profile_picture 
+        ? Storage::url($testimonial->testimonial_user->profile_picture) 
+        : asset('assets/images/testimonials/t1.jpg') 
+    }});">
                                     </div>
+
                                     <div class="star-rating-wp">
                                         <div class="star-rating">
                                             <span class="star-rating__fill" style="width:{{ $testimonial->rating * 20 }}%"></span>
@@ -518,7 +523,10 @@
                                     </div>
                                 </div>
                                 <div class="testimonials-box-text">
-                                    <h3 class="h3-title">{{ $testimonial->testimonial_user->username }}</h3>
+                                    <h3 class="h3-title">
+                                        {{ isset($testimonial->testimonial_user) ? $testimonial->testimonial_user->username : $testimonial->name }}
+                                    </h3>
+
                                     <p>{{ $testimonial->description }}</p>
                                 </div>
                             </div>

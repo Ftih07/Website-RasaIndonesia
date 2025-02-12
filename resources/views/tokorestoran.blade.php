@@ -142,7 +142,7 @@
                                                         <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>All Types</option>
                                                         @foreach ($businessTypes as $type)
                                                         <option value="{{ strtolower($type->title) }}"
-                                                            {{ request('type') == strtolower($type->title) ? 'selected' : '' }}>
+                                                            {{ request('type') == strtolower($type->title) ? 'selected' : 's' }}>
                                                             {{ $type->title }}
                                                         </option>
                                                         @endforeach
