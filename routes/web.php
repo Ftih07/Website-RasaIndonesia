@@ -43,8 +43,3 @@ Route::post('/testimonial/logout', [TestimonialAuthController::class, 'logout'])
 
 Route::get('/profile/edit', [TestimonialAuthController::class, 'editProfile'])->name('testimonial.profile.edit');
 Route::post('/profile/update', [TestimonialAuthController::class, 'updateProfile'])->name('testimonial.profile.update');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/upload-business', [BusinessController::class, 'showUploadForm']);
-    Route::post('/upload-business', [BusinessController::class, 'processUpload']);
-});

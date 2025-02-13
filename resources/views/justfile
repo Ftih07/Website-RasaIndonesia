@@ -1,169 +1,44 @@
-function fetchNearbyBusinesses(location, map) {
-    let url = "/api/nearby-businesses";
+public function showUploadForm()
+{
+    return view('upload-business');
+}
 
-    // Cek apakah location tersedia
-    if (location && location.lat && location.lng) {
-        url += `?lat=${location.lat}&lng=${location.lng}`;
+public function processUpload(Request $request)
+{
+    $request->validate([
+        'json_file' => 'required|mimes:json|max:2048',
+    ]);
+
+    // Simpan file JSON ke storage
+    $path = $request->file('json_file')->store('json_uploads');
+
+    // Baca file yang sudah diupload
+    $jsonData = Storage::get($path);
+    $data = json_decode($jsonData, true);
+
+    if (!$data) {
+        return back()->with('error', 'File JSON tidak valid.');
     }
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Data dari API:", data); // Debugging
+    // Simpan ke database
+    foreach ($data as $row) {
+        Business::create([
+            'type_id' => 1,
+            'name' => $row['Place_name'],
+            'address' => $row['Address1'],
+            'location' => $row['Location'],
+            'latitude' => $row['Latitude'] ?? null,
+            'longitude' => $row['Longitude'] ?? null,
+            'description' => null,
+            'logo' => null,
+            'open_hours' => null,
+            'services' => null,
+            'menu' => null,
+            'media_social' => null,
+            'iframe_url' => null,
+            'contact' => null,
+        ]);
+    }
 
-            if (!Array.isArray(data) || data.length === 0) {
-                console.warn("Data restoran kosong atau format tidak sesuai");
-                return;
-            }
-
-            data.forEach(business => {
-                if (business.latitude && business.longitude) {
-                    console.log("Menambahkan marker:", business.name); // Debugging
-
-                    const marker = new google.maps.Marker({
-                        position: {
-                            lat: parseFloat(business.latitude),
-                            lng: parseFloat(business.longitude),
-                        },
-                        map: map,
-                        title: business.name,
-                    });
-
-                    // Custom Label di Samping Marker
-                    class CustomLabel extends google.maps.OverlayView {
-                        constructor(position, business, map) {
-                            super();
-                            this.position = position;
-                            this.business = business;
-                            this.map = map;
-                            this.div = null;
-                            this.setMap(map);
-                        }
-
-                        onAdd() {
-                            this.div = document.createElement("div");
-                            this.div.className = "custom-marker-label";
-                            this.div.innerHTML = `
-                                <div class="marker-container">
-                                    <img src="assets/images/icon-business.png" class="marker-icon" />
-                                    <span class="marker-text">${this.business.name}</span>
-                                </div>
-                            `;
-                            this.getPanes().overlayMouseTarget.appendChild(this.div);
-                        }
-
-                        draw() {
-                            const projection = this.getProjection();
-                            if (!projection) return;
-
-                            const position = projection.fromLatLngToDivPixel(this.position);
-                            this.div.style.left = `${position.x}px`;
-                            this.div.style.top = `${position.y}px`;
-                        }
-
-                        onRemove() {
-                            if (this.div) {
-                                this.div.parentNode.removeChild(this.div);
-                                this.div = null;
-                            }
-                        }
-                    }
-
-                    new CustomLabel(
-                        new google.maps.LatLng(business.latitude, business.longitude),
-                        business,
-                        map
-                    );
-
-                    // Fungsi mendapatkan rute ke lokasi bisnis
-                    window.getDirections = function (lat, lng) {
-                        if ("geolocation" in navigator) {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const userLat = position.coords.latitude;
-                                    const userLng = position.coords.longitude;
-                                    const url = `https://www.google.com/maps/dir/${userLat},${userLng}/${lat},${lng}`;
-                                    window.open(url, "_blank");
-                                },
-                                (error) => {
-                                    console.error("Error mendapatkan lokasi: ", error);
-                                    alert("Gagal mendapatkan lokasi Anda. Pastikan izin lokasi diaktifkan.");
-                                }
-                            );
-                        } else {
-                            alert("Geolokasi tidak didukung di browser Anda.");
-                        }
-                    };
-
-                    // InfoWindow untuk setiap marker
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: `
-                            <div class="card-marker">
-                                <div class="gallery-swiper">
-                                    <div class="swiper-container">
-                                        <div class="swiper-wrapper">
-                                            ${business.galleries.map(gallery => `
-                                                <div class="swiper-slide">
-                                                    <img src="${gallery.image}" alt="${gallery.title}" />
-                                                </div>
-                                            `).join('')}
-                                        </div>
-                                        <div class="swiper-button-next"></div>
-                                        <div class="swiper-button-prev"></div>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-title">${business.name}</div>
-                                    <div class="rating">
-                                        ${renderStars(business.average_rating)}
-                                        <span>${business.average_rating.toFixed(1)}</span>
-                                        <span>(${business.total_responses} reviews)</span>
-                                    </div>
-                                    <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
-                                    <div class="details-button">
-                                        <a href="/business/${business.id}" target="_blank" class="btn-details">
-                                            <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                            Details
-                                        </a>
-                                    </div>
-                                    <div class="map-buttons">
-                                        <button onclick="getDirections(${business.latitude}, ${business.longitude})" class="btn-route">
-                                            Rute ke sini
-                                        </button>
-                                        <a href="https://www.google.com/maps?q=${business.latitude},${business.longitude}" target="_blank" class="btn-view-map">
-                                            Lihat di Google Maps
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `,
-                        maxWidth: 300,
-                    });
-
-                    marker.addListener("click", () => {
-                        infoWindow.open(map, marker);
-                        setTimeout(() => {
-                            new Swiper('.swiper-container', {
-                                navigation: {
-                                    nextEl: '.swiper-button-next',
-                                    prevEl: '.swiper-button-prev',
-                                },
-                                loop: true,
-                            });
-                        }, 500);
-                    });
-
-                    // Fungsi untuk membuat bintang rating
-                    function renderStars(rating) {
-                        const stars = Math.round(rating);
-                        const fullStars = '&#9733;'.repeat(stars);
-                        const emptyStars = '&#9734;'.repeat(5 - stars);
-                        return `${fullStars}${emptyStars}`;
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error("Error mengambil data restoran:", error);
-        });
+    return back()->with('success', 'Data berhasil diimport!');
 }

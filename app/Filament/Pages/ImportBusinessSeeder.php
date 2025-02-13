@@ -15,7 +15,7 @@ class ImportBusinessSeeder extends Page
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static string $view = 'filament.pages.import-business-seeder';
     protected static ?string $navigationLabel = 'Import Business JSON';
-    protected static ?string $title = 'Import Business Data';
+    protected static ?string $title = 'Import Business Data Scraper';
 
     public $json_file;
     public $selectedTypeId;
