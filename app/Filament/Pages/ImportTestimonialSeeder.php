@@ -10,53 +10,73 @@ use Illuminate\Support\Facades\Storage;
 
 class ImportTestimonialSeeder extends Page
 {
-    use WithFileUploads;
+    use WithFileUploads; // Enables file upload functionality
 
+    // Navigation icon for Filament panel
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    // Defines the Blade view associated with this page
     protected static string $view = 'filament.pages.import-testimonial-seeder';
+
+    // Navigation label in the sidebar
     protected static ?string $navigationLabel = 'Import Testimonials';
+
+    // Page title
     protected static ?string $title = 'Import Testimonial Data';
 
-    public $json_file;
-    public $business_id;
+    public $json_file; // Variable to store uploaded JSON file
+    public $business_id; // Variable to store selected business ID
 
+    /**
+     * Handles the process of importing testimonial data from a JSON file.
+     */
     public function importData()
     {
+        // Check if both a file and a business ID are provided
         if (!$this->json_file || !$this->business_id) {
             session()->flash('message', 'Please select a business and upload a JSON file first.');
             return;
         }
-    
-        // Simpan file JSON ke storage
-        $filePath = $this->json_file->store('json-uploads'); // Laravel akan menyimpannya ke `storage/app/json-uploads`
-    
+
+        // Store the uploaded JSON file in `storage/app/json-uploads`
+        $filePath = $this->json_file->store('json-uploads');
+
+        // Ensure the file was successfully saved
         if (!$filePath || !Storage::exists($filePath)) {
             session()->flash('message', 'Failed to save file.');
             return;
         }
-    
-        // Baca file JSON dari storage
+
+        // Read the stored JSON file
         $jsonData = Storage::get($filePath);
         $data = json_decode($jsonData, true);
-    
+
+        // Validate JSON format
         if (!is_array($data)) {
             session()->flash('message', 'Invalid JSON format.');
             return;
         }
-    
+
+        // Loop through each row and insert data into the `testimonials` table
         foreach ($data as $row) {
             Testimonial::create([
-                'business_id' => $this->business_id,
-                'testimonial_user_id' => null,
-                'name' => $row['author_title'],
-                'description' => $row['review_text'] ?? 'No review text',
-                'rating' => $row['rating'] ?? 0,
+                'business_id' => $this->business_id, // Associate with selected business
+                'testimonial_user_id' => null, // No user ID provided
+                'name' => $row['author_title'], // Author name
+                'description' => $row['review_text'] ?? 'No review text', // Review text with fallback
+                'rating' => $row['rating'] ?? 0, // Rating with default value
             ]);
         }
-    
+
+        // Flash success message
         session()->flash('message', 'Testimonials imported successfully!');
     }
-    
+
+    /**
+     * Fetches available businesses and returns them as an array of options.
+     *
+     * return array Associative array of business names mapped to their IDs.
+     */
     protected function getBusinessOptions(): array
     {
         return Business::pluck('name', 'id')->toArray();
