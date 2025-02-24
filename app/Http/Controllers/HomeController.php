@@ -12,23 +12,23 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    //
+    // Display the 'show' view
     public function show()
     {
-        // Kirim data ke view
         return view('show');
     }
 
+    // Display the home page with filtered businesses
     public function home(Request $request)
     {
         $galleries = Gallery::all();
         $qna = QnA::all();
         $types = Type::all();
 
-        // Ambil filter tipe dari request (default 'all' jika tidak ada filter)
+        // Get type filter from request (default: 'all')
         $typeFilter = $request->get('type', 'all');
 
-        // Query bisnis dengan filter tipe
+        // Query businesses based on type filter
         $businesses = Business::with('testimonials', 'type')
             ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
                 $query->whereHas('type', function ($q) use ($typeFilter) {
@@ -38,31 +38,35 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        // Hitung rata-rata rating untuk setiap bisnis
+        // Calculate the average rating for each business
         foreach ($businesses as $business) {
             $business->average_rating = $business->testimonials->avg('rating') ?? 0;
         }
 
-        // Kirim data ke view
         return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter'));
     }
 
+    // Get nearby businesses based on latitude and longitude
     public function getNearbyBusinesses(Request $request)
     {
+        // Retrieve latitude and longitude from query parameters
         $latitude = $request->query('lat');
         $longitude = $request->query('lng');
-    
+
+        // Initialize query with related models
         $query = Business::with(['type', 'testimonials', 'galleries']);
-    
+
+        // If latitude and longitude are provided, calculate distance
         if ($latitude && $longitude) {
             $query->selectRaw("
                 *, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) 
                 * cos(radians(longitude) - radians(?)) + sin(radians(?)) 
                 * sin(radians(latitude)))) AS distance", [$latitude, $longitude, $latitude])
-                ->having('distance', '<', 10)
-                ->orderBy('distance');
+                ->having('distance', '<', 10) // Filter businesses within a 10 km radius
+                ->orderBy('distance'); // Order results by distance (nearest first)
         }
-    
+
+        // Retrieve businesses and format response
         $businesses = $query->get()->map(function ($business) {
             return [
                 'id' => $business->id,
@@ -71,47 +75,48 @@ class HomeController extends Controller
                 'longitude' => $business->longitude,
                 'type' => [
                     'id' => optional($business->type)->id,
-                    'title' => optional($business->type)->title ?? 'N/A',
+                    'title' => optional($business->type)->title ?? 'N/A', // Handle missing type
                 ],
-                'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1),
-                'total_responses' => $business->testimonials->count(),
+                'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1), // Calculate average rating
+                'total_responses' => $business->testimonials->count(), // Count total testimonials
                 'galleries' => $business->galleries->map(function ($gallery) {
                     return [
                         'title' => $gallery->title,
-                        'image' => asset('storage/' . $gallery->image),
+                        'image' => asset('storage/' . $gallery->image), // Convert image path to URL
                     ];
                 }),
             ];
         });
-    
+
+        // Return JSON response with business data
         return response()->json($businesses);
     }
-    
 
+    // Display businesses filtered by category, type, and keyword search
     public function tokorestoran(Request $request)
     {
         $query = Business::with('testimonials', 'food_categories', 'type');
 
-        // Filter berdasarkan kategori makanan
+        // Filter by food category
         if ($request->filled('category') && $request->category !== 'all') {
             $query->whereHas('food_categories', function ($q) use ($request) {
                 $q->where('title', $request->category);
             });
         }
 
-        // Filter berdasarkan jenis bisnis
+        // Filter by business type
         if ($request->filled('type') && $request->type !== 'all') {
             $query->whereHas('type', function ($q) use ($request) {
                 $q->where('title', $request->type);
             });
         }
 
-        // Pencarian berdasarkan nama
+        // Search by name
         if ($request->filled('keyword')) {
             $query->where('name', 'like', '%' . $request->keyword . '%');
         }
 
-        // Sorting data
+        // Sort businesess
         if ($request->filled('sort')) {
             $order = $request->sort === 'oldest' ? 'asc' : 'desc';
             $query->orderBy('created_at', $order);
@@ -119,12 +124,12 @@ class HomeController extends Controller
 
         $businesses = $query->get();
 
-        // Hitung rata-rata rating
+        // Calculate average rating for each business
         foreach ($businesses as $business) {
             $business->average_rating = $business->testimonials->avg('rating') ?? 0;
         }
 
-        // Ambil kategori makanan dan jenis bisnis untuk dropdown
+        // Get food categories and business types for dropdowns
         $foodCategories = FoodCategory::all();
         $businessTypes = Type::all();
 

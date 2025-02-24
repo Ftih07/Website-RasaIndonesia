@@ -14,64 +14,72 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\SelectFilter;
 
-
+// Defining a resource class for Business entity
 class BusinessResource extends Resource
 {
+    // Specifies the Eloquent model associated with this resource
     protected static ?string $model = Business::class;
 
+    // Sets the navigation icon for the resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    // Defines the form structure for creating and editing Business records
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                // Select field for business type with a relationship to 'type' table
                 Forms\Components\Select::make('type_id')
                     ->label('Type Business')
                     ->relationship('type', 'title')
                     ->required(),
 
+                // Multi-select field for food categories related to the business
                 Forms\Components\Select::make('food_categories')
                     ->label('Food Categories in Business')
-                    ->relationship('food_categories', 'title') // Menggunakan relasi many-to-many
-                    ->multiple() // Mendukung multi-select
-                    ->preload()
-                    ->required(),
+                    ->relationship('food_categories', 'title') // Many-to-many relationship
+                    ->multiple()
+                    ->preload(),
 
-
+                // Text input for business name
                 Forms\Components\TextInput::make('name')
                     ->label('Business Name')
                     ->required(),
 
+                // Textarea input for business description
                 Forms\Components\Textarea::make('description')
-                    ->label('Business Description')
-                    ->required(),
+                    ->label('Business Description'),
 
+                // File upload input for business logo
                 Forms\Components\FileUpload::make('logo')
                     ->label('Logo')
                     ->directory('logos'),
 
+                // Textarea input for business address
                 Forms\Components\Textarea::make('address')
                     ->label('Address')
                     ->required(),
 
+                // Key-value input for specifying business open hours
                 Forms\Components\KeyValue::make('open_hours')
                     ->label('Open Hours')
                     ->keyLabel('Day')
-                    ->valueLabel('Hours')
-                    ->required(),
+                    ->valueLabel('Hours'),
 
+                // Checkbox list for business services
                 Forms\Components\CheckboxList::make('services')
                     ->label('Services')
                     ->options([
                         'Dine In' => 'Dine In',
                         'Delivery' => 'Delivery',
-                    ])
-                    ->required(),
+                    ]),
 
+                // File upload input for menu list
                 Forms\Components\FileUpload::make('menu')
                     ->label('Menu List')
                     ->directory('menu'),
 
+                // Repeater for social media accounts
                 Forms\Components\Repeater::make('media_social')
                     ->label('Social Media')
                     ->schema([
@@ -89,14 +97,14 @@ class BusinessResource extends Resource
                             ->url()
                             ->required(),
                     ])
-                    ->columns(2)
-                    ->required(),
+                    ->columns(2),
 
+                // Text inputs for business location and Google Maps details
                 Forms\Components\TextInput::make('location')
                     ->label('Google Maps Link')
                     ->required()
                     ->reactive(),
-                    
+
                 Forms\Components\TextInput::make('latitude')
                     ->label('Latitude')
                     ->nullable()
@@ -109,12 +117,12 @@ class BusinessResource extends Resource
                     ->reactive()
                     ->placeholder('Enter longitude manually'),
 
-
+                // Text input for iframe embedding business location
                 Forms\Components\TextInput::make('iframe_url')
                     ->label('Iframe Business Location')
-                    ->maxLength(2048) // Mengatur panjang maksimum karakter
-                    ->required(), // Opsional
+                    ->maxLength(2048),
 
+                // Repeater for contact details
                 Forms\Components\Repeater::make('contact')
                     ->label('Contact')
                     ->schema([
@@ -131,11 +139,9 @@ class BusinessResource extends Resource
                             ->label('Link or Number Contact')
                             ->required(),
                     ])
-                    ->columns(2) // Untuk tata letak form
-                    ->required(),
+                    ->columns(2),
 
-
-                // Gallery Business Form
+                // Gallery section for business images
                 Forms\Components\Repeater::make('galleries')
                     ->label('Gallery')
                     ->relationship('galleries')
@@ -180,18 +186,17 @@ class BusinessResource extends Resource
             ]);
     }
 
+    // Defines the table structure for displaying business records
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('address')->limit(50),
                 Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
             ->filters([
-                //
                 SelectFilter::make('type_id')
                     ->label('Type Business')
                     ->relationship('type', 'title')

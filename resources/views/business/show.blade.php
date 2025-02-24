@@ -7,7 +7,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Rasa Indonesia</title>
+    <title>Taste of Indonesia</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fancybox.min.css') }}">
 
     <!-- custom css  -->
-    @vite('resources/css/app.css')
+    @vite('resources/css/show.css')
 
 </head>
 
@@ -335,7 +335,6 @@
         </div>
     </section>
 
-
     <section class="newsletter-sec section pt-0">
         <div class="sec-wp">
             <div class="container">
@@ -512,7 +511,7 @@
                                         style="background-image: url({{ 
         isset($testimonial->testimonial_user) && $testimonial->testimonial_user->profile_picture 
         ? Storage::url($testimonial->testimonial_user->profile_picture) 
-        : asset('assets/images/testimonials/t1.jpg') 
+        : asset('assets/images/testimonials/profile.png') 
     }});">
                                     </div>
 
@@ -633,7 +632,7 @@
                         <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($otherBusiness->type->title ?? 'all') }}" data-cat="{{ strtolower($otherBusiness->type->title ?? 'all') }}">
                             <div class="dish-box text-center">
                                 <div class="dist-img">
-                                    <img src="{{ asset('storage/' . $otherBusiness->logo) }}" alt="{{ $otherBusiness->name }}">
+                                    <img src="{{ $otherBusiness->logo ? asset('storage/' . $otherBusiness->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $otherBusiness->name }}">
                                 </div>
                                 <div class="dish-rating">
                                     {{ number_format($otherBusiness->average_rating, 1) }}

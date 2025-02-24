@@ -2,14 +2,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Rasa Indonesia</title>
+    <title>Taste of Indonesia</title>
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
@@ -20,11 +19,64 @@
     <!-- fancy box  -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- custom css  -->
-    @vite('resources/css/app.css')
+    @vite('resources/css/home.css')
 
 </head>
 
 <body class="body-fixed">
+    <!-- Overlay Countdown -->
+    <div id="countdown-overlay" class="overlay">
+        <div class="countdown-container">
+            <!-- LOGO SECTION -->
+            <div class="logo-section">
+                <img src="assets/images/logo/Logo-Atdag-Canberra-background.png" alt="Atase Perdagangan Canberra" />
+                <img src="assets/images/logo/Logo-ICAV-background.png" alt="ICAV" />
+            </div>
+
+            <!-- LAUNCHING TEXT -->
+            <p class="launching-text">LAUNCHING SOON WEBSITE</p>
+
+            <!-- TITLE -->
+            <h1 class="title">
+                <span class="highlight">Taste</span> of Indonesia
+            </h1>
+
+            <!-- COUNTDOWN -->
+            <div id="countdown"></div>
+
+            <!-- BUTTONS -->
+            <div class="buttons">
+                <button id="enter-button" class="btn btn-enter" onclick="hideCountdown()">
+                    Enter Website
+                </button>
+                <a href="#" class="btn btn-try" onclick="hideCountdown()">
+                    Try Now
+                </a>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <p class="description">
+                Taste of Indonesia is a web-based platform that provides information
+                about various stores and restaurants that serve Indonesian food across
+                Australia.
+            </p>
+
+            <!-- EVENT INFO -->
+            <div class="event-info">
+                <span>📅 22–23 March <br> 10 AM–4 PM</span> |
+                <span>📍 Queen Victoria Market C &amp; D Shed</span> |
+                <span>📦 Indonesia Street Food Festival</span>
+            </div>
+
+            <!-- COLLABORATION -->
+            <p class="collaboration">
+                In collaboration with <br />
+                MELBOURNE FOOD &amp; WINE SPECIAL EVENTS 2025
+            </p>
+        </div>
+    </div>
+
+
     <!-- start of header  -->
     <header class="site-header">
         <div class="container">
@@ -594,6 +646,61 @@
     <script src="assets/js/smooth-scroll.js"></script>
     <!-- custom js  -->
     <script src="assets/main.js"></script>
+    <script>
+        let autoHideTimer; // Variabel untuk menyimpan timer auto-hide
+
+        function updateCountdown() {
+            const launchDate = new Date('March 22, 2025 11:00:00 GMT+11').getTime();
+            const now = new Date().getTime();
+            const timeLeft = launchDate - now;
+
+            if (timeLeft <= 0) {
+                // Countdown selesai
+                document.getElementById('countdown').innerText = "The website is live!";
+                document.getElementById('enter-button').style.display = 'inline-block';
+                startAutoHide(); // Mulai timer auto-hide 3 detik
+            } else {
+                // Countdown masih berjalan
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                document.getElementById('countdown').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        // Fungsi untuk memulai timer auto-hide setelah countdown selesai
+        function startAutoHide() {
+            // Pastikan timer hanya dimulai satu kali
+            if (!autoHideTimer) {
+                autoHideTimer = setTimeout(() => {
+                    hideCountdown();
+                }, 3000);
+            }
+        }
+
+        // Fungsi untuk menghilangkan overlay
+        function hideCountdown() {
+            document.getElementById('countdown-overlay').style.display = 'none';
+        }
+
+        // Jika user mengklik tombol "Try Now", langsung hilangkan overlay dan batalkan timer auto-hide (jika ada)
+        document.querySelector('.btn.btn-try').addEventListener('click', (e) => {
+            e.preventDefault();
+            clearTimeout(autoHideTimer);
+            hideCountdown();
+        });
+
+        // Jika user mengklik tombol "Enter Website", langsung hilangkan overlay dan batalkan timer auto-hide (jika ada)
+        document.getElementById('enter-button').addEventListener('click', () => {
+            clearTimeout(autoHideTimer);
+            hideCountdown();
+        });
+
+        // Mulai countdown
+        updateCountdown();
+    </script>
 
     <script>
         function toggleDropdown() {
@@ -780,9 +887,8 @@
                                                             </div>
                                                         `).join('')}
                                                     </div>
-                                                    <!-- Tombol navigasi -->
-                                                    <div class="swiper-button-next"></div>
-                                                    <div class="swiper-button-prev"></div>
+                                                    <!-- Pagination kustom -->
+                                                    <div class="swiper-pagination-maps"></div>
                                                 </div>
                                             </div>
                                             <div class="card-content">
@@ -793,21 +899,28 @@
                                                     <span>(${business.total_responses} reviews)</span>
                                                 </div>
                                                 <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
-                                                <div class="details-button">
-                                                    <a href="/business/${business.id}" target="_blank" class="btn-details">
+                                                    <div class="buttons-maps">
+                                                    <a
+                                                        href="/business/${business.id}"
+                                                        target="_blank"
+                                                        class="btn-maps btn-details"
+                                                    >
                                                         Details
                                                     </a>
-                                                </div>
-                                                <div class="map-buttons">
-                                                    <!-- Tombol untuk rute dari lokasi user ke bisnis -->
-                                                    <button onclick="getDirections(${business.latitude}, ${business.longitude})" class="btn-route">
+                                                    <button
+                                                        onclick="getDirections(${business.latitude}, ${business.longitude})"
+                                                        class="btn-maps btn-route"
+                                                    >
                                                         Directions
                                                     </button>
-                                                    <!-- Tombol untuk lihat lokasi di Google Maps -->
-                                                    <a href="https://www.google.com/maps?q=${business.latitude},${business.longitude}" target="_blank" class="btn-view-map">
+                                                    <a
+                                                        href="https://www.google.com/maps?q=${business.latitude},${business.longitude}"
+                                                        target="_blank"
+                                                        class="btn-maps btn-view-map"
+                                                    >
                                                         View in Google Maps
                                                     </a>
-                                                </div>
+                                                    </div>
                                             </div>
                                         </div>
                                     `,
