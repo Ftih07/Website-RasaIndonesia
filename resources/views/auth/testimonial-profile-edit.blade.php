@@ -55,6 +55,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Edit Form  -->
     <section>
         <div class="form-box">
             <div class="form-value">
@@ -131,6 +133,7 @@
             </div>
         </div>
     </section>
+    
     <!-- footer starts  -->
     <footer class="site-footer">
         <div class="bottom-footer">
@@ -212,16 +215,21 @@
         nomodule
         src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
     <script>
+        /**
+         * Toggle Password Visibility
+         * This function toggles the visibility of the password input field.
+         * It also changes the icon to indicate whether the password is visible or hidden.
+         */
         function togglePassword() {
-            const passwordInput = document.getElementById("password");
-            const toggleIcon = document.getElementById("togglePassword");
+            const passwordInput = document.getElementById("password"); // Get the password input field
+            const toggleIcon = document.getElementById("togglePassword"); // Get the toggle icon
 
             if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.setAttribute("name", "eye-outline"); // Mata terbuka
+                passwordInput.type = "text"; // Show password
+                toggleIcon.setAttribute("name", "eye-outline"); // Change icon to open eye
             } else {
-                passwordInput.type = "password";
-                toggleIcon.setAttribute("name", "eye-off-outline"); // Mata tertutup
+                passwordInput.type = "password"; // Hide password
+                toggleIcon.setAttribute("name", "eye-off-outline"); // Change icon to closed eye
             }
         }
     </script>

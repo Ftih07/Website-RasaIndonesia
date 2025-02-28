@@ -8,29 +8,31 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * This method creates the businesses table with various attributes.
      */
     public function up(): void
     {
         Schema::create('businesses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('type_id')->constrained('types')->cascadeOnDelete();
-            $table->string('name');
-            $table->text('description');
-            $table->string('logo')->nullable();
-            $table->text('address');
-            $table->string('iframe_url', 500);
-            $table->json('open_hours');
-            $table->json('services');
-            $table->string('menu')->nullable(); 
-            $table->json('media_social');
-            $table->string('location')->nullable();
-            $table->json('contact');
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->foreignId('type_id')->constrained('types')->cascadeOnDelete(); // Foreign key to types table
+            $table->string('name'); // Business name
+            $table->text('description'); // Business description
+            $table->string('logo')->nullable(); // Optional logo
+            $table->text('address'); // Business address
+            $table->string('iframe_url', 500); // Embedded map URL
+            $table->json('open_hours'); // JSON field for open hours
+            $table->json('services'); // JSON field for services offered
+            $table->string('menu')->nullable(); // Optional menu URL or path
+            $table->json('media_social'); // JSON field for social media links
+            $table->string('location')->nullable(); // Optional location description
+            $table->json('contact'); // JSON field for contact details
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 
     /**
      * Reverse the migrations.
+     * Drops the businesses table if it exists.
      */
     public function down(): void
     {

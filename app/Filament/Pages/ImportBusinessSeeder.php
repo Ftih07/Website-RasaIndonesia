@@ -19,7 +19,7 @@ class ImportBusinessSeeder extends Page
     protected static string $view = 'filament.pages.import-business-seeder';
 
     // Set the navigation label displayed in the sidebar.
-    protected static ?string $navigationLabel = 'Import Business JSON';
+    protected static ?string $navigationLabel = 'Import Business Seeder';
 
     // Set the page title.
     protected static ?string $title = 'Import Business Data Scraper';

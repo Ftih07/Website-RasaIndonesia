@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creates the galleries table
         Schema::create('galleries', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('image');
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->string('title'); // Title of the gallery item
+            $table->string('image'); // Image URL or path
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

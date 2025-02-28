@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creates the testimonial_users table
         Schema::create('testimonial_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('profile_picture')->nullable();
-            $table->timestamps(); 
+            $table->id(); // Primary key
+            $table->string('username')->unique(); // Unique username for authentication
+            $table->string('password'); // Encrypted password
+            $table->string('profile_picture')->nullable(); // Optional profile picture
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

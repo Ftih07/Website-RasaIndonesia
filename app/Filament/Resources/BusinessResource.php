@@ -20,6 +20,9 @@ class BusinessResource extends Resource
     // Specifies the Eloquent model associated with this resource
     protected static ?string $model = Business::class;
 
+    protected static ?string $navigationGroup = 'Business';
+    protected static ?int $navigationSort = 2;
+
     // Sets the navigation icon for the resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

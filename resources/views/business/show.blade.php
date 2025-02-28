@@ -13,9 +13,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
-
-
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
@@ -27,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fancybox.min.css') }}">
 
     <!-- custom css  -->
-    @vite('resources/css/show.css')
+    <link rel="stylesheet" href="{{ asset('assets/css/show.css') }}">
 
 </head>
 
@@ -136,6 +133,7 @@
         </div>
     </section>
 
+    <!-- Business Overview  -->
     <section class="book-table section bg-light">
         <div class="book-table-shape">
             <img src="{{ asset('assets/images/table-leaves-shape.png') }}" alt="">
@@ -244,6 +242,7 @@
 
     </section>
 
+    <!-- Catalogue Menu  -->
     <section style="background-image: url(assets/images/menu-bg.png);"
         class="our-menu section bg-light repeat-img" id="menu">
         <div class="sec-wp">
@@ -335,6 +334,7 @@
         </div>
     </section>
 
+    <!-- Contact business  -->
     <section class="newsletter-sec section pt-0">
         <div class="sec-wp">
             <div class="container">
@@ -445,6 +445,7 @@
 
     </section>
 
+    <!-- Testimonial -->
     <section class="testimonials section bg-light">
         <div class="sec-wp">
             <div class="container">
@@ -560,7 +561,7 @@
 
     </section>
 
-    <!-- Modal -->
+    <!-- Modal Add Testimonial -->
     <div id="customModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -587,7 +588,7 @@
         </div>
     </div>
 
-
+    <!-- Other Businesses  -->
     <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
         <div class="sec-wp">
             <div class="container">
@@ -685,8 +686,7 @@
         </div>
     </section>
 
-
-
+    <!-- Contact Want to add your business  -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
 
@@ -721,7 +721,7 @@
     </div>
 
     <!-- footer starts  -->
-    <footer class="site-footer" id="contact">
+    <footer class="site-footer">
         <div class="top-footer section">
             <div class="sec-wp">
                 <div class="container">
@@ -740,18 +740,23 @@
                                 <div class="social-icon">
                                     <ul>
                                         <li>
-                                            <a href="#">
+                                            <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
                                                 <i class="uil uil-facebook-f"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
                                                 <i class="uil uil-instagram"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
                                                 <i class="uil uil-youtube"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                                <i class="fab fa-tiktok"></i>
                                             </a>
                                         </li>
                                     </ul>
@@ -763,11 +768,11 @@
                                 <div class="footer-menu food-nav-menu">
                                     <h3 class="h3-title">Site Navigation</h3>
                                     <ul class="column-2">
-                                        <li><a href="#about">Home</a></li>
+                                        <li><a href="#home" class="footer-active-menu">Home</a></li>
                                         <li><a href="#about">About Us</a></li>
                                         <li><a href="#menu">Store & Restaurant</a></li>
                                         <li><a href="#gallery">Gallery</a></li>
-                                        <li><a href="#blog">QnA</a></li>
+                                        <li><a href="#qna">QnA</a></li>
                                         <li><a href="#contact">Contact Us</a></li>
                                     </ul>
                                 </div>
@@ -775,18 +780,18 @@
                                     <h3 class="h3-title">Contact Support</h3>
                                     <ul>
                                         <div class="info-container">
-                                            <div class="info-item">
-                                                <i class="uil uil-location-point"></i>
-                                                <p>tanya-atdag.au</p>
-                                            </div>
-                                            <div class="info-item">
-                                                <i class="uil uil-utensils"></i>
-                                                <p>+62021858171</p>
-                                            </div>
-                                            <div class="info-item">
-                                                <i class="uil uil-utensils"></i>
-                                                <p>tanya-atdag.au@gmail.com</p>
-                                            </div>
+                                            <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                <div class="info-item">
+                                                    <i class="uil uil-globe"></i>
+                                                    <p>tanya-atdag.au</p>
+                                                </div>
+                                            </a>
+                                            <a href="mailto:atase.perdagangan@gmail.com">
+                                                <div class="info-item">
+                                                    <i class="uil uil-envelope"></i>
+                                                    <p>atase.perdagangan@gmail.com</p>
+                                                </div>
+                                            </a>
                                         </div>
                                     </ul>
                                 </div>
@@ -801,7 +806,7 @@
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <div class="copyright-text">
-                            <p>Copyright &copy; 2025 <span class="name">Taste</span> of Indonesia. All Rights Reserved.
+                            <p>Copyright &copy; 2025 <span class="name">Taste </span>of Indonesia. All Rights Reserved.
                             </p>
                         </div>
                     </div>
@@ -810,7 +815,6 @@
             </div>
         </div>
     </footer>
-
 
     <script
         type="module"
@@ -862,9 +866,13 @@
     <script src="{{ asset('assets/main.js') }}"></script>
 
     <script>
+        /**
+         * Swiper Initialization
+         * This initializes the Swiper carousel for testimonials with responsive settings.
+         */
         var swiper = new Swiper('.swiper-container', {
-            slidesPerView: 4, // Tampilkan 4 testimonial
-            spaceBetween: 30, // Jarak antar testimonial
+            slidesPerView: 4, // Display 4 testimonials by default
+            spaceBetween: 30, // Space between testimonials
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -875,23 +883,30 @@
             },
             breakpoints: {
                 1024: {
-                    slidesPerView: 3, // Tampilan 3 testimonial pada layar besar
+                    slidesPerView: 3, // Show 3 testimonials on large screens
                 },
                 768: {
-                    slidesPerView: 2, // Tampilan 2 testimonial pada layar medium
+                    slidesPerView: 2, // Show 2 testimonials on medium screens
                 },
                 480: {
-                    slidesPerView: 1, // Tampilan 1 testimonial pada layar kecil
+                    slidesPerView: 1, // Show 1 testimonial on small screens
                 }
             }
         });
 
+        /**
+         * Toggle Dropdown Menu
+         * This function toggles the visibility of the dropdown menu.
+         */
         function toggleDropdown() {
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Menutup dropdown saat klik di luar area dropdown
+        /**
+         * Close Dropdown Menu on Outside Click
+         * This event listener closes the dropdown if a click occurs outside the profile image.
+         */
         window.addEventListener('click', function(event) {
             const dropdown = document.getElementById('dropdownMenu');
             const profileImage = document.querySelector('.profile-image');
@@ -900,28 +915,41 @@
             }
         });
 
+        /**
+         * Modal Handling
+         * Handles the opening and closing of the custom modal for adding testimonials.
+         */
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('customModal');
-            const openButton = document.querySelector('.button-add-testimonial'); // Tombol untuk membuka modal
-            const closeButton = modal.querySelector('.close-button');
-            const cancelButton = modal.querySelector('.cancel-button');
+            const openButton = document.querySelector('.button-add-testimonial'); // Button to open modal
+            const closeButton = modal.querySelector('.close-button'); // Close button
+            const cancelButton = modal.querySelector('.cancel-button'); // Cancel button
 
-            // Fungsi untuk membuka modal
+            /**
+             * Open Modal
+             * Displays the modal when the add testimonial button is clicked.
+             */
             const openModal = () => {
                 modal.style.display = 'block';
             };
 
-            // Fungsi untuk menutup modal
+            /**
+             * Close Modal
+             * Hides the modal when the close or cancel button is clicked.
+             */
             const closeModal = () => {
                 modal.style.display = 'none';
             };
 
-            // Event listener
+            // Add event listeners for opening and closing modal
             openButton.addEventListener('click', openModal);
             closeButton.addEventListener('click', closeModal);
             cancelButton.addEventListener('click', closeModal);
 
-            // Tutup modal jika klik di luar konten
+            /**
+             * Close Modal on Outside Click
+             * Closes the modal when clicking outside the modal content.
+             */
             window.addEventListener('click', (event) => {
                 if (event.target === modal) {
                     closeModal();
@@ -931,26 +959,33 @@
     </script>
 
     <script>
+        /**
+         * Swiper Initialization
+         * This script initializes the Swiper slider with pagination, navigation, and looping functionality.
+         */
         const swiper = new Swiper('.swiper-container', {
             pagination: {
-                el: '.swiper-pagination',
-                clickable: true
+                el: '.swiper-pagination', // Enables pagination dots
+                clickable: true // Allows clicking on pagination dots to navigate
             },
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
+                nextEl: '.swiper-button-next', // Next slide button
+                prevEl: '.swiper-button-prev' // Previous slide button
             },
-            loop: true,
+            loop: true, // Enables infinite loop
         });
     </script>
 
     <script>
+        /**
+         * PDF Viewer Button
+         * Redirects users to the PDF file when the "View PDF" button is clicked.
+         */
         document.getElementById('viewPdfButton').addEventListener('click', function() {
-            const pdfUrl = "{{ asset('storage/' . $business->menu) }}"; // URL langsung ke file PDF
-            window.location.href = pdfUrl; // Redirect ke halaman baru
+            const pdfUrl = "{{ asset('storage/' . $business->menu) }}"; // Direct URL to the PDF file
+            window.location.href = pdfUrl; // Redirects to a new page
         });
     </script>
-
 
 </body>
 

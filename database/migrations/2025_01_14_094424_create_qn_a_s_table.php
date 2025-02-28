@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creates the qn_a_s table
         Schema::create('qn_a_s', function (Blueprint $table) {
-            $table->id();
-            $table->string('question');
-            $table->string('answer');
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->string('question'); // Question field
+            $table->string('answer'); // Answer field
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

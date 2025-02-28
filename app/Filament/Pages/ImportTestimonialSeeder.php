@@ -19,10 +19,10 @@ class ImportTestimonialSeeder extends Page
     protected static string $view = 'filament.pages.import-testimonial-seeder';
 
     // Navigation label in the sidebar
-    protected static ?string $navigationLabel = 'Import Testimonials';
+    protected static ?string $navigationLabel = 'Import Testimonials Seeder';
 
     // Page title
-    protected static ?string $title = 'Import Testimonial Data';
+    protected static ?string $title = 'Import Testimonial Data Scraper';
 
     public $json_file; // Variable to store uploaded JSON file
     public $business_id; // Variable to store selected business ID

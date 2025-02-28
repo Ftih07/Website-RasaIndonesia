@@ -1,6 +1,7 @@
 $(document).ready(function ($) {
     "use strict";
 
+    // Initialize Swiper for book table image slider
     var book_table = new Swiper(".book-table-img-slider", {
         slidesPerView: 1,
         spaceBetween: 20,
@@ -29,6 +30,7 @@ $(document).ready(function ($) {
         },
     });
 
+    // Initialize Swiper for team slider
     var team_slider = new Swiper(".team-slider", {
         slidesPerView: 3,
         spaceBetween: 30,
@@ -38,7 +40,6 @@ $(document).ready(function ($) {
             disableOnInteraction: false,
         },
         speed: 2000,
-
         navigation: {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
@@ -63,9 +64,12 @@ $(document).ready(function ($) {
         },
     });
 
+    // Remove default class from menu-dish when filters are clicked
     jQuery(".filters").on("click", function () {
         jQuery("#menu-dish").removeClass("bydefault_show");
     });
+
+    // Initialize MixItUp for menu filtering
     $(function () {
         var filterList = {
             init: function () {
@@ -87,16 +91,17 @@ $(document).ready(function ($) {
         filterList.init();
     });
 
-    // Filter Toko & Restoran
-
+    // Toggle navigation menu
     jQuery(".menu-toggle").click(function () {
         jQuery(".main-navigation").toggleClass("toggled");
     });
 
+    // Close navigation menu when a menu item is clicked
     jQuery(".header-menu ul li a").click(function () {
         jQuery(".main-navigation").removeClass("toggled");
     });
 
+    // Register GSAP ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
 
     var elementFirst = document.querySelector(".site-header");
@@ -104,27 +109,28 @@ $(document).ready(function ($) {
         trigger: "body",
         start: "30px top",
         end: "bottom bottom",
-
         onEnter: () => myFunction(),
         onLeaveBack: () => myFunction(),
     });
 
+    // Toggle sticky header class
     function myFunction() {
         elementFirst.classList.toggle("sticky_head");
     }
 
+    // Initialize Parallax effect
     var scene = $(".js-parallax-scene").get(0);
     var parallaxInstance = new Parallax(scene);
 });
 
+// Event handler when the window is fully loaded
 jQuery(window).on("load", function () {
     $("body").removeClass("body-fixed");
 
-    //activating tab of filter
+    // Activate tab filter animation using GSAP
     let targets = document.querySelectorAll(".filter");
     let activeTab = 0;
     let old = 0;
-    let dur = 0.4;
     let animation;
 
     for (let i = 0; i < targets.length; i++) {
@@ -132,12 +138,13 @@ jQuery(window).on("load", function () {
         targets[i].addEventListener("click", moveBar);
     }
 
-    // initial position on first === All
+    // Set initial position of filter indicator
     gsap.set(".filter-active", {
         x: targets[0].offsetLeft,
         width: targets[0].offsetWidth,
     });
 
+    // Function to move the filter indicator
     function moveBar() {
         if (this.index != activeTab) {
             if (animation && animation.isActive()) {
@@ -175,11 +182,11 @@ jQuery(window).on("load", function () {
     }
 });
 
+// Event listener for updating active navigation menu on scroll
 document.addEventListener("DOMContentLoaded", function () {
-    const sections = document.querySelectorAll("section, footer"); // Ambil semua elemen section
-    const navLinks = document.querySelectorAll(".menu li a"); // Ambil semua elemen nav link
+    const sections = document.querySelectorAll("section, footer");
+    const navLinks = document.querySelectorAll(".menu li a");
 
-    // Fungsi untuk mengubah active menu saat scroll
     function updateActiveMenu() {
         let currentSection = "";
         sections.forEach((section) => {
@@ -191,16 +198,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         navLinks.forEach((link) => {
-            link.classList.remove("active-menu"); // Hapus class active dari semua menu
+            link.classList.remove("active-menu");
             if (link.getAttribute("href").substring(1) === currentSection) {
-                link.classList.add("active-menu"); // Tambahkan class active pada menu yang sesuai
+                link.classList.add("active-menu");
             }
         });
     }
 
-    // Event listener untuk scroll
+    // Listen for scroll event
     window.addEventListener("scroll", updateActiveMenu);
 
-    // Cek posisi awal saat halaman pertama kali dimuat
+    // Initialize menu highlighting
     updateActiveMenu();
 });

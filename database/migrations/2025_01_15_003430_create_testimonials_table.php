@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('testimonials', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
-            $table->foreignId('testimonial_user_id')->constrained('testimonial_users')->cascadeOnDelete();
-            $table->string('name');
-            $table->text('description');
-            $table->integer('rating')->unsigned();
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete(); // Foreign key to businesses table
+            $table->foreignId('testimonial_user_id')->constrained('testimonial_users')->cascadeOnDelete(); // Foreign key to testimonial_users table
+            $table->string('name'); // Name of the person giving the testimonial
+            $table->text('description'); // Testimonial text
+            $table->integer('rating')->unsigned(); // Rating (e.g., 1-5 stars)
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

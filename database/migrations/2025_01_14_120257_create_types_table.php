@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creates the types table
         Schema::create('types', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->string('title'); // Type title
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

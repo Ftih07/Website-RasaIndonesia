@@ -2,25 +2,30 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Taste of Indonesia</title>
+
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
     <!-- bootstrap  -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
     <!-- for swiper slider  -->
     <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
 
     <!-- fancy box  -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- custom css  -->
-    @vite('resources/css/home.css')
-
+    <link rel="stylesheet" href="assets/css/home.css">
 </head>
 
 <body class="body-fixed">
@@ -141,25 +146,29 @@
 
     <div id="viewport">
         <div id="js-scroll-content">
+
+            <!-- Hero - Main Banner -->
             <section class="main-banner" id="home">
                 <div class="js-parallax-scene">
+                    <!-- Parallax effect elements -->
                     <div class="banner-shape-1 w-100" data-depth="0.30">
-                        <img src="assets/images/berry.png" alt="">
+                        <img src="assets/images/berry.png" alt="Berry Shape">
                     </div>
                     <div class="banner-shape-2 w-100" data-depth="0.25">
-                        <img src="assets/images/leaf.png" alt="">
+                        <img src="assets/images/leaf.png" alt="Leaf Shape">
                     </div>
                 </div>
                 <div class="sec-wp">
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12 mb-4 logo">
-                                <!-- Tambahkan logo di sini -->
-                                <img src="assets/images/logo/Logo-ICAV.png" alt="Logo 1" class="logo mx-3" style="width: 160px; height: auto;">
-                                <img src="assets/images/logo/Logo-Atdag-Canberra.png" alt="Logo 2" class="logo mx-3" style="width: 240px; height: auto;">
+                                <!-- Logos Section -->
+                                <img src="assets/images/logo/Logo-ICAV.png" alt="ICAV Logo" class="logo mx-3" style="width: 160px; height: auto;">
+                                <img src="assets/images/logo/Logo-Atdag-Canberra.png" alt="Atdag Canberra Logo" class="logo mx-3" style="width: 240px; height: auto;">
                             </div>
                             <div class="col-lg-6">
                                 <div class="banner-text">
+                                    <!-- Main Banner Text -->
                                     <h1 class="h1-title">
                                         Welcome to Website
                                         <span>Taste</span>
@@ -170,6 +179,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="banner-img-wp">
+                                    <!-- Background Image Section -->
                                     <div class="banner-img" style="background-image: url(https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2024/07/16062938/Ragam-Makanan-Khas-Indonesia-yang-Lezat-dan-Kaya-Nutrisi.jpg.webp);">
                                     </div>
                                 </div>
@@ -179,43 +189,49 @@
                 </div>
             </section>
 
+            <!-- Section: Food Category -->
             <section class="book-table section bg-light">
+                <!-- Decorative Shapes for Aesthetic Design -->
                 <div class="book-table-shape">
-                    <img src="assets/images/table-leaves-shape.png" alt="">
+                    <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
                 </div>
-
                 <div class="book-table-shape book-table-shape2">
-                    <img src="assets/images/table-leaves-shape.png" alt="">
+                    <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
                 </div>
 
                 <div class="sec-wp">
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
+                                <!-- Section Title -->
                                 <div class="sec-title text-center mb-5">
                                     <p class="sec-sub-title mb-3">category</p>
                                     <h2 class="h2-title">Find Food<br>Category Easily</h2>
                                     <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="">
+                                        <img src="assets/images/title-shape.svg" alt="Title Shape">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Food Category Information -->
                         <div class="book-table-info">
                             <div class="row align-items-center">
+                                <!-- Authentic Category -->
                                 <div class="col-lg-4">
                                     <div class="call-now-side table-title text-center">
                                         <i class="uil uil-coffee icon"></i>
                                         <h3>Authentic</h3>
                                     </div>
                                 </div>
+                                <!-- Halal Category -->
                                 <div class="col-lg-4">
                                     <div class="call-now text-center">
                                         <i class="uil uil-moon icon"></i>
                                         <h3>Halal</h3>
                                     </div>
                                 </div>
+                                <!-- Traditional Category -->
                                 <div class="col-lg-4">
                                     <div class="call-now-side table-title text-center">
                                         <i class="uil uil-utensils icon"></i>
@@ -224,17 +240,16 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
             </section>
 
+            <!-- Section: About Us -->
             <section class="about-sec section" id="about">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
+                            <!-- Section Title -->
                             <div class="sec-title text-center mb-5">
                                 <p class="sec-sub-title mb-3">About Us</p>
                                 <div class="about_us">
@@ -244,16 +259,17 @@
                                     </h2>
                                 </div>
                                 <div class="sec-title-shape mb-4">
-                                    <img src="assets/images/title-shape.svg" alt="">
+                                    <img src="assets/images/title-shape.svg" alt="Title Shape">
                                 </div>
-                                <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos. </p>
-                                <p>We've gathered information on restaurants, cafes and shops that serve Indonesian specialties, from rendang to satay to market snacks. Not only that, we also provide reviews, recommendations and guides to help you find the best places that serve authentic Indonesian delights.</p>
-
+                                <!-- Description of Taste of Indonesia -->
+                                <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.</p>
+                                <p>We've gathered information on restaurants, cafes, and shops that serve Indonesian specialties, from rendang to satay to market snacks. Not only that, we also provide reviews, recommendations, and guides to help you find the best places that serve authentic Indonesian delights.</p>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-8 m-auto">
+                            <!-- About Us Video Section -->
                             <div class="about-video">
                                 <div class="about-video-img" style="background-image: url(https://blog.bankmega.com/wp-content/uploads/2022/11/Makanan-Khas-Tradisional.jpg);">
                                 </div>
@@ -263,21 +279,24 @@
                 </div>
             </section>
 
-            <section style="background-image: url(assets/images/menu-bg.png);"
-                class="our-menu section bg-light repeat-img" id="menu">
+            <!-- Section: Store & Restaurant List -->
+            <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
                 <div class="sec-wp">
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
+                                <!-- Section Title -->
                                 <div class="sec-title text-center mb-5">
                                     <p class="sec-sub-title mb-3">Store & Restaurant</p>
-                                    <h2 class="h2-title">Find List of<span>Store & Restaurant Here!</span></h2>
+                                    <h2 class="h2-title">Find List of <span>Store & Restaurant Here!</span></h2>
                                     <div class="sec-title-shape mb-4">
                                         <img src="assets/images/title-shape.svg" alt="">
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Map Section -->
                         <section class="about-sec section">
                             <div class="container">
                                 <div class="row">
@@ -285,7 +304,6 @@
                                         <div class="about-video">
                                             <div class="scrapping-map">
                                                 <div id="map" style="width: 100%; height: 500px;"></div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -318,25 +336,27 @@
                             </div>
                         </div>
 
-                        <!-- Store and Restaurant Items -->
+                        <!-- Store and Restaurant Listings -->
                         <div class="menu-list-row">
                             <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                 @foreach($businesses as $business)
-                                <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}"
-                                    data-cat="{{ strtolower($business->type->title ?? 'all') }}">
+                                <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}" data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                     <div class="dish-box text-center">
+                                        <!-- Business Logo -->
                                         <div class="dist-img">
-                                            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
-                                                alt="{{ $business->name_business }}">
+                                            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}">
                                         </div>
+                                        <!-- Business Rating -->
                                         <div class="dish-rating">
                                             {{ number_format($business->average_rating, 1) }}
                                             <i class="uil uil-star"></i>
                                         </div>
+                                        <!-- Business Title -->
                                         <div class="dish-title">
                                             <h3 class="h3-title">{{ $business->name }}</h3>
-                                            <p>{{ $business->type->title ?? 'N/A' }}</p> <!-- Asumsi ada relasi type -->
+                                            <p>{{ $business->type->title ?? 'N/A' }}</p>
                                         </div>
+                                        <!-- Business Info -->
                                         <div class="info-container">
                                             <div class="info-item">
                                                 <i class="uil uil-location-point"></i>
@@ -353,6 +373,7 @@
                                         </div>
 
                                         <hr>
+                                        <!-- Business Actions -->
                                         <div class="menu-tab text-center">
                                             <ul>
                                                 <div class="filter-active-data"></div>
@@ -362,7 +383,7 @@
                                                         Details
                                                     </a>
                                                 </li>
-                                                <li class="">
+                                                <li>
                                                     <a href="{{ $business->location }}" target="_blank">
                                                         <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
                                                         Maps
@@ -376,13 +397,13 @@
                             </div>
                         </div>
 
+                        <!-- View All Button -->
                         <div class="button-container">
                             <a href="{{ route('tokorestoran') }}" class="view-all-button">View All</a>
                         </div>
                     </div>
                 </div>
             </section>
-
 
             <!-- Gallery  -->
             <section class="book-table section bg-light" id="gallery">
@@ -473,7 +494,7 @@
 
             </section>
 
-
+            <!-- Contact Want to add your business  -->
             <div class="bg-pattern bg-light repeat-img"
                 style="background-image: url(assets/images/blog-pattern-bg.png);">
 
@@ -492,12 +513,18 @@
                                                 </p>
                                             </div>
                                             <div class="contact-icons">
-                                                <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
-                                                <a href="mailto:your-email@example.com"><i class="uil uil-envelope"></i></a>
-                                                <a href="https://instagram.com/your-profile" target="_blank"><i class="uil uil-instagram"></i></a>
-                                                <a href="https://facebook.com/your-profile" target="_blank"><i class="uil uil-facebook"></i></a>
-                                                <a href="tel:+1234567890"><i class="uil uil-phone"></i></a>
-                                                <a href="https://t.me/your-profile" target="_blank"><i class="uil uil-telegram"></i></a>
+                                                <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
+                                                    <i class="uil uil-facebook-f"></i>
+                                                </a>
+                                                <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
+                                                    <i class="uil uil-instagram"></i>
+                                                </a>
+                                                <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
+                                                    <i class="uil uil-youtube"></i>
+                                                </a>
+                                                <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                                    <i class="fab fa-tiktok"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -528,18 +555,23 @@
                                         <div class="social-icon">
                                             <ul>
                                                 <li>
-                                                    <a href="#">
+                                                    <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
                                                         <i class="uil uil-facebook-f"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#">
+                                                    <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
                                                         <i class="uil uil-instagram"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#">
+                                                    <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
                                                         <i class="uil uil-youtube"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                                        <i class="fab fa-tiktok"></i>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -569,16 +601,10 @@
                                                             <p>tanya-atdag.au</p>
                                                         </div>
                                                     </a>
-                                                    <a href="https://tanya-atdag.au/en/" target="_blank">
-                                                        <div class="info-item">
-                                                            <i class="uil uil-phone"></i>
-                                                            <p>+62021858171</p>
-                                                        </div>
-                                                    </a>
-                                                    <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                    <a href="mailto:atase.perdagangan@gmail.com">
                                                         <div class="info-item">
                                                             <i class="uil uil-envelope"></i>
-                                                            <p>tanya-atdag.au@gmail.com</p>
+                                                            <p>atase.perdagangan@gmail.com</p>
                                                         </div>
                                                     </a>
                                                 </div>
@@ -647,71 +673,108 @@
     <!-- custom js  -->
     <script src="assets/main.js"></script>
     <script>
-        let autoHideTimer; // Variabel untuk menyimpan timer auto-hide
+        /**
+         * Countdown Timer Script
+         * This script manages a countdown timer until a specified launch date.
+         * Once the countdown reaches zero, it displays an "Enter Website" button and auto-hides after 3 seconds.
+         */
 
+        let autoHideTimer; // Variable to store the auto-hide timer
+
+        /**
+         * Updates the countdown timer on the page.
+         * When the countdown reaches zero, it displays a message and starts an auto-hide timer.
+         */
         function updateCountdown() {
-            const launchDate = new Date('March 22, 2025 11:00:00 GMT+11').getTime();
-            const now = new Date().getTime();
-            const timeLeft = launchDate - now;
+            const launchDate = new Date('March 22, 2025 11:00:00 GMT+11').getTime(); // Set the launch date
+            const now = new Date().getTime(); // Get the current time
+            const timeLeft = launchDate - now; // Calculate remaining time
 
             if (timeLeft <= 0) {
-                // Countdown selesai
+                // When the countdown is finished
                 document.getElementById('countdown').innerText = "The website is live!";
-                document.getElementById('enter-button').style.display = 'inline-block';
-                startAutoHide(); // Mulai timer auto-hide 3 detik
+                document.getElementById('enter-button').style.display = 'inline-block'; // Show enter button
+                startAutoHide(); // Start auto-hide timer (3 seconds)
             } else {
-                // Countdown masih berjalan
+                // Calculate time units
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                // Update the countdown display
                 document.getElementById('countdown').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                // Repeat the function every second
                 setTimeout(updateCountdown, 1000);
             }
         }
 
-        // Fungsi untuk memulai timer auto-hide setelah countdown selesai
+        /**
+         * Starts an auto-hide timer for the countdown overlay (3 seconds after countdown ends).
+         */
         function startAutoHide() {
-            // Pastikan timer hanya dimulai satu kali
-            if (!autoHideTimer) {
+            if (!autoHideTimer) { // Ensure timer starts only once
                 autoHideTimer = setTimeout(() => {
                     hideCountdown();
                 }, 3000);
             }
         }
 
-        // Fungsi untuk menghilangkan overlay
+        /**
+         * Hides the countdown overlay.
+         */
         function hideCountdown() {
             document.getElementById('countdown-overlay').style.display = 'none';
         }
 
-        // Jika user mengklik tombol "Try Now", langsung hilangkan overlay dan batalkan timer auto-hide (jika ada)
+        /**
+         * Event listener for the "Try Now" button.
+         * Clicking this button immediately hides the countdown overlay and cancels auto-hide timer.
+         */
         document.querySelector('.btn.btn-try').addEventListener('click', (e) => {
-            e.preventDefault();
-            clearTimeout(autoHideTimer);
+            e.preventDefault(); // Prevent default button action
+            clearTimeout(autoHideTimer); // Cancel auto-hide timer if active
             hideCountdown();
         });
 
-        // Jika user mengklik tombol "Enter Website", langsung hilangkan overlay dan batalkan timer auto-hide (jika ada)
+        /**
+         * Event listener for the "Enter Website" button.
+         * Clicking this button immediately hides the countdown overlay and cancels auto-hide timer.
+         */
         document.getElementById('enter-button').addEventListener('click', () => {
-            clearTimeout(autoHideTimer);
+            clearTimeout(autoHideTimer); // Cancel auto-hide timer if active
             hideCountdown();
         });
 
-        // Mulai countdown
+        // Start the countdown when the script loads
         updateCountdown();
     </script>
 
     <script>
+        /**
+         * Dropdown Toggle Script
+         * 
+         * This script handles the opening and closing of a dropdown menu when the profile image is clicked.
+         * It also ensures the dropdown closes when clicking outside of it.
+         */
+
+        /**
+         * Toggles the visibility of the dropdown menu.
+         */
         function toggleDropdown() {
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if outside the dropdown area
+        /**
+         * Event listener to close the dropdown when clicking outside of the dropdown area.
+         */
         window.addEventListener('click', function(event) {
             const dropdown = document.getElementById('dropdownMenu');
             const profileImage = document.querySelector('.profile-image');
+
+            // Check if the clicked area is outside the profile image
             if (!profileImage.contains(event.target)) {
                 dropdown.style.display = 'none';
             }
@@ -719,20 +782,29 @@
     </script>
 
     <script>
+        /**
+         * Google Maps Integration with User Location and Nearby Businesses
+         * This script initializes a Google Map, detects the user's location, and fetches nearby businesses.
+         */
         function initMap() {
-            // Open the map on default position in Australia
+            // Default map location (Australia)
             const defaultLocation = {
                 lat: -25.6545305,
                 lng: 133.9214759
             };
 
+            // Initialize the map
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: defaultLocation,
                 zoom: 4,
             });
 
+            // Add a button to get the user's location
             addLocationButton(map);
 
+            /**
+             * Adds a "My Location" button to the map.
+             */
             function addLocationButton(map) {
                 const locationButton = document.createElement("button");
 
@@ -763,8 +835,7 @@
                 });
             }
 
-
-            // Coba dapatkan lokasi pengguna
+            // Try to get the user's location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     const userLocation = {
@@ -774,11 +845,10 @@
 
                     console.log("User Location:", userLocation);
 
-                    // Pindahkan peta ke lokasi pengguna
                     map.setCenter(userLocation);
                     map.setZoom(14);
 
-                    // Tambahkan marker biru untuk lokasi pengguna
+                    // Add a blue marker for the user's location
                     const userMarker = new google.maps.Marker({
                         position: userLocation,
                         map: map,
@@ -788,7 +858,7 @@
                         }
                     });
 
-                    // Tambahkan lingkaran transparan di sekitar lokasi pengguna
+                    // Add a circle around the user's location
                     const userCircle = new google.maps.Circle({
                         strokeColor: "#007bff",
                         strokeOpacity: 0.8,
@@ -797,10 +867,10 @@
                         fillOpacity: 0.35,
                         map,
                         center: userLocation,
-                        radius: 300, // Radius dalam meter
+                        radius: 300,
                     });
 
-                    // Ambil data bisnis terdekat dari backend
+                    // Fetch nearby businesses
                     fetchNearbyBusinesses(userLocation, map);
 
                 }, () => {
@@ -813,11 +883,12 @@
             }
         }
 
-        // Fungsi untuk mengambil bisnis terdekat berdasarkan lokasi
+        /**
+         * Fetches nearby businesses and adds markers to the map.
+         */
         function fetchNearbyBusinesses(location, map) {
             let url = "/api/nearby-businesses";
 
-            // Cek apakah location tersedia
             if (location && location.lat && location.lng) {
                 url += `?lat=${location.lat}&lng=${location.lng}`;
             }
@@ -825,7 +896,7 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Data from API:", data); // Debugging
+                    console.log("Data from API:", data);
 
                     if (!Array.isArray(data) || data.length === 0) {
                         console.warn("Store & Restaurant data is empty or the format is incompatible.");
@@ -844,17 +915,17 @@
                                 map: map,
                                 title: business.name,
                                 label: {
-                                    text: business.name, // Nama bisnis di samping marker
-                                    color: "#fff", // Warna merah (bisa diganti)
+                                    text: business.name,
+                                    color: "#fff",
                                     fontSize: "14px",
                                     fontWeight: "bold",
-                                    className: "marker-label", // Tambahkan kelas CSS untuk styling tambahan
+                                    className: "marker-label",
                                 },
                             });
 
-
-
-                            // Pastikan ini ada di bagian paling atas atau sebelum tombol digunakan
+                            /**
+                             * Opens Google Maps with directions from the user's location to a given destination.
+                             */
                             window.getDirections = function(lat, lng) {
                                 if ("geolocation" in navigator) {
                                     navigator.geolocation.getCurrentPosition(
@@ -927,12 +998,6 @@
                                 maxWidth: 300,
                             });
 
-                            // Fungsi untuk mendapatkan rute ke lokasi bisnis
-
-
-
-
-                            // Inisialisasi Swiper setelah info window terbuka
                             new google.maps.event.addListener(marker, 'click', function() {
                                 setTimeout(() => {
                                     new Swiper('.swiper-container', {
@@ -942,11 +1007,9 @@
                                         },
                                         loop: true,
                                     });
-                                }, 500); // Tunggu hingga DOM tersedia
+                                }, 500);
                             });
 
-
-                            // Helper function untuk render bintang
                             function renderStars(rating) {
                                 const stars = Math.round(rating);
                                 const fullStars = '&#9733;'.repeat(stars);
@@ -965,14 +1028,15 @@
                 });
         }
 
-
-        // Fungsi render rating bintang
+        /**
+         * Generates star ratings based on a given number.
+         */
         function renderStars(rating) {
             const stars = Math.round(rating);
             return "★".repeat(stars) + "☆".repeat(5 - stars);
         }
 
-        // Inisialisasi peta setelah halaman dimuat
+        // Initialize the map when the page loads
         window.onload = initMap;
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&callback=initMap"></script>

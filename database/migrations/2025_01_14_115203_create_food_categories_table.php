@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creates the food_categories table
         Schema::create('food_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->string('title'); // Category title
+            $table->timestamps(); // Created at & Updated at timestamps
         });
     }
 

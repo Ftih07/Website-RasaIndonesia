@@ -1,5 +1,6 @@
 <x-filament-panels::page>
     <style>
+        /* Custom styling for select dropdown */
         select {
             background-color: black !important;
             color: white !important;
@@ -13,7 +14,7 @@
     </style>
 
     <div class="p-4 space-y-4">
-        {{-- Pilihan Type --}}
+        <!-- Business Type Selection -->
         <label class="block text-white">Select Type Business</label>
         <select wire:model="selectedTypeId" class="block w-full border p-2 rounded">
             <option value="">Select Business Type</option>
@@ -22,16 +23,16 @@
             @endforeach
         </select>
 
-        {{-- File Upload --}}
+        <!-- JSON File Upload -->
         <label class="block mt-4">Upload JSON File</label>
         <input type="file" wire:model="json_file" accept=".json" class="block w-full border p-2 rounded">
 
-        {{-- Tombol Submit --}}
+        <!-- Import Button -->
         <x-filament::button wire:click="importData" color="primary" class="mt-4">
             Import Now
         </x-filament::button>
 
-        {{-- Notifikasi --}}
+        <!-- Success Notification -->
         @if (session()->has('message'))
         <div class="text-green-500 mt-2">{{ session('message') }}</div>
         @endif

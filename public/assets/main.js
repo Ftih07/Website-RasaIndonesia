@@ -1,8 +1,8 @@
-$(document).ready(function ($) {
-    "use strict";
+$(document).ready(function ($) { 
+    "use strict"; 
 
     var book_table = new Swiper(".book-table-img-slider", {
-        slidesPerView: 1,
+        slidesPerView: 1, 
         spaceBetween: 20,
         loop: true,
         autoplay: {
@@ -88,7 +88,6 @@ $(document).ready(function ($) {
     });
 
     // Filter Toko & Restoran
-
     jQuery(".menu-toggle").click(function () {
         jQuery(".main-navigation").toggleClass("toggled");
     });
@@ -176,10 +175,9 @@ jQuery(window).on("load", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const sections = document.querySelectorAll("section, footer"); // Ambil semua elemen section
-    const navLinks = document.querySelectorAll(".menu li a"); // Ambil semua elemen nav link
+    const sections = document.querySelectorAll("section, footer"); 
+    const navLinks = document.querySelectorAll(".menu li a"); 
 
-    // Fungsi untuk mengubah active menu saat scroll
     function updateActiveMenu() {
         let currentSection = "";
         sections.forEach((section) => {
@@ -191,9 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         navLinks.forEach((link) => {
-            link.classList.remove("active-menu"); // Hapus class active dari semua menu
+            link.classList.remove("active-menu"); 
             if (link.getAttribute("href").substring(1) === currentSection) {
-                link.classList.add("active-menu"); // Tambahkan class active pada menu yang sesuai
+                link.classList.add("active-menu"); 
             }
         });
     }
@@ -201,7 +199,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener untuk scroll
     window.addEventListener("scroll", updateActiveMenu);
 
-    // Cek posisi awal saat halaman pertama kali dimuat
     updateActiveMenu();
 });
 
@@ -326,14 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url;
     });
 });
-
-
-
-
-
-
-
-
 
 $(document).ready(function ($) {
 

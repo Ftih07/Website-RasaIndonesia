@@ -18,7 +18,7 @@
     <!-- fancy box  -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- custom css  -->
-    @vite('resources/css/tokorestoran.css')
+    <link rel="stylesheet" href="assets/css/tokorestoran.css">
 
 </head>
 
@@ -88,16 +88,19 @@
         <div id="viewport">
             <div id="js-scroll-content">
 
+                <!-- Store & Restaurant Section -->
                 <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
                     <div class="sec-wp">
                         <div class="container">
                             <div class="row">
+                                <!-- Logo Section -->
                                 <div class="col-lg-12 text-center mb-4">
                                     <div class="logo-container">
                                         <img src="{{ asset('assets/images/logo/Logo-ICAV.png') }}" alt="Logo 1" class="logo mx-3" style="width: 80px; height: auto;">
                                         <img src="{{ asset('assets/images/logo/Logo-Atdag-Canberra.png') }}" alt="Logo 2" class="logo mx-3" style="width: 100px; height: auto;">
                                     </div>
                                 </div>
+                                <!-- Section Title -->
                                 <div class="col-lg-12">
                                     <div class="sec-title text-center mb-5">
                                         <p class="sec-sub-title mb-3">Store & Restaurant</p>
@@ -109,7 +112,7 @@
                                 </div>
                             </div>
 
-                            <!-- Filters -->
+                            <!-- Filters Section -->
                             <div class="menu-tab-wp">
                                 <div class="row">
                                     <div class="col-lg-12 m-auto">
@@ -120,8 +123,7 @@
                                                     <select id="food-category" class="form-select">
                                                         <option value="all" {{ request('category') == 'all' ? 'selected' : '' }}>All Categories</option>
                                                         @foreach ($foodCategories as $category)
-                                                        <option value="{{ strtolower($category->title) }}"
-                                                            {{ request('category') == strtolower($category->title) ? 'selected' : '' }}>
+                                                        <option value="{{ strtolower($category->title) }}" {{ request('category') == strtolower($category->title) ? 'selected' : '' }}>
                                                             {{ $category->title }}
                                                         </option>
                                                         @endforeach
@@ -136,13 +138,12 @@
                                                     </select>
                                                 </li>
 
-                                                <!-- Dropdown for Types -->
+                                                <!-- Dropdown for Business Types -->
                                                 <li class="filter">
                                                     <select id="business-type" class="form-select">
                                                         <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>All Types</option>
                                                         @foreach ($businessTypes as $type)
-                                                        <option value="{{ strtolower($type->title) }}"
-                                                            {{ request('type') == strtolower($type->title) ? 'selected' : 's' }}>
+                                                        <option value="{{ strtolower($type->title) }}" {{ request('type') == strtolower($type->title) ? 'selected' : '' }}>
                                                             {{ $type->title }}
                                                         </option>
                                                         @endforeach
@@ -151,8 +152,7 @@
 
                                                 <!-- Search Field -->
                                                 <li class="filter">
-                                                    <input type="text" id="search-keyword" class="form-control" placeholder="Search Here"
-                                                        value="{{ request('keyword') }}">
+                                                    <input type="text" id="search-keyword" class="form-control" placeholder="Search Here" value="{{ request('keyword') }}">
                                                 </li>
 
                                                 <!-- Search Button -->
@@ -161,13 +161,11 @@
                                                 </li>
                                             </ul>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Store and Restaurant Items -->
+                            <!-- Store and Restaurant List -->
                             <div class="menu-list-row">
                                 @if($businesses->isEmpty())
                                 <div class="alert alert-warning text-center">
@@ -176,21 +174,23 @@
                                 @else
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                     @foreach($businesses as $business)
-                                    <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}"
-                                        data-cat="{{ strtolower($business->type->title ?? 'all') }}">
+                                    <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}" data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
+                                            <!-- Business Logo -->
                                             <div class="dist-img">
-                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
-                                                    alt="{{ $business->name_business }}">
+                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}">
                                             </div>
+                                            <!-- Business Rating -->
                                             <div class="dish-rating">
                                                 {{ number_format($business->average_rating, 1) }}
                                                 <i class="uil uil-star"></i>
                                             </div>
+                                            <!-- Business Title -->
                                             <div class="dish-title">
                                                 <h3 class="h3-title">{{ $business->name }}</h3>
-                                                <p>{{ $business->type->title ?? 'N/A' }}</p> <!-- Asumsi ada relasi type -->
+                                                <p>{{ $business->type->title ?? 'N/A' }}</p>
                                             </div>
+                                            <!-- Business Info -->
                                             <div class="info-container">
                                                 <div class="info-item">
                                                     <i class="uil uil-location-point"></i>
@@ -205,18 +205,17 @@
                                                     </p>
                                                 </div>
                                             </div>
-
                                             <hr>
+                                            <!-- Business Actions -->
                                             <div class="menu-tab text-center">
                                                 <ul>
-                                                    <div class="filter-active-data"></div>
                                                     <li class="filter-data active">
                                                         <a href="{{ route('business.show', $business->id) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                             Details
                                                         </a>
                                                     </li>
-                                                    <li class="">
+                                                    <li>
                                                         <a href="{{ $business->location }}" target="_blank">
                                                             <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
                                                             Maps
@@ -230,29 +229,28 @@
                                 </div>
                                 @endif
                             </div>
-
                         </div>
                     </div>
                 </section>
 
-
-
-                <div class="bg-pattern bg-light repeat-img"
-                    style="background-image: url(assets/images/blog-pattern-bg.png);">
+                <!-- Contact Section -->
+                <div class="bg-pattern bg-light repeat-img" style="background-image: url(assets/images/blog-pattern-bg.png);">
 
                     <section class="newsletter-sec section pt-0" id="contact">
                         <div class="sec-wp">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-8 m-auto">
-                                        <div class="newsletter-box text-center back-img white-text"
-                                            style="background-image: url(assets/images/news.jpg);">
+                                        <!-- Newsletter Box -->
+                                        <div class="newsletter-box text-center back-img white-text" style="background-image: url(assets/images/news.jpg);">
                                             <div class="bg-overlay dark-overlay"></div>
                                             <div class="sec-wp">
+                                                <!-- Contact Information -->
                                                 <div class="newsletter-box-text">
                                                     <h2 class="h2-title">Want to add your business?</h2>
                                                     <p>Please contact us and tell us details about your business.</p>
                                                 </div>
+                                                <!-- Contact Icons -->
                                                 <div class="contact-icons">
                                                     <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
                                                     <a href="mailto:your-email@example.com"><i class="uil uil-envelope"></i></a>
@@ -270,6 +268,7 @@
                     </section>
                 </div>
 
+
                 <!-- footer starts  -->
                 <footer class="site-footer">
                     <div class="top-footer section">
@@ -281,7 +280,7 @@
                                             <div class="footer-logo">
                                                 <div class="header-logo">
                                                     <a href="index.html" class="decoration-none">
-                                                        <span class="text-#FF8243">Taste</span> of Indonesia
+                                                        <span class="text-#FF8243">Taste </span>of Indonesia
                                                     </a>
                                                 </div>
                                             </div>
@@ -290,18 +289,23 @@
                                             <div class="social-icon">
                                                 <ul>
                                                     <li>
-                                                        <a href="#">
+                                                        <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
                                                             <i class="uil uil-facebook-f"></i>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="#">
+                                                        <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
                                                             <i class="uil uil-instagram"></i>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="#">
+                                                        <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
                                                             <i class="uil uil-youtube"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                                            <i class="fab fa-tiktok"></i>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -313,30 +317,30 @@
                                             <div class="footer-menu food-nav-menu">
                                                 <h3 class="h3-title">Site Navigation</h3>
                                                 <ul class="column-2">
-                                                    <li><a href="{{ route('home') }}">Home</a></li>
-                                                    <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                                    <li><a href="#" class="footer-active-menu">Store & Restaurant</a></li>
-                                                    <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
-                                                    <li><a href="{{ route('home') }}#blog">QnA</a></li>
-                                                    <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
+                                                    <li><a href="#home" class="footer-active-menu">Home</a></li>
+                                                    <li><a href="#about">About Us</a></li>
+                                                    <li><a href="#menu">Store & Restaurant</a></li>
+                                                    <li><a href="#gallery">Gallery</a></li>
+                                                    <li><a href="#qna">QnA</a></li>
+                                                    <li><a href="#contact">Contact Us</a></li>
                                                 </ul>
                                             </div>
                                             <div class="footer-menu">
                                                 <h3 class="h3-title">Contact Support</h3>
                                                 <ul>
                                                     <div class="info-container">
-                                                        <div class="info-item">
-                                                            <i class="uil uil-location-point"></i>
-                                                            <p>tanya-atdag.au</p>
-                                                        </div>
-                                                        <div class="info-item">
-                                                            <i class="uil uil-utensils"></i>
-                                                            <p>+62021858171</p>
-                                                        </div>
-                                                        <div class="info-item">
-                                                            <i class="uil uil-utensils"></i>
-                                                            <p>tanya-atdag.au@gmail.com</p>
-                                                        </div>
+                                                        <a href="https://tanya-atdag.au/en/" target="_blank">
+                                                            <div class="info-item">
+                                                                <i class="uil uil-globe"></i>
+                                                                <p>tanya-atdag.au</p>
+                                                            </div>
+                                                        </a>
+                                                        <a href="mailto:atase.perdagangan@gmail.com">
+                                                            <div class="info-item">
+                                                                <i class="uil uil-envelope"></i>
+                                                                <p>atase.perdagangan@gmail.com</p>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                 </ul>
                                             </div>
@@ -351,7 +355,7 @@
                             <div class="row">
                                 <div class="col-lg-12 text-center">
                                     <div class="copyright-text">
-                                        <p>Copyright &copy; 2025 <span class="name">Taste</span> of Indonesia. All Rights Reserved.
+                                        <p>Copyright &copy; 2025 <span class="name">Taste </span>of Indonesia. All Rights Reserved.
                                         </p>
                                     </div>
                                 </div>
@@ -362,10 +366,6 @@
                 </footer>
             </div>
         </div>
-
-
-
-
 
         <!-- jquery  -->
         <script src="assets/js/jquery-3.5.1.min.js"></script>
@@ -402,16 +402,31 @@
         <script src="assets/js/smooth-scroll.js"></script>
         <!-- custom js  -->
         <script src="assets/main.js"></script>
+        
         <script>
+            /**
+             * Dropdown Menu Script
+             * This script handles the visibility of a dropdown menu when a profile image is clicked.
+             * It also ensures that the dropdown closes when clicking outside of the menu.
+             */
+
+            /**
+             * Toggles the visibility of the dropdown menu.
+             * If the menu is visible, it hides it; otherwise, it shows it.
+             */
             function toggleDropdown() {
                 const menu = document.getElementById('dropdownMenu');
                 menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
             }
 
-            // Menutup dropdown saat klik di luar area dropdown
+            /**
+             * Closes the dropdown menu when clicking outside of it.
+             */
             window.addEventListener('click', function(event) {
                 const dropdown = document.getElementById('dropdownMenu');
                 const profileImage = document.querySelector('.profile-image');
+
+                // Check if the click is outside the profile image and dropdown menu
                 if (!profileImage.contains(event.target)) {
                     dropdown.style.display = 'none';
                 }
