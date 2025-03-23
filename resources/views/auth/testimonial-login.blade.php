@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taste of Indonesia | Login</title>
-    @vite('resources/css/testimonial-login.css')
+    <link rel="stylesheet" href="{{ asset('assets/css/testimonial-login.css') }}">
 
 </head>
 

@@ -19,8 +19,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fancybox.min.css') }}">
 
     <title>Register | Taste of Indonesia</title>
-    @vite('resources/css/testimonial-register.css')
-</head>
+    <link rel="stylesheet" href="{{ asset('assets/css/testimonial-register.css') }}"></head>
 
 <body>
     <!-- start of header  -->

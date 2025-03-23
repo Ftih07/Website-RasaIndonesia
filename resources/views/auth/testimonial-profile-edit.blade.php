@@ -21,8 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile | Taste of Indonesia</title>
-    @vite('resources/css/testimonial-profile-edit.css')
-
+    <link rel="stylesheet" href="{{ asset('assets/css/testimonial-profile-edit.css') }}">
 </head>
 
 <body>
