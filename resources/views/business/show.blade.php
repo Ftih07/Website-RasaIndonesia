@@ -98,7 +98,14 @@
                     <div class="sec-img mt-5">
                         <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
                             alt="{{ $business->name_business }}">
+
+                        <!-- Menampilkan Unique Code -->
+                        <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
+                            <p>{{ $business->unique_code ?? '' }}</p>
+                        </a>
+
                     </div>
+
                 </div>
                 <div class="col-lg-7">
 

@@ -188,6 +188,10 @@
                                             <!-- Business Title -->
                                             <div class="dish-title">
                                                 <h3 class="h3-title">{{ $business->name }}</h3>
+                                                <!-- Menampilkan Unique Code -->
+                                                <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
+                                                    <p>{{ $business->unique_code ?? '' }}</p>
+                                                </a>
                                                 <p>{{ $business->type->title ?? 'N/A' }}</p>
                                             </div>
                                             <!-- Business Info -->
@@ -402,7 +406,7 @@
         <script src="assets/js/smooth-scroll.js"></script>
         <!-- custom js  -->
         <script src="assets/main.js"></script>
-        
+
         <script>
             /**
              * Dropdown Menu Script

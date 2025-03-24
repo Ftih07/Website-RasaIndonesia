@@ -1051,7 +1051,7 @@ p {
     margin-bottom: 15px;
 }
 
-.dish-title {
+.dish-title { 
     padding: 0 30px;
 }
 
@@ -1885,6 +1885,15 @@ p {
     width: 500px;
     height: 500px;
     border-radius: 999px;
+}
+.sec-img p {
+    font-size: 2.5em; /* Sesuaikan ukuran font */
+    font-weight: 900;
+    text-align: center;
+    margin-top: 30px;
+    font-family: "Playfair Display", serif;
+    text-decoration: none;
+    color: #0d0d25;
 }
 
 .sec-text-hero {

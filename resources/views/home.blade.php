@@ -352,8 +352,12 @@
                                             <i class="uil uil-star"></i>
                                         </div>
                                         <!-- Business Title -->
-                                        <div class="dish-title"> 
+                                        <div class="dish-title">
                                             <h3 class="h3-title">{{ $business->name }}</h3>
+                                            <!-- Menampilkan Unique Code -->
+                                            <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
+                                                <p>{{ $business->unique_code ?? '' }}</p>
+                                            </a>
                                             <p>{{ $business->type->title ?? 'N/A' }}</p>
                                         </div>
                                         <!-- Business Info -->

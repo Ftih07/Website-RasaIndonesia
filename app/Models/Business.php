@@ -27,6 +27,8 @@ class Business extends Model
         'contact',
         'latitude',
         'longitude',
+        'unique_code',
+        'document',
     ];
 
     /**

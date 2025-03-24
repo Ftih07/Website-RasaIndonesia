@@ -36,6 +36,20 @@ class BusinessResource extends Resource
                     ->label('Type Business')
                     ->relationship('type', 'title')
                     ->required(),
+                    
+                Forms\Components\TextInput::make('unique_code')
+                    ->label('Unique Code')
+                    ->nullable() // Tidak wajib diisi
+                    ->placeholder('Enter unique code') // Menambahkan placeholder
+                    ->columnSpan(2), // Jika ingin lebar input lebih besar (opsional)
+
+
+                // PDF Upload Field
+                Forms\Components\FileUpload::make('document')
+                    ->label('Upload Sticker (PDF)')
+                    ->directory('documents')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(10240), // Maksimal 10MB
 
                 // Multi-select field for food categories related to the business
                 Forms\Components\Select::make('food_categories')
