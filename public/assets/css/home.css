@@ -1061,16 +1061,18 @@ p {
     text-transform: capitalize;
     margin-bottom: 5px;
     font-family: "Playfair Display", serif;
-    font-weight: bold;
+    font-weight: 900;
     color: #0d0d25;
     transition: 0.3s;
-    min-height: 76px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    font-weight: 900;
+    /* min-height: 76px; */ /* Hapus jika tidak diperlukan */
+    /* Hapus properti yang membatasi jumlah baris */
+    display: block; 
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    white-space: normal;
 }
+
 
 .dish-title p {
     color: #bfbfbf;
