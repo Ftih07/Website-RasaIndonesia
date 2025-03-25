@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BusinessResource\Pages;
 use App\Filament\Resources\BusinessResource\RelationManagers;
+use App\Http\Controllers\StickerController;
 use App\Models\Business;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -36,13 +37,12 @@ class BusinessResource extends Resource
                     ->label('Type Business')
                     ->relationship('type', 'title')
                     ->required(),
-                    
+
                 Forms\Components\TextInput::make('unique_code')
                     ->label('Unique Code')
-                    ->nullable() // Tidak wajib diisi
-                    ->placeholder('Enter unique code') // Menambahkan placeholder
-                    ->columnSpan(2), // Jika ingin lebar input lebih besar (opsional)
-
+                    ->nullable()
+                    ->placeholder('Enter unique code')
+                    ->columnSpan(2),
 
                 // PDF Upload Field
                 Forms\Components\FileUpload::make('document')
@@ -208,9 +208,14 @@ class BusinessResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('unique_code')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('address')->limit(50),
+                Tables\Columns\TextColumn::make('document')
+                    ->url(fn($record) => asset('storage/' . $record->document), true)
+                    ->label('Download Sticker'),
                 Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
             ->filters([
@@ -227,8 +232,13 @@ class BusinessResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('generate_pdf')
+                    ->label('Generate PDF')
+                    ->action(fn($record) => app(StickerController::class)->generate($record))
+                    ->color('primary')
+                    ->hidden(fn($record) => empty($record->unique_code)), // Sembunyikan kalau Unique Code kosong
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

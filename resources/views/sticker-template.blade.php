@@ -7,14 +7,18 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 300px;
+            height: 300px;
+            margin: 0;
+            padding: 0;
         }
 
         .logo {
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -42,14 +46,14 @@
 
         .title {
             font-size: 16px;
-            font-weight: bolder;
+            font-weight: 900;
             word-wrap: break-word;
             white-space: normal;
-            /* Tambahkan ini agar bisa wrap */
             max-width: 100%;
-            /* Pastikan tidak melewati container */
+            height: 20px;
+            /* Sesuaikan tinggi agar cuma 2 baris */
+            overflow: hidden;
         }
-
 
         .line {
             width: 100%;
