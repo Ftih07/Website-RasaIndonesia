@@ -1051,7 +1051,7 @@ p {
     margin-bottom: 15px;
 }
 
-.dish-title { 
+.dish-title {
     padding: 0 30px;
 }
 
@@ -3131,4 +3131,62 @@ input[type="number"] {
 .btn:hover {
     opacity: 0.8;
     color: #fff;
+}
+
+.body-order {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+.container-order {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.section-order {
+    text-align: center;
+}
+
+.section-order h3 {
+    font-size: 18px;
+    font-weight:bolder;
+    margin-bottom: 30px;
+}
+
+.btn-order {
+    background: linear-gradient(to bottom, #f9d423, #f8b500);
+    border: none;
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-order:hover {
+    color: black;
+    background: linear-gradient(to bottom, #f9d423, #ffa751);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.divider {
+    border-left: 1px dotted #888;
+    height: 150px;
+}
+
+@media (max-width: 600px) {
+    .container-order {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .divider {
+        display: none;
+    }
 }

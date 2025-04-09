@@ -341,6 +341,30 @@
         </div>
     </section>
 
+    <div class="body-order">
+        <div class="container-order">
+            <div class="section-order">
+                <h3>Tap to Order Your Foods</h3>
+                @if ($business->order)
+                <a href="{{ $business->order }}" target="_blank" class="btn-order">Order Now</a>
+                @else
+                <div class="btn-order disabled">
+                    Order Unavailable
+                </div>
+                @endif
+            </div>
+
+            @if ($business->reserve)
+            <div class="divider"></div>
+
+            <div class="section-order">
+                <h3>Tap to Make a Reservation</h3>
+                <a href="{{ $business->reserve }}" target="_blank" class="btn-order">Reserve</a>
+            </div>
+            @endif
+        </div>
+    </div>
+
     <!-- Contact business  -->
     <section class="newsletter-sec section pt-0">
         <div class="sec-wp">

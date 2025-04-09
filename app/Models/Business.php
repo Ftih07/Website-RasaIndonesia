@@ -29,6 +29,8 @@ class Business extends Model
         'longitude',
         'unique_code',
         'document',
+        'order',
+        'reserve',
     ];
 
     /**

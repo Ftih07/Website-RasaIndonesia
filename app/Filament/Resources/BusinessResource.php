@@ -96,6 +96,14 @@ class BusinessResource extends Resource
                     ->label('Menu List')
                     ->directory('menu'),
 
+                // Business Order Link
+                Forms\Components\TextInput::make('order')
+                    ->label('Business Order Link'),
+
+                // Business Reserve Link
+                Forms\Components\TextInput::make('reserve')
+                    ->label('Business Reserve Link'),
+                    
                 // Repeater for social media accounts
                 Forms\Components\Repeater::make('media_social')
                     ->label('Social Media')
