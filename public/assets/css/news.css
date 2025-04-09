@@ -226,11 +226,9 @@ ul {
 .uil {
     color: #ff8243;
 }
-
 .fab {
     color: #ff8243;
 }
-
 @media screen and (min-width: 992px) {
     .menu-toggle {
         display: none;
@@ -765,18 +763,25 @@ p {
     display: inline-block;
     background: #f3f3f5;
     box-shadow: 9px 9px 12px #e4e4e4, -9px -9px 12px #ffffff;
-    padding: 3px 20px;
+    padding: 3px 40px;
     border-radius: 60px;
     color: #ff8243;
     font-size: 14px;
 }
-
+.calendar-events{
+    margin-top: 5em;
+}
 .h2-title {
     font-size: 46px;
     line-height: 56px;
     margin-bottom: 15px;
     text-transform: capitalize;
     position: relative;
+}
+
+.title-news {
+    margin-left: 8em;
+    margin-right: 8em;
 }
 
 .about_us h2 {
@@ -794,27 +799,6 @@ p {
 .sub-title span {
     display: block;
 }
-.scrapping-map {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: fit-content;
-    background-size: cover;
-    background-position: center;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgb(36 39 37 / 30%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 10px solid rgb(237, 237, 237); /* Border besar */
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-    margin-top: -10%;
-}
-
-.scrapping-map:hover {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Shadow saat hover */
-    transform: scale(1.02); /* Sedikit memperbesar efek */
-}
 
 .about-video-img {
     position: relative;
@@ -824,7 +808,7 @@ p {
     min-height: 400px;
     background-size: cover;
     background-position: center;
-    border-radius: 40px;
+    border-radius: 10px;
     box-shadow: 0 0 20px rgb(36 39 37 / 30%);
     display: flex;
     align-items: center;
@@ -1061,30 +1045,19 @@ p {
     text-transform: capitalize;
     margin-bottom: 5px;
     font-family: "Playfair Display", serif;
-    font-weight: 900;
+    font-weight: bold;
     color: #0d0d25;
     transition: 0.3s;
-    /* min-height: 76px; */ /* Hapus jika tidak diperlukan */
-    /* Hapus properti yang membatasi jumlah baris */
-    display: block;
-    -webkit-line-clamp: unset;
-    -webkit-box-orient: unset;
-    overflow: visible;
-    white-space: normal;
-}
-
-.faq-sec {
-    margin-top: 50px;
+    min-height: 76px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 900;
 }
 
 .dish-title p {
     color: #bfbfbf;
-}
-
-.dish-title a p {
-    color: #000;
-    font-family: "Playfair Display", serif;
-    font-weight: 900;
 }
 
 .dish-info ul,
@@ -1211,13 +1184,12 @@ p {
 /* ****************** */
 
 .book-table {
-    margin-top: 100px;
+    margin-top: 20px;
     overflow: hidden;
 }
 
 .book-table-shape img {
     position: absolute;
-    top: -10px;
     right: 73%;
     width: 540px;
 }
@@ -1899,6 +1871,15 @@ p {
     height: 500px;
     border-radius: 999px;
 }
+.sec-img p {
+    font-size: 2.5em; /* Sesuaikan ukuran font */
+    font-weight: 900;
+    text-align: center;
+    margin-top: 30px;
+    font-family: "Playfair Display", serif;
+    text-decoration: none;
+    color: #0d0d25;
+}
 
 .sec-text-hero {
     margin-top: 4em;
@@ -2148,8 +2129,11 @@ iframe {
 }
 
 @media (max-width: 991px) {
+    .title-news {
+        margin-left: 3em;
+        margin-right: 3em;
+    }
     .book-table {
-        margin-top: 200px;
         overflow: hidden;
     }
     .dropdown-menu {
@@ -2306,6 +2290,11 @@ iframe {
 }
 
 @media (max-width: 767px) {
+    .title-news {
+        margin-left: 0em;
+        margin-right: 0em;
+        font-size: 2em;
+    }
     .contact-icons {
         gap: 15px;
     }
@@ -2920,385 +2909,287 @@ iframe {
     }
 }
 
-/* Modal overlay */
-.modal {
-    display: none; /* Default: tidak terlihat */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Background gelap */
-}
-
-/* Modal box */
-.modal-content {
-    position: relative;
-    margin: 10% auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    width: 50%;
-    max-width: 600px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Close button */
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-}
-
-/* Form styling */
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.sort {
-    display: flex;
-    align-items: center; /* Menyelaraskan teks dengan dropdown */
-    gap: 10px; /* Beri jarak antara teks dan dropdown */
-    white-space: nowrap; /* Mencegah teks turun ke bawah */
-}
-
-textarea,
-input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.cancel-button,
-.submit-button {
-    padding: 10px 15px;
-    border-color: #ffbc00;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.cancel-button {
-    background: transparent;
-    color: #ffbc00;
-}
-
-.submit-button {
-    background-color: #ffbc00;
-    color: #fff;
-}
-
-.cancel-button:hover {
-    background-color: #ffbc00;
-    color: #fff;
-}
-
-.submit-button:hover {
-    background-color: #ecad00;
-}
-
-.catalogue-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffbc00;
-    text-decoration: none;
-    gap: 5px;
-    font-size: 17px;
-}
-.catalogue-link:hover {
-    color: #ecad00;
-}
-
-.custom-infowindow {
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 300px;
-}
-
-.custom-infowindow h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.custom-infowindow p {
-    margin: 5px 0;
-    font-size: 12px;
-    color: #333;
-}
-
-.card-marker {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
-.card-marker img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-.card-content {
-    padding: 15px;
-    text-align: center;
-}
-.card-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-.rating {
-    color: #ffa500;
-}
-.info {
-    color: #666;
-    font-size: 14px;
-    margin: 5px 0;
-}
-.status {
-    color: green;
-    font-weight: bold;
-}
-
-.custom-map-control-button {
-    background-color: white;
-    border: 2px solid #4285f4;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    margin: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #4285f4;
-}
-.custom-map-control-button:hover {
-    background-color: #f8f9fa;
-}
-
-.marker-label {
-    white-space: nowrap;
-    background: red;
-    padding: 2px 5px;
-    border-radius: 4px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-}
-.buttons-maps {
+.article-header {
+    color: #000;
+    margin-bottom: 40px;
+    margin-top: 20px;
+    font-weight: 500;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 8px;
-}
-.btn-maps {
-    display: block;
-    padding: 6px;
-    font-size: 12px;
-    border-radius: 4px;
-    text-decoration: none;
-    text-align: center;
-    font-weight: bold;
-    transition: 0.3s;
-}
-.btn-details {
-    background: #007bff;
-    color: white;
-}
-.btn-route {
-    background: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-.btn-view-map {
-    background: #ff5733;
-    color: white;
-}
-.btn:hover {
-    opacity: 0.8;
-    color: #fff;
 }
 
-/* OVERLAY COUNTDOWN */
-#countdown-overlay {
-    transition: opacity 0.5s ease-in-out;
+.article-header p {
+    font-size: 16px;
+    margin: 0; /* Menghapus margin default agar lebih rapat */
 }
 
-.overlay {
-    position: fixed;
-    inset: 0; /* top:0, right:0, bottom:0, left:0 */
-    /* Tambahkan gradient agar tampilan lebih menarik */
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
-    backdrop-filter: blur(8px);
+.time {
+    color: #878787;
+}
+
+.time i {
+    margin-right: 5px; /* Atur jarak antara ikon dan teks */
+}
+
+.social-icons {
+    margin-top: 5px;
+    font-size: 20px;
+    color: #000;
     display: flex;
+    gap: 15px; /* Menambahkan jarak antar ikon */
+}
+
+.social-icons a i{
+    color: #000;
+}
+
+.article-content p {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* News */
+.collection {
+    margin-top: -7em;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
-    z-index: 1000;
+}
+.collection .content-news {
+    height: 28rem;
+    width: 25rem;
+    background-color: #1b1f2a;
+    border: 0.2rem solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.7rem;
+    border-bottom: 0.4rem solid #ff8243;
+    border-top: 0.4rem solid #ff8243;
+    overflow: hidden;
+    /* padding: .2rem; */
 }
 
-/* KONTEN COUNTDOWN */
-.countdown-container {
-    max-width: 900px; /* Lebar maksimum konten */
-    width: 90%; /* Lebar responsif */
-    margin: 0 auto;
+.content-news img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom-left-radius: 0.6rem;
+    border-bottom-right-radius: 0.6rem;
+}
+.text-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.text-content h3 {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #fff;
+    margin-top: 20px;
+}
+.text-content p {
+    margin-top: 10px;
+    max-width: 22rem;
+    font-size: 0.9rem;
+    font-weight: 400;
     text-align: center;
     color: #fff;
-    padding: 40px 20px;
+    line-height: 1.3; /* Atur sesuai kebutuhan */
 }
 
-/* LOGO SECTION */
-.logo-section {
-    display: flex;
-    flex-wrap: wrap; /* Agar logo tidak terpotong di layar kecil */
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 20px;
-}
-.logo-section img {
-    height: 60px; /* Sesuaikan ukuran logo */
-    max-width: 150px;
+.button-container-news {
+    text-align: center;
+    margin-top: 10px;
 }
 
-/* TEKS LAUNCHING */
-.launching-text {
-    font-size: 1rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-/* JUDUL */
-.title {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    font-weight: bold;
-    line-height: 1.2;
-    color: #fff;
-}
-.title .highlight {
-    color: #ff8c00; /* Warna oranye */
-}
-
-/* COUNTDOWN */
-#countdown {
-    font-size: 5rem; /* Perbesar font */
-    font-weight: bold;
-    margin-bottom: 30px;
-    color: #ffcc00; /* Warna lebih kontras */
-    text-shadow: 2px 2px 10px rgba(255, 204, 0, 0.8); /* Efek glow */
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-/* TOMBOL */
-.buttons {
-    margin-bottom: 20px;
-}
-.btn {
+.view-all-button-news {
     display: inline-block;
-    padding: 10px 23px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
     color: #fff;
+    text-decoration: none;
+    background: linear-gradient(90deg, #ff7e5f, #ff8243);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
-.btn-enter {
-    background-color: #007bff; /* Biru */
-    display: none; /* Tombol muncul setelah countdown selesai */
-}
-.btn-try {
-    background-color: #ff8c00; /* Abu-abu */
-}
-/* Hover effect */
-.btn:hover {
-    filter: brightness(110%);
+
+.view-all-button-news:hover {
+    background: linear-gradient(90deg, #ff8243, #ff7e5f);
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
 }
 
-/* DESKRIPSI */
-.description {
-    max-width: 700px;
-    margin: 20px auto;
-    line-height: 1.6;
-    font-size: 1rem;
-    padding: 0 10px;
-}
-
-/* INFO EVENT */
-.event-info {
+.swiper-button-wp-news {
+    position: relative;
+    margin-top: 60px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    justify-content: center;
-    margin: 30px 0;
-    font-size: 1rem;
-    line-height: 1.4;
-}
-.event-info div {
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    height: 60px;
     align-items: center;
-    text-align: center;
 }
 
-/* KOLABORASI */
-.collaboration {
-    margin-top: 20px;
+.swiper-button-wp-news .swiper-button-prev {
+    margin-left: 7em;
+}
+
+.swiper-button-wp-news .swiper-button-next {
+    margin-right: 7em;
+}
+
+.another-news {
+    margin-top: 5em;
+}
+
+/* Events */
+.container-events {
+    display: flex;
+    border-radius: 8px;
+}
+.event-description {
+    flex: 2;
+    padding-right: 20px;
+}
+.sidebar {
+    flex: 2;
+    background: linear-gradient(145deg, #ececec, #ffffff);
+    box-shadow: 28px 28px 45px #d4d4d4, -28px -28px 45px #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    flex-direction: column;
+}
+.sidebar p {
+    margin: 5px 0;
+}
+
+.sidebar p i {
+    margin-right: 5px;
+    color: #ff8243;
+}
+.content {
+    margin-right: 50px;
+    flex: 4; /* Lebih kecil */
+}
+
+.event-tag {
+    display: inline-block;
+    background: #ecad00;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
     font-weight: bold;
-    line-height: 1.6;
 }
 
-/* RESPONSIVE DESIGN */
-@media (max-width: 768px) {
-    .title {
-        font-size: 2rem;
+.contact-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #ddd;
+}
+
+.contact-section h3 {
+    font-size: 25px;
+}
+
+.contact-section p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #000;
+}
+.contact-section p a {
+    color: #000;
+}
+.contact-section i {
+    color: #000;
+}
+
+.sidebar a,
+.sidebar p {
+    position: relative;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Underline hanya pada teks, tidak termasuk ikon */
+.sidebar a::after,
+.sidebar p::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 0;
+    height: 2px;
+    background-color: #ff8243; /* Warna underline */
+    transition: width 0.3s ease-in-out;
+}
+
+/* Efek animasi underline mengikuti panjang teks */
+.sidebar a:hover::after,
+.sidebar p:hover::after {
+    width: 100%; /* Menyesuaikan panjang teks */
+}
+
+/* Supaya ikon tidak ikut underline */
+.sidebar i {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .container-events {
+        flex-direction: column-reverse; /* Sidebar muncul duluan */
     }
-    .logo-section img {
-        height: 50px;
-        max-width: 120px;
+
+    .container-events-sidebar {
+        margin-bottom: 3em;
     }
-    #countdown {
-        font-size: 3rem; /* Sesuaikan ukuran */
+
+    .content {
+        margin-right: 0;
+        flex: 1; /* Full width */
+    }
+
+    .sidebar {
+        flex: 1; /* Full width */
+        margin-top: 20px; /* Beri jarak antara konten dan sidebar */
     }
 }
-@media (max-width: 480px) {
-    .title {
-        font-size: 1.8rem;
+
+@media screen and (max-width: 768px) {
+    .container-events {
+        flex-direction: column-reverse; /* Sidebar muncul duluan */
+        align-items: center;
     }
-    .launching-text {
-        font-size: 0.9rem;
+
+    .container-events-sidebar {
+        margin-bottom: 3em;
     }
-    .btn {
-        font-size: 0.9rem;
+
+    .content {
+        width: 100%;
     }
-    .event-info {
-        gap: 20px;
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
     }
-    #countdown {
-        font-size: 2.5rem; /* Sesuaikan ukuran */
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .sidebar i {
+        font-size: 16px; /* Perkecil ikon */
+    }
+
+    .contact-section h3 {
+        font-size: 20px;
     }
 }
 
@@ -3530,96 +3421,5 @@ input[type="number"] {
 }
 
 .swiper-button-wp-calendar .swiper-button-next {
-    margin-right: 7em;
-}
-
-/* News */
-.collection {
-    margin-top: -7em;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.collection .content-news {
-    height: 28rem;
-    width: 25rem;
-    background-color: #1b1f2a;
-    border: 0.2rem solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.7rem;
-    border-bottom: 0.4rem solid #ff8243;
-    border-top: 0.4rem solid #ff8243;
-    overflow: hidden;
-    /* padding: .2rem; */
-}
-
-.content-news img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom-left-radius: 0.6rem;
-    border-bottom-right-radius: 0.6rem;
-}
-.text-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.text-content h3 {
-    font-size: 1.7rem;
-    font-weight: 900;
-    color: #fff;
-    margin-top: 20px;
-}
-.text-content p {
-    margin-top: 10px;
-    max-width: 22rem;
-    font-size: 0.9rem;
-    font-weight: 400;
-    text-align: center;
-    color: #fff;
-    line-height: 1.3; /* Atur sesuai kebutuhan */
-}
-
-.button-container-news {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.view-all-button-news {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-    background: linear-gradient(90deg, #ff7e5f, #ff8243);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.view-all-button-news:hover {
-    background: linear-gradient(90deg, #ff8243, #ff7e5f);
-    transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    color: #fff;
-}
-
-.swiper-button-wp-news {
-    position: relative;
-    margin-top: 60px;
-    display: flex;
-    justify-content: space-between;
-    height: 60px;
-    align-items: center;
-}
-
-.swiper-button-wp-news .swiper-button-prev {
-    margin-left: 7em;
-}
-
-.swiper-button-wp-news .swiper-button-next {
     margin-right: 7em;
 }

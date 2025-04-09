@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\EventsController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\TestimonialAuthController;
 
 /**
@@ -53,9 +55,9 @@ Route::middleware('auth:testimonial')->group(function () {
  * HomeController Routes
  * Uses a controller to handle the main home, show, and tokorestoran pages.
  */
-Route::get('/', [HomeController::class, 'home'])->name('home'); // Multicore
-Route::get('/show', [HomeController::class, 'show'])->name('show'); // Multicore
-Route::get('/tokorestoran', [HomeController::class, 'tokorestoran'])->name('tokorestoran'); // Multicore
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/show', [HomeController::class, 'show'])->name('show');
+Route::get('/tokorestoran', [HomeController::class, 'tokorestoran'])->name('tokorestoran');
 
 /**
  * Business Routes
@@ -84,3 +86,15 @@ Route::get('/profile/edit', [TestimonialAuthController::class, 'editProfile'])
     ->name('testimonial.profile.edit');
 Route::post('/profile/update', [TestimonialAuthController::class, 'updateProfile'])
     ->name('testimonial.profile.update');
+
+
+/**
+ * News Read More Route
+ * Retrieves and displays news details based on the given ID.
+ */
+Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
+/**
+ * News Read More Route
+ * Retrieves and displays news details based on the given ID.
+ */
+Route::get('/events/{slug}', [EventsController::class, 'show'])->name('events.show');

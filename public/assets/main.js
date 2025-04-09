@@ -1,8 +1,8 @@
-$(document).ready(function ($) { 
-    "use strict"; 
+$(document).ready(function ($) {
+    "use strict";
 
     var book_table = new Swiper(".book-table-img-slider", {
-        slidesPerView: 1, 
+        slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
         autoplay: {
@@ -175,8 +175,8 @@ jQuery(window).on("load", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const sections = document.querySelectorAll("section, footer"); 
-    const navLinks = document.querySelectorAll(".menu li a"); 
+    const sections = document.querySelectorAll("section, footer");
+    const navLinks = document.querySelectorAll(".menu li a");
 
     function updateActiveMenu() {
         let currentSection = "";
@@ -189,9 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         navLinks.forEach((link) => {
-            link.classList.remove("active-menu"); 
+            link.classList.remove("active-menu");
             if (link.getAttribute("href").substring(1) === currentSection) {
-                link.classList.add("active-menu"); 
+                link.classList.add("active-menu");
             }
         });
     }
@@ -218,7 +218,7 @@ $(document).ready(function () {
     // Initial GSAP setup
     gsap.set(".filter-active", {
         x: targets[0].offsetLeft,
-        width: targets[0].offsetWidth
+        width: targets[0].offsetWidth,
     });
 
     function moveBar() {
@@ -232,11 +232,19 @@ $(document).ready(function () {
 
             animation.to(".filter-active", {
                 x: targets[activeTab].offsetLeft,
-                width: targets[activeTab].offsetWidth
+                width: targets[activeTab].offsetWidth,
             });
 
-            animation.to(targets[oldTab], { color: "#0d0d25", ease: "none" }, 0);
-            animation.to(targets[activeTab], { color: "#fff", ease: "none" }, 0);
+            animation.to(
+                targets[oldTab],
+                { color: "#0d0d25", ease: "none" },
+                0
+            );
+            animation.to(
+                targets[activeTab],
+                { color: "#fff", ease: "none" },
+                0
+            );
         }
     }
 
@@ -271,38 +279,46 @@ $(document).ready(function () {
         const keyword = $("#search-keyword").val().toLowerCase();
 
         // Filtering
-        menuItems.hide().filter(function () {
-            const itemCategory = $(this).data("category");
-            const itemType = $(this).data("cat");
-            const itemName = $(this).data("name");
+        menuItems
+            .hide()
+            .filter(function () {
+                const itemCategory = $(this).data("category");
+                const itemType = $(this).data("cat");
+                const itemName = $(this).data("name");
 
-            const matchesCategory = selectedCategory === "all" || itemCategory === selectedCategory;
-            const matchesType = selectedType === "all" || itemType === selectedType;
-            const matchesKeyword = !keyword || itemName.includes(keyword);
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    itemCategory === selectedCategory;
+                const matchesType =
+                    selectedType === "all" || itemType === selectedType;
+                const matchesKeyword = !keyword || itemName.includes(keyword);
 
-            return matchesCategory && matchesType && matchesKeyword;
-        }).show();
+                return matchesCategory && matchesType && matchesKeyword;
+            })
+            .show();
 
         // Sorting
         const sortedItems = menuItems.sort(function (a, b) {
             const timeA = $(a).data("created-at");
             const timeB = $(b).data("created-at");
 
-            return sortOrder === "newest" ? new Date(timeB) - new Date(timeA) : new Date(timeA) - new Date(timeB);
+            return sortOrder === "newest"
+                ? new Date(timeB) - new Date(timeA)
+                : new Date(timeA) - new Date(timeB);
         });
 
         $("#menu-dish").html(sortedItems);
     });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const foodCategory = document.getElementById('food-category');
-    const sortOrder = document.getElementById('sort-order');
-    const businessType = document.getElementById('business-type');
-    const searchKeyword = document.getElementById('search-keyword');
-    const searchButton = document.getElementById('search-button');
+document.addEventListener("DOMContentLoaded", function () {
+    const foodCategory = document.getElementById("food-category");
+    const sortOrder = document.getElementById("sort-order");
+    const businessType = document.getElementById("business-type");
+    const searchKeyword = document.getElementById("search-keyword");
+    const searchButton = document.getElementById("search-button");
 
-    searchButton.addEventListener('click', function () {
+    searchButton.addEventListener("click", function () {
         const selectedCategory = foodCategory.value;
         const selectedSort = sortOrder.value;
         const selectedType = businessType.value;
@@ -310,13 +326,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Construct URL with query parameters
         const url = new URL(window.location.href);
-        url.searchParams.set('category', selectedCategory);
-        url.searchParams.set('sort', selectedSort);
-        url.searchParams.set('type', selectedType);
+        url.searchParams.set("category", selectedCategory);
+        url.searchParams.set("sort", selectedSort);
+        url.searchParams.set("type", selectedType);
         if (keyword) {
-            url.searchParams.set('keyword', keyword);
+            url.searchParams.set("keyword", keyword);
         } else {
-            url.searchParams.delete('keyword'); // Remove keyword if empty
+            url.searchParams.delete("keyword"); // Remove keyword if empty
         }
 
         // Reload page with updated filters
@@ -325,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 $(document).ready(function ($) {
-
     jQuery(".filters").on("click", function () {
         jQuery("#menu").removeClass("bydefault_show-menu");
     });
@@ -351,3 +366,56 @@ $(document).ready(function ($) {
     });
 });
 
+var TrandingSlider = new Swiper(".tranding-slider", {
+    effect: "coverflow",
+    grabCursor: true,
+    centeredSlides: true,
+    loop: true,
+    slidesPerView: "auto",
+    coverflowEffect: {
+        rotate: 3,
+        stretch: 2,
+        depth: 100,
+        modifier: 5,
+        slideShadows: false,
+    },
+    autoplay: {
+        delay: 5000, // 3 detik
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    },
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+});
+
+var swiperNews = new Swiper(".mySwiper", {
+    effect: "coverflow",
+    grabCursor: true,
+    centeredSlides: true,
+    loop: false,
+    slidesPerView: "auto",
+    coverflowEffect: {
+        rotate: 0,
+        stretch: 0,
+        depth: 150,
+        modifier: 2.5,
+        slideShadows: true,
+    },
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    },
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+});

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Events;
 use App\Models\FoodCategory;
 use App\Models\Gallery;
+use App\Models\News;
 use App\Models\QnA;
 use App\Models\Type;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -43,7 +46,10 @@ class HomeController extends Controller
             $business->average_rating = $business->testimonials->avg('rating') ?? 0;
         }
 
-        return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter'));
+        $events = Events::where('end_time', '>', Carbon::now('Australia/Melbourne'))->get();
+        $news = News::where('status', 'published')->latest()->take(6)->get(); // ambil 6 news terbaru
+
+        return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter', 'events', 'news'));
     }
 
     // Get nearby businesses based on latitude and longitude

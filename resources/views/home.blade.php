@@ -24,6 +24,11 @@
 
     <!-- fancy box  -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
     <!-- custom css  -->
     <link rel="stylesheet" href="assets/css/home.css">
 </head>
@@ -103,6 +108,8 @@
                                 <li><a href="#menu">Store & Restaurant</a></li>
                                 <li><a href="#gallery">Gallery</a></li>
                                 <li><a href="#qna">QnA</a></li>
+                                <li><a href="#calendar">Calendar</a></li>
+                                <li><a href="#news">News</a></li>
                                 <li><a href="#contact">Contact Us</a></li>
                                 <li>
                                     @guest('testimonial')
@@ -498,13 +505,135 @@
 
             </section>
 
+            <!-- Calendar  -->
+            <section class="faq-sec section bg-light" id="calendar">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="sec-title text-center mb-5">
+                            <p class="sec-sub-title mb-3">CALENDAR OF EVENTS</p>
+                            <div class="about_us">
+                                <h2>Calendar of </h2>
+                                <h2>
+                                    Events<span class="rasa-text"> Taste </span>of Indonesia
+                                </h2>
+                            </div>
+                            <div class="sec-title-shape mb-4">
+                                <img src="assets/images/title-shape.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tranding" class="calendar section bg-light">
+                <div class="container-card-calendar">
+                    <div class="swiper tranding-slider">
+                        <div class="swiper-wrapper">
+                            <!-- Slide-start -->
+                            @foreach ($events as $event)
+                            <div class="swiper-slide tranding-slide">
+                                <div class="tranding-slide-img">
+                                    <img src="{{ asset('storage/' . $event->image_events) }}" alt="Tranding" />
+                                </div>
+                                <div class="tranding-slide-content">
+                                    <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="link-calendar">
+                                        <h1 class="food-price">{{ $event->type_events }}</h1>
+                                        <div class="desc">
+                                            <div class="location">
+                                                <i class="fa-solid fa-location-dot"></i> {{ $event->place_name }}
+                                            </div>
+                                            <div class="title-calendar">{{ $event->title }}</div>
+                                            <div class="time">
+                                                {{ \Carbon\Carbon::parse($event->start_time)->format('j F Y - \a\t gA') }}
+                                                to
+                                                {{ \Carbon\Carbon::parse($event->end_time)->format('gA') }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            <!-- Slide-end -->
+
+                        </div>
+
+                        <div class="swiper-button-wp-calendar">
+                            <div class="swiper-button-prev swiper-button">
+                                <i class="uil uil-angle-left"></i>
+                            </div>
+                            <div class="swiper-button-next swiper-button">
+                                <i class="uil uil-angle-right"></i>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- News  -->
+            <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="news">
+                <div class="sec-wp">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="sec-title text-center mb-5">
+                                    <p class="sec-sub-title mb-3">news</p>
+                                    <div class="about_us">
+                                        <h2>News About </h2>
+                                        <h2>
+                                            <span class="rasa-text"> Taste </span>of Indonesia
+                                        </h2>
+                                    </div>
+                                    <div class="sec-title-shape mb-4">
+                                        <img src="assets/images/title-shape.svg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="collection">
+                <div class="swiper-container mySwiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($news as $item)
+                        <div class="content-news swiper-slide">
+                            <img src="{{ asset('storage/' . $item->image_news) }}" alt="{{ $item->title }}">
+                            <div class="text-content">
+                                <h3>{{ Str::limit(strip_tags($item->title), 20) }}</h3>
+                                <p>{{ Str::limit(strip_tags($item->desc), 100) }}</p>
+                                <div class="button-container-news">
+                                    <a href="{{ route('news.show', $item->slug) }}" class="view-all-button-news">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+
+                    <div class="swiper-button-wp-news">
+                        <div class="swiper-button-prev swiper-button">
+                            <i class="uil uil-angle-left"></i>
+                        </div>
+                        <div class="swiper-button-next swiper-button">
+                            <i class="uil uil-angle-right"></i>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </section>
+
+
             <!-- Contact Want to add your business  -->
             <div class="bg-pattern bg-light repeat-img"
                 style="background-image: url(assets/images/blog-pattern-bg.png);">
 
                 <section class="newsletter-sec section pt-0" id="contact">
                     <div class="sec-wp">
-                        <div class="container">
+                        <div class="container-calendar">
                             <div class="row">
                                 <div class="col-lg-8 m-auto">
                                     <div class="newsletter-box text-center back-img white-text"
