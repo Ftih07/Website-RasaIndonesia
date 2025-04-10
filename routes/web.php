@@ -88,6 +88,8 @@ Route::post('/profile/update', [TestimonialAuthController::class, 'updateProfile
     ->name('testimonial.profile.update');
 
 
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+
 /**
  * News Read More Route
  * Retrieves and displays news details based on the given ID.

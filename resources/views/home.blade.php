@@ -625,6 +625,9 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </section>
+            <div class="button-container-news-view-all">
+                <a href="{{ route('news.index') }}" class="view-all-button-news-view-all">View All</a>
+            </div>
 
 
             <!-- Contact Want to add your business  -->

@@ -23,4 +23,11 @@ class NewsController extends Controller
 
         return view('news.show', compact('currentNews', 'anotherNews'));
     }
+
+    public function index()
+    {
+        $allNews = News::where('status', 'published')->get();
+
+        return view('news.index', compact('allNews'));
+    }
 }
