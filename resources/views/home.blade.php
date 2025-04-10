@@ -525,6 +525,7 @@
                 </div>
             </section>
 
+            @if($events->count())
             <section id="tranding" class="calendar section bg-light">
                 <div class="container-card-calendar">
                     <div class="swiper tranding-slider">
@@ -567,10 +568,14 @@
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
-
                     </div>
                 </div>
             </section>
+            @else
+            <section class="faq-sec section bg-light text-center">
+                <h3>No upcoming events for now. Stay tuned!</h3>
+            </section>
+            @endif
 
             <!-- News  -->
             <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="news">
