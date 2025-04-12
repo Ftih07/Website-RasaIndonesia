@@ -55,8 +55,18 @@ class BusinessController extends Controller
 
         $testimonials = $testimonialsQuery->get();
 
+        $latestMenus = $business->products()->latest()->take(6)->get();
+
         // Pass data to the view
-        return view('business.show', compact('business', 'types', 'otherBusinesses', 'typeFilter', 'testimonials', 'ratingFilter', 'sortOrder'));
+        return view('business.show', compact('business', 'types', 'otherBusinesses', 'typeFilter', 'testimonials', 'ratingFilter', 'sortOrder', 'latestMenus'));
+    }
+
+    public function menu($id)
+    {
+        $business = Business::with('products')->findOrFail($id);
+        $menus = $business->products()->latest()->get();
+
+        return view('business.menu', compact('business', 'menus'));
     }
 
     /**

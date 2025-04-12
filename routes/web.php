@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\TestimonialAuthController;
 
@@ -100,3 +101,5 @@ Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
  * Retrieves and displays news details based on the given ID.
  */
 Route::get('/events/{slug}', [EventsController::class, 'show'])->name('events.show');
+
+Route::get('/business/{id}/menu', [BusinessController::class, 'menu'])->name('business.menu');

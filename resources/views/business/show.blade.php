@@ -117,6 +117,7 @@
                             {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
                             @endforeach
                         </h3>
+                        <p>Updated On: {{ \Carbon\Carbon::parse($business->updated_at)->format('D F d, Y \a\t gA') }}</p>
                         <p>{{ $business->description }}</p>
                     </div>
 
@@ -297,7 +298,7 @@
 
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show-menu" id="menu">
-                        @foreach($business->products as $menu)
+                        @foreach($latestMenus as $menu)
                         <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}" data-cat="{{ $menu->type }}">
                             <div class="dish-box text-center">
                                 <div class="dist-img">
@@ -337,6 +338,11 @@
                         @endforeach
                     </div>
                 </div>
+
+                <div class="text-center mt-4">
+                    <a href="{{ route('business.menu', $business->id) }}" target="_blank" class="viewAllBtn">View All</a>
+                </div>
+
             </div>
         </div>
     </section>

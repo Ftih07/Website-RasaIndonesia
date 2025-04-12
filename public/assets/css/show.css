@@ -1934,6 +1934,12 @@ iframe {
     text-align: left;
 }
 
+.sec-text-hero p {
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+}
+
 .sec-text-hero h2 {
     font-size: 48px;
     margin-bottom: 10px;
@@ -3152,7 +3158,7 @@ input[type="number"] {
 
 .section-order h3 {
     font-size: 25px;
-    font-weight:bolder;
+    font-weight: bolder;
     margin-bottom: 30px;
 }
 
@@ -3192,4 +3198,19 @@ input[type="number"] {
     .section-order h3 {
         font-size: 20px;
     }
+}
+
+.viewAllBtn {
+    background-color: #ff8a00;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.viewAllBtn:hover {
+    background-color: #e67e00;
+    color: #fff;
 }
