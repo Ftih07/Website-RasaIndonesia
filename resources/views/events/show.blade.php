@@ -139,10 +139,22 @@
                                         <i class="fa-brands fa-facebook"></i>
                                     </a>
                                     <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}" target="_blank">
-                                        <i class="fa-brands fa-twitter"></i>
+                                        <i class="fa-brands fa-x-twitter"></i>
                                     </a>
                                     <a href="mailto:?subject=Check out this event&body={{ urlencode(request()->fullUrl()) }}">
                                         <i class="fa-solid fa-envelope"></i>
+                                    </a>
+                                    <!-- WhatsApp -->
+                                    <a href="https://wa.me/?text={{ urlencode($event->title . ' ' . Request::fullUrl()) }}" target="_blank" title="Share via WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
+
+                                    <!-- Instagram DM -->
+                                    <a href="https://www.instagram.com/direct/inbox/"
+                                        target="_blank"
+                                        title="Share via Instagram DM"
+                                        onclick="copyLinkToClipboard('{{ Request::fullUrl() }}')">
+                                        <i class="fa-brands fa-instagram"></i>
                                     </a>
                                     <a href="#" onclick="navigator.clipboard.writeText('{{ request()->fullUrl() }}'); alert('Link copied!')">
                                         <i class="fa-solid fa-link"></i>
@@ -477,6 +489,18 @@
             document.execCommand("copy");
             document.body.removeChild(tempInput);
             alert("Link copied to clipboard!");
+        }
+    </script>
+
+    <script>
+        function copyLinkToClipboard(link) {
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    alert("Link has been copied to the clipboard. You can directly paste it in Instagram DM 😊");
+                })
+                .catch(err => {
+                    console.error("Could not copy text: ", err);
+                });
         }
     </script>
 

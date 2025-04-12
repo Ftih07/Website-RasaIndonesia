@@ -134,6 +134,7 @@
                                     {{ $currentNews->time_read }} minute read . {{ $currentNews->published_display }}
                                 </p>
                                 <div class="social-icons">
+                                    <p>Share :</p>
                                     <!-- Facebook -->
                                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(Request::fullUrl()) }}"
                                         target="_blank">
@@ -143,12 +144,25 @@
                                     <!-- Twitter -->
                                     <a href="https://twitter.com/intent/tweet?url={{ urlencode(Request::fullUrl()) }}&text={{ urlencode($currentNews->title) }}"
                                         target="_blank">
-                                        <i class="fa-brands fa-twitter"></i>
+                                        <i class="fa-brands fa-x-twitter"></i>
                                     </a>
 
                                     <!-- Email -->
                                     <a href="mailto:?subject={{ urlencode($currentNews->title) }}&body=Check out this article: {{ urlencode(Request::fullUrl()) }}">
                                         <i class="fa-solid fa-envelope"></i>
+                                    </a>
+
+                                    <!-- WhatsApp -->
+                                    <a href="https://wa.me/?text={{ urlencode($currentNews->title . ' ' . Request::fullUrl()) }}" target="_blank" title="Share via WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
+
+                                    <!-- Instagram DM -->
+                                    <a href="https://www.instagram.com/direct/inbox/"
+                                        target="_blank"
+                                        title="Share via Instagram DM"
+                                        onclick="copyLinkToClipboard('{{ Request::fullUrl() }}')">
+                                        <i class="fa-brands fa-instagram"></i>
                                     </a>
 
                                     <!-- Copy Link -->
@@ -411,6 +425,18 @@
             navigator.clipboard.writeText(window.location.href)
                 .then(() => alert('Link copied to clipboard!'))
                 .catch(err => console.error('Could not copy text: ', err));
+        }
+    </script>
+
+    <script>
+        function copyLinkToClipboard(link) {
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    alert("Link has been copied to the clipboard. You can directly paste it in Instagram DM 😊");
+                })
+                .catch(err => {
+                    console.error("Could not copy text: ", err);
+                });
         }
     </script>
 
