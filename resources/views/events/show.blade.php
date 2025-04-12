@@ -162,7 +162,8 @@
                                 <div class="container-events-sidebar">
                                     <aside class="sidebar">
                                         <!-- Location -->
-                                        <p><i class="fas fa-map-marker-alt"></i> <strong>{{ $event->place_name }}</strong><br>
+                                        <p class="event-address">
+                                            <i class="fas fa-map-marker-alt"></i> <strong>{{ $event->place_name }}</strong><br>
                                             {{ $event->street_name }}
                                         </p>
 
@@ -185,7 +186,7 @@
                                                 allowfullscreen>
                                             </iframe>
                                         </div>
-                                        @endif  
+                                        @endif
 
                                         <!-- Contact -->
                                         <div class="contact-section">

@@ -3060,6 +3060,11 @@ iframe {
     border-radius: 8px;
     flex-direction: column;
 }
+.event-address {
+    max-width: 30ch;
+    word-wrap: break-word;
+}
+
 .sidebar p {
     margin: 5px 0;
 }
