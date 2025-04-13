@@ -43,6 +43,8 @@ class Business extends Model
         'services' => 'array',
         'media_social' => 'array',
         'contact' => 'array',
+        'order' => 'array',
+        'reserve' => 'array',
     ];
 
     /**

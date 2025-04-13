@@ -351,23 +351,156 @@
         <div class="container-order">
             <div class="section-order">
                 <h3>Tap to Order Your Foods</h3>
-                @if ($business->order)
-                <a href="{{ $business->order }}" target="_blank" class="btn-order">Order Now</a>
+                @if (!empty($business->order))
+                <button class="btn-order" data-bs-toggle="modal" data-bs-target="#orderModal">Order Now</button>
                 @else
-                <div class="btn-order disabled">
-                    Order Unavailable
-                </div>
+                <div class="btn-order disabled">Order Unavailable</div>
                 @endif
             </div>
 
-            @if ($business->reserve)
+            @if (!empty($business->reserve))
             <div class="divider"></div>
 
             <div class="section-order">
                 <h3>Tap to Make a Reservation</h3>
-                <a href="{{ $business->reserve }}" target="_blank" class="btn-order">Reserve</a>
+                <button class="btn-order" data-bs-toggle="modal" data-bs-target="#reserveModal">Reserve</button>
             </div>
             @endif
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 shadow border-0 overflow-hidden">
+                <!-- Header with wave design -->
+                <div class="position-relative">
+                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-4">
+                        <h4 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h4>
+                        <button type="button" class="btn-close btn-close-white me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="wave-divider">
+                        <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+                    </svg>
+                </div>
+                <!-- Body with platforms grid -->
+                <div class="modal-body p-4 pt-0">
+                    @if (!empty($business->order) && is_array($business->order))
+                    <div class="row g-4 py-2">
+                        @foreach ($business->order as $item)
+                        <div class="col-md-6">
+                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column align-items-center p-4 text-decoration-none text-dark border rounded-4 shadow-sm h-100">
+                                <div class="platform-icon-wrapper mb-3">
+                                    <div class="platform-icon rounded-circle p-3 bg-light shadow-sm">
+                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" width="50">
+                                    </div>
+                                    <span class="platform-badge badge bg-primary position-absolute">Order Now</span>
+                                </div>
+                                <h5 class="platform-name fw-bold">{{ $item['platform'] }}</h5>
+                                <p class="text-muted text-center small mb-3">Fast delivery, easy tracking</p>
+                                <div class="platform-button mt-auto px-4 py-2 rounded-pill bg-light">
+                                    Continue <i class="bi bi-arrow-right ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Customer favorite tag -->
+                    <div class="top-choice position-absolute">
+                        <div class="badge bg-warning text-dark p-2 px-3 rounded-pill shadow-sm">
+                            <i class="bi bi-star-fill me-1"></i> Customer Favorite
+                        </div>
+                    </div>
+                    @else
+                    <div class="text-center py-5">
+                        <div class="empty-illustration mb-4">
+                            <i class="bi bi-bag-x display-1 text-muted"></i>
+                        </div>
+                        <h5 class="fw-bold text-muted">No Order Options Available</h5>
+                        <p class="text-muted">Please check back later or contact us directly.</p>
+                        <button class="btn btn-outline-primary rounded-pill px-4 mt-2">
+                            <i class="bi bi-telephone me-2"></i> Contact Us
+                        </button>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Footer with additional options -->
+                <div class="modal-footer bg-light border-top py-3">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reserve Modal -->
+    <div class="modal fade" id="reserveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 shadow border-0 overflow-hidden">
+                <!-- Header with wave design -->
+                <div class="position-relative">
+                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-4">
+                        <h4 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h4>
+                        <button type="button" class="btn-close btn-close-white me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="wave-divider">
+                        <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+                    </svg>
+                </div>
+                <!-- Body with platforms grid -->
+                <div class="modal-body p-4 pt-0">
+                    @if (!empty($business->reserve) && is_array($business->reserve))
+                    <div class="row g-4 py-2">
+                        @foreach ($business->reserve as $item)
+                        <div class="col-md-6">
+                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column align-items-center p-4 text-decoration-none text-dark border rounded-4 shadow-sm h-100">
+                                <div class="platform-icon-wrapper mb-3">
+                                    <div class="platform-icon rounded-circle p-3 bg-light shadow-sm">
+                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" width="50">
+                                    </div>
+                                    <span class="platform-badge badge bg-primary position-absolute">Reserve Now</span>
+                                </div>
+                                <h5 class="platform-name fw-bold">{{ $item['platform'] }}</h5>
+                                <p class="text-muted text-center small mb-3">Fast delivery, easy tracking</p>
+                                <div class="platform-button mt-auto px-4 py-2 rounded-pill bg-light">
+                                    Continue <i class="bi bi-arrow-right ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-5">
+                        <div class="empty-illustration mb-4">
+                            <i class="bi bi-bag-x display-1 text-muted"></i>
+                        </div>
+                        <h5 class="fw-bold text-muted">No Reserve Options Available</h5>
+                        <p class="text-muted">Please check back later or contact us directly.</p>
+                        <button class="btn btn-outline-primary rounded-pill px-4 mt-2">
+                            <i class="bi bi-telephone me-2"></i> Contact Us
+                        </button>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Footer with additional options -->
+                <div class="modal-footer bg-light border-top py-3">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -599,29 +732,41 @@
     </section>
 
     <!-- Modal Add Testimonial -->
+
     <div id="customModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Add Your Testimonial</h2>
-            <form id="testimonialForm" method="POST" action="{{ route('business.testimonials.store') }}">
-                @csrf
-                <input type="hidden" name="business_id" value="{{ $business->id }}">
+        <div class="modal-content-testimonial">
+            <div class="modal-header">
+                <h2>Add Your Testimonial</h2>
+                <span class="close-button">&times;</span>
+            </div>
 
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" required></textarea>
-                </div>
+            <div class="modal-body">
+                <form id="testimonialForm" method="POST" action="{{ route('business.testimonials.store') }}">
+                    @csrf
+                    <input type="hidden" name="business_id" value="{{ $business->id }}">
 
-                <div class="form-group">
-                    <label for="rating">Rating</label>
-                    <input type="number" id="rating" name="rating" min="1" max="5" required>
-                </div>
+                    <div class="form-group">
+                        <label for="description">Your Experience</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Tell us about your experience..." required></textarea>
+                    </div>
 
-                <div class="form-actions">
-                    <button type="button" class="cancel-button">Cancel</button>
-                    <button type="submit" class="submit-button">Submit</button>
-                </div>
-            </form>
+                    <div class="form-group rating-group">
+                        <label>Your Rating</label>
+                        <div class="star-rating-input">
+                            <input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="5 stars">★</label>
+                            <input type="radio" id="star4" name="rating" value="4" required><label for="star4" title="4 stars">★</label>
+                            <input type="radio" id="star3" name="rating" value="3" required><label for="star3" title="3 stars">★</label>
+                            <input type="radio" id="star2" name="rating" value="2" required><label for="star2" title="2 stars">★</label>
+                            <input type="radio" id="star1" name="rating" value="1" required><label for="star1" title="1 star">★</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button">Cancel</button>
+                        <button type="submit" class="submit-button">Submit Testimonial</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

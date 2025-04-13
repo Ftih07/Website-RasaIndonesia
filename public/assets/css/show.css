@@ -2935,33 +2935,6 @@ iframe {
     background-color: rgba(0, 0, 0, 0.5); /* Background gelap */
 }
 
-/* Modal box */
-.modal-content {
-    position: relative;
-    margin: 10% auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    width: 50%;
-    max-width: 600px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Close button */
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-}
-
-/* Form styling */
-.form-group {
-    margin-bottom: 15px;
-}
 
 label {
     display: block;
@@ -2975,48 +2948,220 @@ label {
     white-space: nowrap; /* Mencegah teks turun ke bawah */
 }
 
-textarea,
-input[type="number"] {
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content-testimonial {
+    background-color: #fff;
+    margin: 10vh auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.4s ease;
+    overflow: hidden;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #343a40;
+}
+
+.close-button {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #343a40;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 20px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #495057;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    resize: vertical;
+}
+
+textarea:focus {
+    border-color: #4dabf7;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+}
+
+/* Star Rating */
+.rating-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.star-rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.star-rating-input input {
+    display: none;
+}
+
+.star-rating-input label {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+    margin: 0 2px;
+    transition: color 0.3s;
+}
+
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label {
+    color: #ffb800;
+}
+
+/* Form Actions */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-}
-
-.cancel-button,
-.submit-button {
-    padding: 10px 15px;
-    border-color: #ffbc00;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-top: 25px;
 }
 
 .cancel-button {
-    background: transparent;
-    color: #ffbc00;
+    padding: 10px 16px;
+    background-color: #f1f3f5;
+    color: #495057;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
 .submit-button {
-    background-color: #ffbc00;
-    color: #fff;
+    padding: 10px 16px;
+    background-color: #ecad00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
 .cancel-button:hover {
-    background-color: #ffbc00;
-    color: #fff;
+    background-color: #e9ecef;
 }
 
 .submit-button:hover {
-    background-color: #ecad00;
+    background-color: #cb9500;
 }
 
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .modal-content-testimonial {
+        margin: 5vh auto;
+        width: 95%;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .cancel-button, .submit-button {
+        width: 100%;
+        margin-top: 8px;
+    }
+    
+    .star-rating-input label {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header {
+        padding: 12px 16px;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    textarea {
+        padding: 10px;
+    }
+    
+    .star-rating-input label {
+        font-size: 22px;
+    }
+}
+
+
+/*Menu*/
 .catalogue-link {
     display: flex;
     justify-content: center;
@@ -3198,6 +3343,10 @@ input[type="number"] {
     .section-order h3 {
         font-size: 20px;
     }
+    .body-order {
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
 }
 
 .viewAllBtn {
@@ -3213,4 +3362,102 @@ input[type="number"] {
 .viewAllBtn:hover {
     background-color: #e67e00;
     color: #fff;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5 !important; /* lebih terang */
+    z-index: 1040 !important; /* biar gak nutup modalnya */
+}
+
+.modal.show {
+    z-index: 1050 !important; /* lebih tinggi dari backdrop */
+}
+
+.modal-content {
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+.modal-lg {
+    max-width: 800px;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #f9d423 0%, #f8b500 100%);
+}
+
+.wave-divider {
+    display: block;
+    margin-top: -2px;
+    margin-bottom: -20px;
+    z-index: 10;
+}
+
+.platform-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.platform-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.platform-icon-wrapper {
+    position: relative;
+}
+
+.platform-icon {
+    transition: all 0.4s ease;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.platform-card:hover .platform-icon {
+    transform: scale(1.1);
+}
+
+.platform-badge {
+    top: -5px;
+    right: -15px;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+    transform: rotate(15deg);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.platform-card:hover .platform-badge {
+    opacity: 1;
+    right: -5px;
+}
+
+.platform-button {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+}
+
+.platform-card:hover .platform-button {
+    background: #ff8a00;
+    color: black;
+    border-color: #ff8a00;
+}
+
+.top-choice {
+    top: 25px;
+    right: 35px;
+    z-index: 20;
+    transform: rotate(5deg);
+}
+
+.empty-illustration {
+    opacity: 0.6;
 }

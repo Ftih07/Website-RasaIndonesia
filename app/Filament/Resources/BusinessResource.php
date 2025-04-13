@@ -97,13 +97,40 @@ class BusinessResource extends Resource
                     ->directory('menu'),
 
                 // Business Order Link
-                Forms\Components\TextInput::make('order')
-                    ->label('Business Order Link'),
+                Forms\Components\Repeater::make('order')
+                    ->label('Business Order Link')
+                    ->schema([
+                        Forms\Components\Select::make('platform')
+                            ->label('Platform')
+                            ->options([
+                                'Menulog' => 'Menulog',
+                                'DoorDash' => 'DoorDash',
+                                'UberEAST' => 'UberEAST',
+                                'Website' => 'Website',
+                            ])
+                            ->required(),
+                        Forms\Components\TextInput::make('link')
+                            ->label('Link')
+                            ->url(),
+                    ])
+                    ->columns(2),
 
                 // Business Reserve Link
-                Forms\Components\TextInput::make('reserve')
-                    ->label('Business Reserve Link'),
-                    
+                Forms\Components\Repeater::make('reserve')
+                    ->label('Business Reserve Link')
+                    ->schema([
+                        Forms\Components\Select::make('platform')
+                            ->label('Platform')
+                            ->options([
+                                'OpenTable' => 'OpenTable',
+                            ])
+                            ->required(),
+                        Forms\Components\TextInput::make('link')
+                            ->label('Link')
+                            ->url(),
+                    ])
+                    ->columns(2),
+
                 // Repeater for social media accounts
                 Forms\Components\Repeater::make('media_social')
                     ->label('Social Media')

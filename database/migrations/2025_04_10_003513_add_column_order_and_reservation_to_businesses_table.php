@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('businesses', function (Blueprint $table) {
             //
-            $table->text('order')->nullable()->after('menu'); // Contoh kolom baru
-            $table->text('reserve')->nullable()->after('order'); // Contoh kolom baru
+            $table->json('order')->nullable()->after('menu'); // Contoh kolom baru
+            $table->json('reserve')->nullable()->after('order'); // Contoh kolom baru
         });
     }
 
