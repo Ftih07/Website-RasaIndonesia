@@ -107,6 +107,7 @@ class BusinessResource extends Resource
                                 'DoorDash' => 'DoorDash',
                                 'UberEAST' => 'UberEAST',
                                 'Website' => 'Website',
+                                'HungryPanda' => 'HungryPanda',
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('link')
