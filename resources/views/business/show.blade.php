@@ -372,69 +372,50 @@
     <!-- Order Modal -->
     <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content rounded-4 shadow border-0 overflow-hidden">
-                <!-- Header with wave design -->
+            <div class="modal-content rounded-3 shadow border-0 overflow-hidden">
+                <!-- Compact Header with wave design -->
                 <div class="position-relative">
-                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-4">
-                        <h4 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h4>
-                        <button type="button" class="btn-close btn-close-white me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-3">
+                        <h5 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h5>
+                        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="wave-divider">
-                        <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" class="wave-divider">
+                        <path fill="#ffffff" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,48C640,43,800,27,960,24C1120,21,1280,32,1360,37.3L1440,43L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
                     </svg>
                 </div>
-                <!-- Body with platforms grid -->
-                <div class="modal-body p-4 pt-0">
+
+                <!-- Body with responsive platforms grid -->
+                <div class="modal-body p-3 pt-0">
                     @if (!empty($business->order) && is_array($business->order))
-                    <div class="row g-4 py-2">
+                    <div class="row g-3 py-1">
                         @foreach ($business->order as $item)
-                        <div class="col-md-6">
-                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column align-items-center p-4 text-decoration-none text-dark border rounded-4 shadow-sm h-100">
-                                <div class="platform-icon-wrapper mb-3">
-                                    <div class="platform-icon rounded-circle p-3 bg-light shadow-sm">
-                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" width="50">
-                                    </div>
-                                    <span class="platform-badge badge bg-primary position-absolute">Order Now</span>
+                        <div class="col-md-6 col-12">
+                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column flex-sm-row align-items-center p-3 text-decoration-none text-dark border rounded-3 h-100 position-relative hover-shadow">
+                                <div class="platform-icon rounded-circle p-2 bg-light mb-2 mb-sm-0 me-sm-3">
+                                    <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" class="platform-img">
                                 </div>
-                                <h5 class="platform-name fw-bold">{{ $item['platform'] }}</h5>
-                                <p class="text-muted text-center small mb-3">Fast delivery, easy tracking</p>
-                                <div class="platform-button mt-auto px-4 py-2 rounded-pill bg-light">
-                                    Continue <i class="bi bi-arrow-right ms-2"></i>
+                                <div class="text-center text-sm-start mb-2 mb-sm-0">
+                                    <h6 class="platform-name fw-bold mb-0">{{ $item['platform'] }}</h6>
+                                    <p class="text-muted small mb-0 d-none d-sm-block">Fast delivery, easy tracking</p>
+                                </div>
+                                <div class="ms-auto mt-2 mt-sm-0 order-badge-container">
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: #f8b500; color: white;">Order Now</span>
                                 </div>
                             </a>
                         </div>
                         @endforeach
                     </div>
-
-                    <!-- Customer favorite tag -->
-                    <div class="top-choice position-absolute">
-                        <div class="badge bg-warning text-dark p-2 px-3 rounded-pill shadow-sm">
-                            <i class="bi bi-star-fill me-1"></i> Customer Favorite
-                        </div>
-                    </div>
                     @else
-                    <div class="text-center py-5">
-                        <div class="empty-illustration mb-4">
-                            <i class="bi bi-bag-x display-1 text-muted"></i>
-                        </div>
-                        <h5 class="fw-bold text-muted">No Order Options Available</h5>
-                        <p class="text-muted">Please check back later or contact us directly.</p>
-                        <button class="btn btn-outline-primary rounded-pill px-4 mt-2">
-                            <i class="bi bi-telephone me-2"></i> Contact Us
-                        </button>
+                    <div class="text-center py-4">
+                        <i class="bi bi-bag-x display-5 text-muted"></i>
+                        <h5 class="fw-bold text-muted mt-2">No Order Options Available</h5>
                     </div>
                     @endif
                 </div>
 
-                <!-- Footer with additional options -->
-                <div class="modal-footer bg-light border-top py-3">
-                    <div class="container-fluid">
-                        <div class="row align-items-center">
-                            <div class="col text-end">
-                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Compact Footer -->
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -443,62 +424,50 @@
     <!-- Reserve Modal -->
     <div class="modal fade" id="reserveModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content rounded-4 shadow border-0 overflow-hidden">
-                <!-- Header with wave design -->
+            <div class="modal-content rounded-3 shadow border-0 overflow-hidden">
+                <!-- Compact Header with wave design -->
                 <div class="position-relative">
-                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-4">
-                        <h4 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h4>
-                        <button type="button" class="btn-close btn-close-white me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-3">
+                        <h5 class="modal-title fw-bold ms-2">Choose Your Reserve Platform</h5>
+                        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="wave-divider">
-                        <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" class="wave-divider">
+                        <path fill="#ffffff" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,48C640,43,800,27,960,24C1120,21,1280,32,1360,37.3L1440,43L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
                     </svg>
                 </div>
-                <!-- Body with platforms grid -->
-                <div class="modal-body p-4 pt-0">
+
+                <!-- Body with responsive platforms grid -->
+                <div class="modal-body p-3 pt-0">
                     @if (!empty($business->reserve) && is_array($business->reserve))
-                    <div class="row g-4 py-2">
+                    <div class="row g-3 py-1">
                         @foreach ($business->reserve as $item)
-                        <div class="col-md-6">
-                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column align-items-center p-4 text-decoration-none text-dark border rounded-4 shadow-sm h-100">
-                                <div class="platform-icon-wrapper mb-3">
-                                    <div class="platform-icon rounded-circle p-3 bg-light shadow-sm">
-                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" width="50">
-                                    </div>
-                                    <span class="platform-badge badge bg-primary position-absolute">Reserve Now</span>
+                        <div class="col-md-6 col-12">
+                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column flex-sm-row align-items-center p-3 text-decoration-none text-dark border rounded-3 h-100 position-relative hover-shadow">
+                                <div class="platform-icon rounded-circle p-2 bg-light mb-2 mb-sm-0 me-sm-3">
+                                    <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" class="platform-img">
                                 </div>
-                                <h5 class="platform-name fw-bold">{{ $item['platform'] }}</h5>
-                                <p class="text-muted text-center small mb-3">Fast delivery, easy tracking</p>
-                                <div class="platform-button mt-auto px-4 py-2 rounded-pill bg-light">
-                                    Continue <i class="bi bi-arrow-right ms-2"></i>
+                                <div class="text-center text-sm-start mb-2 mb-sm-0">
+                                    <h6 class="platform-name fw-bold mb-0">{{ $item['platform'] }}</h6>
+                                    <p class="text-muted small mb-0 d-none d-sm-block">Reserve ahead, skip the line</p>
+                                </div>
+                                <div class="ms-auto mt-2 mt-sm-0 order-badge-container">
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: #f8b500; color: white;">Reserve Now</span>
                                 </div>
                             </a>
                         </div>
                         @endforeach
                     </div>
                     @else
-                    <div class="text-center py-5">
-                        <div class="empty-illustration mb-4">
-                            <i class="bi bi-bag-x display-1 text-muted"></i>
-                        </div>
-                        <h5 class="fw-bold text-muted">No Reserve Options Available</h5>
-                        <p class="text-muted">Please check back later or contact us directly.</p>
-                        <button class="btn btn-outline-primary rounded-pill px-4 mt-2">
-                            <i class="bi bi-telephone me-2"></i> Contact Us
-                        </button>
+                    <div class="text-center py-4">
+                        <i class="bi bi-bag-x display-5 text-muted"></i>
+                        <h5 class="fw-bold text-muted mt-2">No Reserve Options Available</h5>
                     </div>
                     @endif
                 </div>
 
-                <!-- Footer with additional options -->
-                <div class="modal-footer bg-light border-top py-3">
-                    <div class="container-fluid">
-                        <div class="row align-items-center">
-                            <div class="col text-end">
-                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Compact Footer -->
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

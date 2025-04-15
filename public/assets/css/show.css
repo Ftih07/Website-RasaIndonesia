@@ -2935,7 +2935,6 @@ iframe {
     background-color: rgba(0, 0, 0, 0.5); /* Background gelap */
 }
 
-
 label {
     display: block;
     font-weight: bold;
@@ -2947,7 +2946,6 @@ label {
     gap: 10px; /* Beri jarak antara teks dan dropdown */
     white-space: nowrap; /* Mencegah teks turun ke bawah */
 }
-
 
 .modal {
     display: none;
@@ -2963,8 +2961,12 @@ label {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content-testimonial {
@@ -2979,8 +2981,14 @@ label {
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Modal Header */
@@ -3119,20 +3127,21 @@ textarea:focus {
         margin: 5vh auto;
         width: 95%;
     }
-    
+
     .modal-header h2 {
         font-size: 1.3rem;
     }
-    
+
     .form-actions {
         flex-direction: column;
     }
-    
-    .cancel-button, .submit-button {
+
+    .cancel-button,
+    .submit-button {
         width: 100%;
         margin-top: 8px;
     }
-    
+
     .star-rating-input label {
         font-size: 25px;
     }
@@ -3142,24 +3151,23 @@ textarea:focus {
     .modal-header {
         padding: 12px 16px;
     }
-    
+
     .modal-body {
         padding: 16px;
     }
-    
+
     .modal-header h2 {
         font-size: 1.2rem;
     }
-    
+
     textarea {
         padding: 10px;
     }
-    
+
     .star-rating-input label {
         font-size: 22px;
     }
 }
-
 
 /*Menu*/
 .catalogue-link {
@@ -3364,6 +3372,7 @@ textarea:focus {
     color: #fff;
 }
 
+/*Modal*/
 .modal-backdrop.show {
     opacity: 0.5 !important; /* lebih terang */
     z-index: 1040 !important; /* biar gak nutup modalnya */
@@ -3372,92 +3381,70 @@ textarea:focus {
 .modal.show {
     z-index: 1050 !important; /* lebih tinggi dari backdrop */
 }
-
-.modal-content {
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-}
-
-.modal-lg {
-    max-width: 800px;
-}
-
+/* Responsive styles */
 .bg-gradient-primary {
     background: linear-gradient(135deg, #f9d423 0%, #f8b500 100%);
 }
 
 .wave-divider {
     display: block;
-    margin-top: -2px;
-    margin-bottom: -20px;
-    z-index: 10;
+    height: 30px;
+    margin-top: -20px;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
 }
 
 .platform-card {
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-}
-
-.platform-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-    border-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-.platform-icon-wrapper {
-    position: relative;
-}
-
-.platform-icon {
-    transition: all 0.4s ease;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.platform-card:hover .platform-icon {
-    transform: scale(1.1);
-}
-
-.platform-badge {
-    top: -5px;
-    right: -15px;
-    font-size: 0.7rem;
-    padding: 0.35rem 0.65rem;
-    transform: rotate(15deg);
-    opacity: 0;
-    transition: all 0.3s ease;
-}
-
-.platform-card:hover .platform-badge {
-    opacity: 1;
-    right: -5px;
-}
-
-.platform-button {
-    transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.platform-card:hover .platform-button {
-    background: #ff8a00;
-    color: black;
-    border-color: #ff8a00;
+.platform-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
-.top-choice {
-    top: 25px;
-    right: 35px;
-    z-index: 20;
-    transform: rotate(5deg);
+/* Mobile-specific adjustments */
+@media (max-width: 575.98px) {
+    .platform-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem 0.75rem;
+    }
+
+    .order-badge-container {
+        margin-top: 0.5rem;
+        margin-left: 0 !important;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .platform-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .modal-title {
+        font-size: 1.15rem;
+    }
 }
 
-.empty-illustration {
-    opacity: 0.6;
+/* Tablet adjustments */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .platform-card {
+        padding: 0.75rem;
+    }
+
+    .platform-img {
+        width: 35px;
+        height: 35px;
+    }
 }
