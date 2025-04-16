@@ -84,12 +84,17 @@
 <body>
     <div class="logo">
         <img src="file://{{ public_path('assets/images/stickers.svg') }}" alt="Logo" style="position: absolute; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+
         <div class="title-container">
             <div class="line"></div>
             <div class="title">{{ $businessName }}</div>
             <div class="line"></div>
         </div>
+
         <div class="text-container">{{ $uniqueCode }}</div>
+
+        {{-- Tambahan QR Code --}}
+        <img src="file://{{ $qrPath }}" alt="QR Code ad" style="position: absolute; bottom: -15px; right: 125px; width: 50px; height: 50px;">
     </div>
 </body>
 

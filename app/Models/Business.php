@@ -13,6 +13,7 @@ class Business extends Model
      */
     protected $fillable = [
         'type_id',
+        'qr_link_id',
         'food_category_id',
         'name',
         'description',
@@ -105,5 +106,10 @@ class Business extends Model
     public function getAverageRatingAttribute()
     {
         return $this->testimonials->avg('rating') ?? 0; // Calculates the average rating from testimonials
+    }
+
+    public function qrLink()
+    {
+        return $this->belongsTo(\App\Models\QrLink::class);
     }
 }

@@ -44,6 +44,32 @@ class BusinessResource extends Resource
                     ->placeholder('Enter unique code')
                     ->columnSpan(2),
 
+                Forms\Components\Select::make('qr_link_id')
+                    ->label('QR Code')
+                    ->relationship('qrLink', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('Select QR code')
+                    ->columnSpan(2),
+
+                    Forms\Components\Placeholder::make('qr_link_id')
+                    ->content(function ($record) {
+                        if (!$record || !$record->qrLink || !$record->qrLink->qr_path) {
+                            return 'No QR Assigned';
+                        }
+                
+                        // Tambahkan 'storage/' di depan path-nya
+                        $url = asset('storage/' . $record->qrLink->qr_path);
+                
+                        return new \Illuminate\Support\HtmlString(
+                            '<div style="border:1px solid #ccc;padding:10px;">'
+                            . '<img src="' . $url . '" style="width:100px;" />'
+                            . '<br><small>' . $url . '</small></div>'
+                        );
+                    })
+                    ->columnSpan(2)
+                    ->reactive(),                
+
                 // PDF Upload Field
                 Forms\Components\FileUpload::make('document')
                     ->label('Upload Sticker (PDF)')

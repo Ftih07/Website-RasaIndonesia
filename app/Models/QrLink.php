@@ -14,4 +14,9 @@ class QrLink extends Model
         'name',
         'url',
     ];
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
 }

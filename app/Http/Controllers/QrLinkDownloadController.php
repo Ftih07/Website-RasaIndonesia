@@ -27,12 +27,13 @@ class QrLinkDownloadController extends Controller
     {
         $qr = QrLink::findOrFail($id);
 
-        $qrSvg = \QrCode::format('svg')->size(300)->generate($qr->url);
+        // Ubah format ke PNG
+        $qrPng = \QrCode::format('png')->size(300)->generate($qr->url);
 
-        $filename = 'qr_' . str_replace([' ', '/'], '_', strtolower($qr->name)) . '.svg';
+        $filename = 'qr_' . str_replace([' ', '/'], '_', strtolower($qr->name)) . '.png';
 
         // Simpan ke storage/app/public/qr_codes
-        Storage::disk('public')->put('qr_codes/' . $filename, $qrSvg);
+        Storage::disk('public')->put('qr_codes/' . $filename, $qrPng);
 
         // Simpan path ke database kalau mau
         $qr->qr_path = 'qr_codes/' . $filename;
