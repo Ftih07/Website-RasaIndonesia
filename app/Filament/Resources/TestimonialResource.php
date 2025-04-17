@@ -58,6 +58,11 @@ class TestimonialResource extends Resource
                 Forms\Components\TextInput::make('rating')
                     ->required()
                     ->numeric(),
+
+                Forms\Components\TextInput::make('image_url')
+                    ->label('Image URL')
+                    ->url()
+                    ->columnSpanFull(), // optional: biar 1 baris penuh
             ]);
     }
 

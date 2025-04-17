@@ -62,9 +62,10 @@ class ImportTestimonialSeeder extends Page
             Testimonial::create([
                 'business_id' => $this->business_id, // Associate with selected business
                 'testimonial_user_id' => null, // No user ID provided
-                'name' => $row['author_title'], // Author name
-                'description' => $row['review_text'] ?? 'No review text', // Review text with fallback
-                'rating' => $row['rating'] ?? 0, // Rating with default value
+                'name' => $row['name'], // Author name
+                'description' => $row['text'] ?? 'No review text', // Review text with fallback
+                'rating' => $row['stars'] ?? 0, // Rating with default value
+                'image_url' => $row['reviewerPhotoUrl'] ?? null, // Image URL Users
             ]);
         }
 

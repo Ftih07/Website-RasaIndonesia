@@ -648,11 +648,7 @@
                             <div class="testimonials-box">
                                 <div class="testimonial-box-top">
                                     <div class="testimonials-box-img back-img"
-                                        style="background-image: url({{ 
-        isset($testimonial->testimonial_user) && $testimonial->testimonial_user->profile_picture 
-        ? Storage::url($testimonial->testimonial_user->profile_picture) 
-        : asset('assets/images/testimonials/profile.png') 
-    }});">
+                                        style="background-image: url({{ $testimonial->photo_url }});">
                                     </div>
 
                                     <div class="star-rating-wp">
@@ -666,7 +662,10 @@
                                         {{ isset($testimonial->testimonial_user) ? $testimonial->testimonial_user->username : $testimonial->name }}
                                     </h3>
 
-                                    <p>{{ $testimonial->description }}</p>
+                                    <p class="testimonial-description" data-description="{{ $testimonial->description }}">
+                                        {{ $testimonial->description }}
+                                    </p>
+
                                 </div>
                             </div>
                         </div>
@@ -686,6 +685,14 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="testimonialModal" class="modal-testimoni-description" style="display: none;">
+                    <div class="modal-content-modal-testimoni-description">
+                        <span class="close-modal">&times;</span>
+                        <p id="modalDescription"></p>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="text-center mt-0">
@@ -1135,6 +1142,33 @@
         document.getElementById('viewPdfButton').addEventListener('click', function() {
             const pdfUrl = "{{ asset('storage/' . $business->menu) }}"; // Direct URL to the PDF file
             window.location.href = pdfUrl; // Redirects to a new page
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const descriptions = document.querySelectorAll('.testimonial-description');
+            const modal = document.getElementById('testimonialModal');
+            const modalDesc = document.getElementById('modalDescription');
+            const closeModal = document.querySelector('.close-modal');
+
+            descriptions.forEach(desc => {
+                desc.addEventListener('click', function() {
+                    const fullText = this.getAttribute('data-description');
+                    modalDesc.textContent = fullText;
+                    modal.style.display = 'block';
+                });
+            });
+
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
         });
     </script>
 

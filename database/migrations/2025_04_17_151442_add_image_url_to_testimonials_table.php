@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('businesses', function (Blueprint $table) {
+        Schema::table('testimonials', function (Blueprint $table) {
             //
-            $table->foreignId('qr_link_id')
-                ->nullable()
-                ->after('type_id')
-                ->constrained('qr_links')
-                ->onDelete('cascade');
+            $table->string('image_url')->nullable()->after('rating');
         });
     }
 
@@ -26,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('businesses', function (Blueprint $table) {
+        Schema::table('testimonials', function (Blueprint $table) {
             //
+            $table->dropColumn('image_url');
         });
     }
 };

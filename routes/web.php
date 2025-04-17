@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ReviewScrapperController;
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BusinessController;
@@ -9,6 +12,9 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QrLinkDownloadController;
 use App\Http\Controllers\TestimonialAuthController;
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 /**
  * Static Page Routes
  * These routes return views without any controller logic.
@@ -106,3 +112,10 @@ Route::get('/events/{slug}', [EventsController::class, 'show'])->name('events.sh
 Route::get('/business/{id}/menu', [BusinessController::class, 'menu'])->name('business.menu');
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');
+
+// ReviewScrapper JSON download routes
+Route::get('/review-scrapper/{reviewScrapper}/download', [ReviewScrapperController::class, 'downloadJson'])
+    ->name('api.review-scrapper.download');
+    
+Route::post('/review-scrapper/download-multiple', [ReviewScrapperController::class, 'downloadMultipleJson'])
+    ->name('api.review-scrapper.download-multiple');

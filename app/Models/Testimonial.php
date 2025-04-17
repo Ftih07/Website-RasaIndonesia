@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model; // Imports the base Eloquent Model class
 class Testimonial extends Model
 {
     // Specifies the attributes that are mass assignable
-    protected $fillable = ['business_id', 'testimonial_user_id', 'name', 'description', 'rating'];
+    protected $fillable = ['business_id', 'testimonial_user_id', 'name', 'description', 'rating', 'image_url'];
 
     /**
      * Define a relationship where a testimonial belongs to a business.
@@ -29,5 +29,19 @@ class Testimonial extends Model
     public function testimonial_user()
     {
         return $this->belongsTo(TestimonialUser::class, 'testimonial_user_id'); // Defines a one-to-many inverse relationship with a custom foreign key
+    }
+
+    // app/Models/Testimonial.php
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->image_url) {
+            return $this->image_url;
+        }
+
+        if ($this->testimonial_user && $this->testimonial_user->profile_picture) {
+            return Storage::url($this->testimonial_user->profile_picture);
+        }
+
+        return asset('assets/images/testimonials/profile.png');
     }
 }
