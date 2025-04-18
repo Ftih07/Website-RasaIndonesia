@@ -194,32 +194,45 @@
                                 <div class="media-sosial">
                                     <div class="icon-container">
                                         @if(!empty($business->media_social))
-                                        @foreach($business->media_social as $media)
-                                        <div class="icon-medsos">
-                                            @switch($media['platform'])
-                                            @case('website')
-                                            <a href="{{ $media['link'] }}" target="_blank">
-                                                <img src="{{ asset('assets/images/icon/globe.png') }}" alt="Globe Icon">
-                                            </a>
-                                            @break
-                                            @case('instagram')
-                                            <a href="{{ $media['link'] }}" target="_blank">
-                                                <img src="{{ asset('assets/images/icon/instagram.png') }}" alt="Instagram Icon">
-                                            </a>
-                                            @break
-                                            @case('facebook')
-                                            <a href="{{ $media['link'] }}" target="_blank">
-                                                <img src="{{ asset('assets/images/icon/facebook.png') }}" alt="Facebook Icon">
-                                            </a>
-                                            @break
-                                            @case('twitter')
-                                            <a href="{{ $media['link'] }}" target="_blank">
-                                                <img src="{{ asset('assets/images/icon/twitter.png') }}" alt="Twitter Icon">
-                                            </a>
-                                            @break
-                                            @endswitch
+                                        <div class="grid-icons">
+                                            @foreach($business->media_social as $media)
+                                            <div class="icon-medsos">
+                                                @switch($media['platform'])
+                                                @case('website')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-globe icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @case('instagram')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-instagram icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @case('facebook')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-facebook icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @case('twitter')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-twitter icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @case('tiktok')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-music icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @case('youtube')
+                                                <a href="{{ $media['link'] }}" target="_blank">
+                                                    <i class="uil uil-youtube icon-orange"></i>
+                                                </a>
+                                                @break
+                                                @endswitch
+
+                                            </div>
+                                            @endforeach
                                         </div>
-                                        @endforeach
                                         @else
                                         <p>No social media links available.</p>
                                         @endif
@@ -229,6 +242,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Services -->
                         <div class="col-lg-4">

@@ -150,6 +150,8 @@ class BusinessResource extends Resource
                             ->label('Platform')
                             ->options([
                                 'OpenTable' => 'OpenTable',
+                                'Quandoo' => 'Quandoo',
+                                'Website' => 'Website',
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('link')
@@ -169,6 +171,8 @@ class BusinessResource extends Resource
                                 'instagram' => 'Instagram',
                                 'facebook' => 'Facebook',
                                 'twitter' => 'Twitter',
+                                'tiktok' => 'Tiktok',
+                                'youtube' => 'Youtube',
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('link')
