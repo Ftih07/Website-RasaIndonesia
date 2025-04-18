@@ -139,6 +139,9 @@ class BusinessResource extends Resource
                         Forms\Components\TextInput::make('link')
                             ->label('Link')
                             ->url(),
+                        Forms\Components\TextInput::make('name')
+                            ->label('Name')
+                            ->nullable(), // bisa juga skip ini karena default sudah nullable
                     ])
                     ->columns(2),
 
@@ -157,6 +160,9 @@ class BusinessResource extends Resource
                         Forms\Components\TextInput::make('link')
                             ->label('Link')
                             ->url(),
+                        Forms\Components\TextInput::make('name')
+                            ->label('Name')
+                            ->nullable(), // bisa juga skip ini karena default sudah nullable
                     ])
                     ->columns(2),
 

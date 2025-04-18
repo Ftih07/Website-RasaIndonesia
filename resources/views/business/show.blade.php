@@ -407,7 +407,12 @@
                                         <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
                                     </div>
                                     <div class="platform-info">
-                                        <h6>{{ $item['platform'] ?? 'Not Available' }}</h6>
+                                        <h6>
+                                            {{ $item['platform'] ?? 'Not Available' }}
+                                            @if(!empty($item['name']))
+                                            - {{ $item['name'] }}
+                                            @endif
+                                        </h6>
                                         <span class="platform-label">Order Now</span>
                                     </div>
                                 </a>
@@ -462,7 +467,12 @@
                                         <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
                                     </div>
                                     <div class="platform-info">
-                                        <h6>{{ $item['platform'] ?? 'Not Available' }}</h6>
+                                        <h6>
+                                            {{ $item['platform'] ?? 'Not Available' }}
+                                            @if(!empty($item['name']))
+                                            - {{ $item['name'] }}
+                                            @endif
+                                        </h6>
                                         <span class="platform-label">Reserve Now</span>
                                     </div>
                                 </a>
