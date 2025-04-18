@@ -66,6 +66,7 @@ class ImportTestimonialSeeder extends Page
                 'description' => $row['text'] ?? 'No review text', // Review text with fallback
                 'rating' => $row['stars'] ?? 0, // Rating with default value
                 'image_url' => $row['reviewerPhotoUrl'] ?? null, // Image URL Users
+                'publishedAtDate' => $row['publishedAtDate'] ?? null, // publishedAtDate Value
             ]);
         }
 

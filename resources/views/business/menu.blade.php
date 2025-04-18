@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <!-- for swiper slider  -->
     <link rel="stylesheet" href="{{ asset('assets/css/swiper-bundle.min.css') }}">
 
@@ -208,131 +210,132 @@
         </div>
     </section>
 
-    <div class="body-order">
-        <div class="container-order">
-            <div class="section-order">
-                <h3>Tap to Order Your Foods</h3>
-                @if (!empty($business->order))
-                <button class="btn-order" data-bs-toggle="modal" data-bs-target="#orderModal">Order Now</button>
-                @else
-                <div class="btn-order disabled">Order Unavailable</div>
-                @endif
-            </div>
-
-            @if (!empty($business->reserve))
-            <div class="divider"></div>
-
-            <div class="section-order">
-                <h3>Tap to Make a Reservation</h3>
-                <button class="btn-order" data-bs-toggle="modal" data-bs-target="#reserveModal">Reserve</button>
-            </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- Order Modal -->
-    <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content rounded-3 shadow border-0 overflow-hidden">
-                <!-- Compact Header with wave design -->
-                <div class="position-relative">
-                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-3">
-                        <h5 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h5>
-                        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" class="wave-divider">
-                        <path fill="#ffffff" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,48C640,43,800,27,960,24C1120,21,1280,32,1360,37.3L1440,43L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
-                    </svg>
-                </div>
-
-                <!-- Body with responsive platforms grid -->
-                <div class="modal-body p-3 pt-0">
-                    @if (!empty($business->order) && is_array($business->order))
-                    <div class="row g-3 py-1">
-                        @foreach ($business->order as $item)
-                        <div class="col-md-6 col-12">
-                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column flex-sm-row align-items-center p-3 text-decoration-none text-dark border rounded-3 h-100 position-relative hover-shadow">
-                                <div class="platform-icon rounded-circle p-2 bg-light mb-2 mb-sm-0 me-sm-3">
-                                    <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" class="platform-img">
-                                </div>
-                                <div class="text-center text-sm-start mb-2 mb-sm-0">
-                                    <h6 class="platform-name fw-bold mb-0">{{ $item['platform'] }}</h6>
-                                    <p class="text-muted small mb-0 d-none d-sm-block">Fast delivery, easy tracking</p>
-                                </div>
-                                <div class="ms-auto mt-2 mt-sm-0 order-badge-container">
-                                    <span class="badge rounded-pill px-3 py-2" style="background-color: #f8b500; color: white;">Order Now</span>
-                                </div>
-                            </a>
+    <!-- Order and Reserve  -->
+    <section class="body-order">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sec-title text-center mb-5">
+                        <p class="sec-sub-title mb-3">{{ $business->name }}</p>
+                        <div class="about_us">
+                            <h2>Delivery and</h2>
+                            <h2>
+                                Reservation Services
+                            </h2>
                         </div>
-                        @endforeach
+                        <div class="sec-title-shape mb-4">
+                            <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-order-reserve">
+            <div class="order-reserve-wrapper">
+                <!-- ORDER SECTION -->
+                <div class="feature-card order-card">
+                    <div class="feature-header">
+                        <div class="icon-container-order-reserve">
+                            <i class="bi bi-bag-check"></i>
+                        </div>
+                        <h3>Order Your Food</h3>
+                    </div>
+
+                    @if (!empty($business->order))
+                    <!-- Order platforms available -->
+                    <div class="content-wrapper">
+                        <div class="card-body">
+                            @if (is_array($business->order) && count($business->order))
+                            <div class="platforms-grid">
+                                @foreach ($business->order as $item)
+                                <a href="{{ $item['link'] ?? '#' }}" target="_blank" class="platform-item">
+                                    <div class="platform-icon">
+                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
+                                    </div>
+                                    <div class="platform-info">
+                                        <h6>{{ $item['platform'] ?? 'Not Available' }}</h6>
+                                        <span class="platform-label">Order Now</span>
+                                    </div>
+                                </a>
+                                @endforeach
+                            </div>
+                            @else
+                            <div class="empty-state">
+                                <i class="bi bi-bag-x"></i>
+                                <p>No order options available</p>
+                            </div>
+                            @endif
+                        </div>
                     </div>
                     @else
-                    <div class="text-center py-4">
-                        <i class="bi bi-bag-x display-5 text-muted"></i>
-                        <h5 class="fw-bold text-muted mt-2">No Order Options Available</h5>
+                    <!-- Order not available -->
+                    <div class="content-wrapper">
+                        <div class="empty-state">
+                            <i class="bi bi-bag-dash"></i>
+                            <p>Online ordering not available</p>
+                        </div>
                     </div>
                     @endif
                 </div>
 
-                <!-- Compact Footer -->
-                <div class="modal-footer bg-light border-top py-2">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Reserve Modal -->
-    <div class="modal fade" id="reserveModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content rounded-3 shadow border-0 overflow-hidden">
-                <!-- Compact Header with wave design -->
-                <div class="position-relative">
-                    <div class="modal-header bg-gradient-primary text-white border-bottom-0 py-3">
-                        <h5 class="modal-title fw-bold ms-2">Choose Your Delivery Platform</h5>
-                        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- DIVIDER -->
+                <div class="section-divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-circle">
+                        <span>OR</span>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" class="wave-divider">
-                        <path fill="#ffffff" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,48C640,43,800,27,960,24C1120,21,1280,32,1360,37.3L1440,43L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
-                    </svg>
+                    <div class="divider-line"></div>
                 </div>
 
-                <!-- Body with responsive platforms grid -->
-                <div class="modal-body p-3 pt-0">
-                    @if (!empty($business->reserve) && is_array($business->reserve))
-                    <div class="row g-3 py-1">
-                        @foreach ($business->reserve as $item)
-                        <div class="col-md-6 col-12">
-                            <a href="{{ $item['link'] }}" target="_blank" class="platform-card d-flex flex-column flex-sm-row align-items-center p-3 text-decoration-none text-dark border rounded-3 h-100 position-relative hover-shadow">
-                                <div class="platform-icon rounded-circle p-2 bg-light mb-2 mb-sm-0 me-sm-3">
-                                    <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] }}" class="platform-img">
-                                </div>
-                                <div class="text-center text-sm-start mb-2 mb-sm-0">
-                                    <h6 class="platform-name fw-bold mb-0">{{ $item['platform'] }}</h6>
-                                    <p class="text-muted small mb-0 d-none d-sm-block">Reserve ahead, skip the line</p>
-                                </div>
-                                <div class="ms-auto mt-2 mt-sm-0 order-badge-container">
-                                    <span class="badge rounded-pill px-3 py-2" style="background-color: #f8b500; color: white;">Reserve Now</span>
-                                </div>
-                            </a>
+                <!-- RESERVE SECTION -->
+                <div class="feature-card reserve-card">
+                    <div class="feature-header">
+                        <div class="icon-container-order-reserve">
+                            <i class="bi bi-calendar-check"></i>
                         </div>
-                        @endforeach
+                        <h3>Make a Reservation</h3>
+                    </div>
+
+                    @if (!empty($business->reserve))
+                    <!-- Reserve platforms available -->
+                    <div class="content-wrapper">
+                        <div class="card-body">
+                            @if (is_array($business->reserve) && count($business->reserve))
+                            <div class="platforms-grid">
+                                @foreach ($business->reserve as $item)
+                                <a href="{{ $item['link'] ?? '#' }}" target="_blank" class="platform-item">
+                                    <div class="platform-icon">
+                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
+                                    </div>
+                                    <div class="platform-info">
+                                        <h6>{{ $item['platform'] ?? 'Not Available' }}</h6>
+                                        <span class="platform-label">Reserve Now</span>
+                                    </div>
+                                </a>
+                                @endforeach
+                            </div>
+                            @else
+                            <div class="empty-state">
+                                <i class="bi bi-bag-x"></i>
+                                <p>No reservation options available</p>
+                            </div>
+                            @endif
+                        </div>
                     </div>
                     @else
-                    <div class="text-center py-4">
-                        <i class="bi bi-bag-x display-5 text-muted"></i>
-                        <h5 class="fw-bold text-muted mt-2">No Reserve Options Available</h5>
+                    <!-- Reserve not available -->
+                    <div class="content-wrapper">
+                        <div class="empty-state">
+                            <i class="bi bi-bag-dash"></i>
+                            <p>Online reservations not available</p>
+                        </div>
                     </div>
                     @endif
                 </div>
-
-                <!-- Compact Footer -->
-                <div class="modal-footer bg-light border-top py-2">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
             </div>
         </div>
-    </div>
+    </section>
+    
     <br>
     <br>
 

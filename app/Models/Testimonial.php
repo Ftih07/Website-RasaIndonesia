@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model; // Imports the base Eloquent Model class
 class Testimonial extends Model
 {
     // Specifies the attributes that are mass assignable
-    protected $fillable = ['business_id', 'testimonial_user_id', 'name', 'description', 'rating', 'image_url'];
+    protected $fillable = ['business_id', 'testimonial_user_id', 'name', 'description', 'rating', 'image_url', 'publishedAtDate'];
 
     /**
      * Define a relationship where a testimonial belongs to a business.
