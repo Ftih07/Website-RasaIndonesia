@@ -14,6 +14,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\SelectFilter;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BusinessExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Tables\Actions\Action;
+use Illuminate\Support\Collection;
 
 // Defining a resource class for Business entity
 class BusinessResource extends Resource
@@ -290,6 +295,16 @@ class BusinessResource extends Resource
                     ->label('Download Sticker'),
                 Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
+
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(route('export-businesses'))
+                    ->openUrlInNewTab()
+                    ->color('success'),
+            ])
+
             ->filters([
                 SelectFilter::make('type_id')
                     ->label('Type Business')
@@ -311,6 +326,12 @@ class BusinessResource extends Resource
                     ->action(fn($record) => app(StickerController::class)->generate($record))
                     ->color('primary')
                     ->hidden(fn($record) => empty($record->unique_code)), // Sembunyikan kalau Unique Code kosong
+                Action::make('export_pdf')
+                    ->label('Export PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('danger')
+                    ->url(fn($record) => route('export-business.pdf.single', $record->id))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

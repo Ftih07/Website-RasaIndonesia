@@ -11,6 +11,9 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QrLinkDownloadController;
 use App\Http\Controllers\TestimonialAuthController;
+use App\Exports\BusinessesExport;
+use App\Http\Controllers\BusinessExportController;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -116,6 +119,13 @@ Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->
 // ReviewScrapper JSON download routes
 Route::get('/review-scrapper/{reviewScrapper}/download', [ReviewScrapperController::class, 'downloadJson'])
     ->name('api.review-scrapper.download');
-    
+
 Route::post('/review-scrapper/download-multiple', [ReviewScrapperController::class, 'downloadMultipleJson'])
     ->name('api.review-scrapper.download-multiple');
+
+Route::get('/export-businesses', function () {
+    return Excel::download(new BusinessesExport, 'businesses.xlsx');
+})->name('export-businesses');
+
+Route::get('/export-business-pdf/{id}', [BusinessExportController::class, 'exportSinglePdf'])
+    ->name('export-business.pdf.single');
