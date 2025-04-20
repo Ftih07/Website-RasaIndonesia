@@ -27,30 +27,30 @@ class BusinessesExport implements
     public function headings(): array
     {
         return [
-            'ID',
-            'Type',
-            'Business Data Update On',
-            'QR Link',
-            'Food Categories',
-            'Name',
-            'Description',
-            'Logo',
-            'Address',
-            'Iframe URL',
-            'Open Hours',
-            'Services',
-            'Menu',
-            'Media Social',
-            'Location',
-            'Contact',
-            'Latitude',
-            'Longitude',
-            'Unique Code',
-            'Document',
-            'Order',
-            'Reserve',
-            'Galleries',
-            'Products',
+            'ID', // Row 1
+            'Type', // Row 2
+            'Business Data Update On', // Row 3
+            'Business Unique ID', // Row 4
+            'Business QR Code Name', // Row 5
+            'Food Categories', // Row 6
+            'Business Name', // Row 7
+            'Description', // Row 8
+            'Logo', // Row 9
+            'Address', // Row 10
+            'Iframe URL',// Row 11
+            'Open Hours',// Row 12
+            'Services',// Row 13
+            'Menu',// Row 14
+            'Media Social',// Row 15
+            'Location',// Row 16
+            'Contact',// Row 17
+            'Latitude',// Row 18
+            'Longitude',// Row 19
+            'Document',// Row 20
+            'Order',// Row 21
+            'Reserve',// Row 22
+            'Galleries',// Row 23
+            'Products',// Row 24
         ];
     }
 

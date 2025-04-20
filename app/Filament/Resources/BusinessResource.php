@@ -310,23 +310,17 @@ class BusinessResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->action(function () {
-                        // Ambil semua data bisnis beserta relasinya
                         $businesses = Business::with(['type', 'qrLink', 'galleries', 'products'])->get();
 
-                        $pdf = SnappyPdf::loadView('exports.businesses-pdf', [
+                        $pdf = Pdf::loadView('exports.businesses-pdf', [
                             'businesses' => $businesses,
-                        ])
-                            ->setPaper('a4', 'landscape')
-                            ->setOption('enable-local-file-access', true)
-                            ->setOption('no-images', false);
+                        ])->setPaper('a4', 'landscape');
 
-                        // Download PDF
                         return response()->streamDownload(
                             fn() => print($pdf->output()),
                             'all-businesses.pdf'
                         );
-                    })
-
+                    }),
             ])
 
             ->filters([
