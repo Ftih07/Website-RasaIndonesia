@@ -19,6 +19,7 @@ use App\Exports\BusinessExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Collection;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 // Defining a resource class for Business entity
 class BusinessResource extends Resource
@@ -303,6 +304,29 @@ class BusinessResource extends Resource
                     ->url(route('export-businesses'))
                     ->openUrlInNewTab()
                     ->color('success'),
+
+                Action::make('export_all_pdf')
+                    ->label('Export All Businesses PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->action(function () {
+                        // Ambil semua data bisnis beserta relasinya
+                        $businesses = Business::with(['type', 'qrLink', 'galleries', 'products'])->get();
+
+                        $pdf = SnappyPdf::loadView('exports.businesses-pdf', [
+                            'businesses' => $businesses,
+                        ])
+                            ->setPaper('a4', 'landscape')
+                            ->setOption('enable-local-file-access', true)
+                            ->setOption('no-images', false);
+
+                        // Download PDF
+                        return response()->streamDownload(
+                            fn() => print($pdf->output()),
+                            'all-businesses.pdf'
+                        );
+                    })
+
             ])
 
             ->filters([
@@ -336,6 +360,23 @@ class BusinessResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('export_pdf')
+                        ->label('Export PDF')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('danger')
+                        ->action(function (\Illuminate\Support\Collection $records) {
+                            $businesses = $records->load(['type', 'qrLink', 'galleries', 'products']);
+
+                            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.businesses-pdf', [
+                                'businesses' => $businesses,
+                            ])->setPaper('a4', 'landscape');
+
+                            return response()->streamDownload(
+                                fn() => print($pdf->output()),
+                                'bulk-businesses.pdf'
+                            );
+                        }),
                 ]),
             ]);
     }

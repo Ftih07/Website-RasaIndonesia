@@ -6,19 +6,28 @@ use App\Models\Business;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-
-class BusinessesExport implements FromCollection, WithHeadings, WithMapping
+class BusinessesExport implements
+    FromCollection,
+    WithHeadings,
+    WithMapping,
+    WithStyles,
+    WithTitle,
+    ShouldAutoSize
 {
     public function collection()
     {
-        return Business::with(['type', 'qrLink'])->get();
+        return Business::with(['type', 'qrLink', 'galleries', 'products'])->get();
     }
 
     public function headings(): array
     {
         return [
-            'id',
+            'ID',
             'Type',
             'Business Data Update On',
             'QR Link',
@@ -45,7 +54,6 @@ class BusinessesExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-
     public function map($business): array
     {
         return [
@@ -57,37 +65,47 @@ class BusinessesExport implements FromCollection, WithHeadings, WithMapping
             $business->unique_code,
             $business->qrLink->name ?? '',
             $business->food_categories->pluck('title')->join(', '),
-
             $business->name,
             $business->description,
             $business->logo,
             $business->address,
             $business->iframe_url,
-
             json_encode($business->open_hours),
             json_encode($business->services),
             $business->menu,
-
             json_encode($business->media_social),
             $business->location,
             json_encode($business->contact),
-
             $business->latitude,
             $business->longitude,
             $business->document,
-
             json_encode($business->order),
             json_encode($business->reserve),
-
-            // Gallery as string: title + image
             $business->galleries->map(function ($gallery) {
                 return $gallery->title . ' (' . asset('storage/' . $gallery->image) . ')';
             })->join(', '),
-
-            // Product as string: name + price + image
             $business->products->map(function ($product) {
-                return $product->name . ' - ' . $product->price . ' (' . asset('storage/' . $product->image) . ')';
+                return $product->name . ' - ' . $product->price;
             })->join(', '),
         ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            // Bold heading row
+            1 => ['font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']]],
+        ] + [
+            // Header background color
+            'A1:Y1' => ['fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4F81BD']
+            ]],
+        ];
+    }
+
+    public function title(): string
+    {
+        return 'Businesses Export';
     }
 }

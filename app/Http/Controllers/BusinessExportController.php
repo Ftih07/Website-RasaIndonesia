@@ -20,4 +20,19 @@ class BusinessExportController extends Controller
 
         return $pdf->download("business-{$business->id}.pdf");
     }
+
+    // Function untuk mengekspor semua bisnis
+    public function exportAllPdf()
+    {
+        // Ambil semua data bisnis beserta relasinya
+        $businesses = Business::with(['type', 'qrLink', 'galleries', 'products'])->get();
+
+        // Gunakan DomPDF untuk generate PDF
+        $pdf = Pdf::loadView('exports.businesses-pdf', [
+            'businesses' => $businesses,
+        ])->setPaper('a4', 'landscape');
+
+        // Download PDF
+        return $pdf->download('all-businesses.pdf');
+    }
 }

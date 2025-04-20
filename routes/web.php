@@ -129,3 +129,6 @@ Route::get('/export-businesses', function () {
 
 Route::get('/export-business-pdf/{id}', [BusinessExportController::class, 'exportSinglePdf'])
     ->name('export-business.pdf.single');
+
+Route::get('businesses/export-all-pdf', [BusinessExportController::class, 'exportAllPdf'])
+    ->name('export-all-businesses-pdf');
