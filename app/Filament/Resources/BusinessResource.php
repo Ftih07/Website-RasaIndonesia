@@ -138,6 +138,8 @@ class BusinessResource extends Resource
                                 'Menulog' => 'Menulog',
                                 'DoorDash' => 'DoorDash',
                                 'UberEAST' => 'UberEAST',
+                                'Abacus' => 'Abacus',
+                                'Fantuan' => 'Fantuan',
                                 'Website' => 'Website',
                                 'HungryPanda' => 'HungryPanda',
                             ])

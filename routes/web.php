@@ -71,12 +71,6 @@ Route::get('/show', [HomeController::class, 'show'])->name('show');
 Route::get('/tokorestoran', [HomeController::class, 'tokorestoran'])->name('tokorestoran');
 
 /**
- * Business Routes
- * Handles business-related functionalities such as displaying details.
- */
-Route::get('/business/{id}', [BusinessController::class, 'show'])->name('business.show');
-
-/**
  * Testimonial Authentication Routes
  * Manages registration, login, and logout for testimonial users.
  */
