@@ -356,7 +356,7 @@
                 </div>
 
                 <div class="text-center mt-4">
-                    <a href="{{ route('business.menu', $business->id) }}" target="_blank" class="viewAllBtn">View All</a>
+                    <a href="{{ route('business.menu', $business->slug) }}" target="_blank" class="viewAllBtn">View All</a>
                 </div>
 
             </div>
@@ -633,7 +633,7 @@
                         <div class="col-lg-12 m-auto">
                             <div class="menu-tab text-center">
                                 <ul class="filters">
-                                    <form method="GET" action="{{ route('business.show', ['id' => $business->id]) }}">
+                                    <form method="GET" action="{{ route('business.show', ['slug' => $business->slug]) }}">
                                         <li class="sort">
                                             <label for="rating" class="label">Filter by Rating:</label>
                                             <select name="rating" id="rating" class="form-select">
@@ -658,8 +658,6 @@
                                     </form>
                                 </ul>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -763,10 +761,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="testimonialForm" method="POST" action="{{ route('business.testimonials.store') }}">
+                <form id="testimonialForm" method="POST" action="{{ route('business.testimonials.store', ['slug' => $business->slug]) }}">
                     @csrf
-                    <input type="hidden" name="business_id" value="{{ $business->id }}">
-
                     <div class="form-group">
                         <label for="description">Your Experience</label>
                         <textarea id="description" name="description" rows="4" placeholder="Tell us about your experience..." required></textarea>
@@ -866,7 +862,7 @@
                                     <ul>
                                         <div class="filter-active-data"></div>
                                         <li class="filter-data active">
-                                            <a href="{{ route('business.show', $otherBusiness->id) }}">
+                                            <a href="{{ route('business.show', $otherBusiness->slug) }}">
                                                 <img src="{{ asset('assets/images/icon-all.png') }}" alt="Filter All" class="icon-filter"> Details
                                             </a>
                                         </li>

@@ -389,7 +389,7 @@
                                             <ul>
                                                 <div class="filter-active-data"></div>
                                                 <li class="filter-data active">
-                                                    <a href="{{ route('business.show', $business->id) }}">
+                                                    <a href="{{ route('business.show', $business->slug) }}">
                                                         <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
                                                         Details
                                                     </a>

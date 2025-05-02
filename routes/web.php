@@ -42,23 +42,14 @@ Route::get('/', function () {
  * Business Details Route
  * Retrieves and displays business details based on the given ID.
  */
-Route::get('/business/{id}', [BusinessController::class, 'show'])->name('business.show');
+Route::get('/business/{slug}', [BusinessController::class, 'show'])->name('business.show');
 
 /**
  * Authenticated Routes Group
  * Requires user authentication to add testimonials to businesses.
  */
-Route::middleware('auth')->group(function () {
-    Route::post('/business/add-testimonial', [BusinessController::class, 'storeTestimonial'])
-        ->name('business.testimonials.store');
-});
-
-/**
- * Testimonial-Specific Auth Routes
- * Allows authenticated testimonial users to submit testimonials.
- */
 Route::middleware('auth:testimonial')->group(function () {
-    Route::post('/business/testimonials', [BusinessController::class, 'storeTestimonial'])
+    Route::post('/business/{slug}/testimonials', [BusinessController::class, 'storeTestimonial'])
         ->name('business.testimonials.store');
 });
 
@@ -106,7 +97,7 @@ Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
  */
 Route::get('/events/{slug}', [EventsController::class, 'show'])->name('events.show');
 
-Route::get('/business/{id}/menu', [BusinessController::class, 'menu'])->name('business.menu');
+Route::get('/business/{slug}/menu', [BusinessController::class, 'menu'])->name('business.menu');
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');
 

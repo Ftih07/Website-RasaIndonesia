@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Str;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -111,5 +112,18 @@ class Business extends Model
     public function qrLink()
     {
         return $this->belongsTo(\App\Models\QrLink::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($business) {
+            $business->slug = Str::slug($business->name . '-' . uniqid());
+        });
+
+        static::updating(function ($business) {
+            if (empty($business->slug)) {
+                $business->slug = Str::slug($business->name . '-' . uniqid());
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models; // Defines the namespace of this model, following Laravel's MVC structure
 
 use Illuminate\Database\Eloquent\Model; // Imports the base Eloquent Model class
+use Illuminate\Support\Facades\Storage; // <- ini harus ada
 
 class Testimonial extends Model
 {
