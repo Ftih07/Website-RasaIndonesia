@@ -312,11 +312,12 @@
                     </div>
                 </div>
 
+                <!-- Update your existing menu cards to include data-menu-id attribute -->
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show-menu" id="menu">
                         @foreach($latestMenus as $menu)
                         <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}" data-cat="{{ $menu->type }}">
-                            <div class="dish-box text-center">
+                            <div class="dish-box text-center" data-menu-id="{{ $menu->id }}">
                                 <div class="dist-img">
                                     <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                         alt="{{ $menu->name }}">
@@ -344,14 +345,14 @@
                                             <b>${{ $menu->price }}</b>
                                         </li>
                                         <li>
-                                            <button class="dish-add-btn">
+                                            <button class="dish-add-btn" data-menu-id="{{ $menu->id }}">
+                                                <i class="fa fa-expand-alt"></i>
                                             </button>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
                         @endforeach
                     </div>
                 </div>
@@ -363,6 +364,86 @@
             </div>
         </div>
     </section>
+
+    <!-- Product Detail Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fw-bold" id="productModalLabel">Product Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <!-- Product Image Section with Overlay -->
+                        <div class="col-lg-5 position-relative product-image-container">
+                            <div class="product-image-wrapper">
+                                <img id="modal-product-image" src="" alt="Product Image" class="product-main-image">
+                            </div>
+                        </div>
+
+                        <!-- Product Details Section -->
+                        <div class="col-lg-7">
+                            <div class="product-details-scroll">
+                                <div class="p-4 p-lg-5">
+
+                                    <!-- Price -->
+                                    <div class="mb-4">
+                                        <span class="badge bg-orange mb-2 featured-badge">Menu</span>
+                                        <h2 id="modal-product-name" class="product-title mb-1"></h2>
+                                        <p id="modal-product-business" class=""></p>
+                                        <h3 id="modal-product-price" class="text-orange fw-bold mb-0 price-tag"></h3>
+                                    </div>
+
+                                    <!-- Product Highlights -->
+                                    <div class="product-highlights mb-4">
+                                        <div class="row g-3">
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-utensils"></i>
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Type</span>
+                                                        <p id="modal-product-type" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-users"></i>
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Serving</span>
+                                                        <p id="modal-product-serving" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Description -->
+                                    <div class="product-description mb-4">
+                                        <h5 class="section-title">Description</h5>
+                                        <p id="modal-product-desc" class="description-text"></p>
+                                    </div>
+
+                                    <!-- Product Variants -->
+                                    <div id="variants-section" class="product-variants mb-4">
+                                        <h5 class="section-title">Variants & Complements</h5>
+                                        <div id="modal-product-variants" class="row g-3">
+                                            <!-- Variants will be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Order and Reserve  -->
     <section class="body-order">
@@ -1024,7 +1105,6 @@
         nomodule
         src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1272,6 +1352,136 @@
                     closeModalFunc();
                 }
             });
+        });
+    </script>
+
+    <!-- JavaScript for Modal Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuData = @json($latestMenus);
+            const businessData = {
+                name: '{{ $business->name }}',
+                logo: '{{ $business->logo }}'
+            };
+
+            // Add Font Awesome if not already included
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            document.querySelectorAll('.dish-box-wp').forEach(item => {
+                const box = item.querySelector('.dish-box');
+                const addBtn = item.querySelector('.dish-add-btn');
+                const menuId = box.getAttribute('data-menu-id');
+
+                box.addEventListener('click', function(e) {
+                    if (!e.target.closest('.dish-add-btn')) {
+                        openProductModal(menuId);
+                    }
+                });
+
+                if (addBtn) {
+                    addBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openProductModal(menuId);
+                    });
+                }
+            });
+
+            function openProductModal(menuId) {
+                const menu = menuData.find(m => m.id == menuId);
+                if (!menu) {
+                    console.error('Menu not found:', menuId);
+                    return;
+                }
+
+                // Populate main product details
+                document.getElementById('modal-product-name').textContent = menu.name;
+                document.getElementById('modal-product-business').textContent = businessData.name;
+
+                // Price with currency formatting
+                document.getElementById('modal-product-price').textContent = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(menu.price);
+
+                // Format product type and details
+                document.getElementById('modal-product-type').textContent = menu.type.charAt(0).toUpperCase() + menu.type.slice(1);
+                document.getElementById('modal-product-serving').textContent = menu.serving || '-';
+
+                // Description with fallback
+                const description = menu.desc || 'A delicious offering from our kitchen. Prepared with the finest ingredients to satisfy your cravings.';
+                document.getElementById('modal-product-desc').textContent = description;
+
+                // Handle image with enhanced error handling
+                const imgSrc = menu.image ?
+                    `/storage/${menu.image}` :
+                    (businessData.logo ? `/storage/${businessData.logo}` : '/assets/images/logo/logo.png');
+
+                const productImage = document.getElementById('modal-product-image');
+                productImage.src = imgSrc;
+                productImage.onerror = function() {
+                    this.src = '/assets/images/logo/logo.png';
+                };
+
+                // Variants handling with enhanced UI
+                const variantsContainer = document.getElementById('modal-product-variants');
+                const variantsSection = document.getElementById('variants-section');
+                variantsContainer.innerHTML = '';
+
+                if (menu.variants && menu.variants.length > 0) {
+                    variantsSection.style.display = 'block';
+                    menu.variants.forEach(variant => {
+                        const variantElem = document.createElement('div');
+                        variantElem.className = 'col-md-6';
+                        variantElem.innerHTML = `
+                    <div class="variant-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="variant-name">${variant.name}</span>
+                            </div>
+                            <div>
+                                <span class="variant-price text-orange">$${variant.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                        variantsContainer.appendChild(variantElem);
+                    });
+                } else {
+                    variantsSection.style.display = 'none';
+                }
+
+                // Fix for Bootstrap modal z-index
+                document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                    backdrop.style.zIndex = "1050";
+                });
+
+                document.getElementById('productModal').style.zIndex = "1055";
+
+                // Show modal
+                const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+                productModal.show();
+
+                // After modal is shown, adjust the height of scrollable content to match image height
+                productModal._element.addEventListener('shown.bs.modal', function() {
+                    setTimeout(() => {
+                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
+                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
+                    }, 100);
+                });
+
+                // Handle window resize
+                window.addEventListener('resize', function() {
+                    if (document.getElementById('productModal').classList.contains('show')) {
+                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
+                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
+                    }
+                });
+            }
         });
     </script>
 

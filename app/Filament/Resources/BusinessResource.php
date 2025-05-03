@@ -261,23 +261,44 @@ class BusinessResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->label('Product Name')
                             ->required(),
+
                         Forms\Components\FileUpload::make('image')
                             ->label('Product Image')
                             ->directory('product-images'),
-                            
+
                         Forms\Components\Select::make('type')
                             ->label('Type')
                             ->options([
                                 'food' => 'Food',
                                 'drink' => 'Drink',
-                            ]) 
+                            ])
                             ->required(),
+
                         Forms\Components\TextInput::make('serving')
                             ->label('Serving'),
+
                         Forms\Components\TextInput::make('price')
                             ->label('Price')
                             ->numeric()
                             ->required(),
+
+                        Forms\Components\Textarea::make('desc')
+                            ->label('Description'),
+
+                        Forms\Components\Repeater::make('variants')
+                            ->label('Variants')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Variant Name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('price')
+                                    ->label('Variant Price')
+                                    ->numeric()
+                                    ->required(),
+                            ])
+                            ->default([])
+                            ->collapsed()
+                            ->grid(2),
                     ])
                     ->columns(1),
             ]);
