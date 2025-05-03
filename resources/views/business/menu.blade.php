@@ -170,7 +170,8 @@
                         <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}" data-cat="{{ $menu->type }}" data-name="{{ strtolower($menu->name) }}">
                             <div class="dish-box text-center">
                                 <div class="dist-img">
-                                    <img src="{{ asset('storage/' . $menu->image) }}" alt="">
+                                    <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
+                                        alt="{{ $menu->name }}">
                                 </div>
                                 <div class="dish-title">
                                     <h3 class="h3-title">{{ $menu->name }}</h3>
@@ -185,7 +186,7 @@
 
                                         <li>
                                             <p>Serving</p>
-                                            <b>{{ $menu->serving }}</b>
+                                            <b>{{ $menu->serving ?? '-' }}</b>
                                         </li>
                                     </ul>
                                 </div>

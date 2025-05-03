@@ -263,14 +263,14 @@ class BusinessResource extends Resource
                             ->required(),
                         Forms\Components\FileUpload::make('image')
                             ->label('Product Image')
-                            ->directory('product-images')
-                            ->required(),
+                            ->directory('product-images'),
+                            
                         Forms\Components\Select::make('type')
                             ->label('Type')
                             ->options([
                                 'food' => 'Food',
                                 'drink' => 'Drink',
-                            ])
+                            ]) 
                             ->required(),
                         Forms\Components\TextInput::make('serving')
                             ->label('Serving'),

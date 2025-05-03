@@ -32,6 +32,7 @@ class BusinessController extends Controller
             })
             ->where('id', '!=', $business->id)
             ->whereNotNull('slug') // Tambahan agar tidak error jika slug null
+            ->inRandomOrder() // Menambahkan pengurutan acak
             ->take(3)
             ->get();
 

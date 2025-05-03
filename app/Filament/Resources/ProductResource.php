@@ -46,9 +46,8 @@ class ProductResource extends Resource
 
                 // File upload field for product image (image file required)
                 Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->required(),
-
+                    ->image() ,
+                    
                 // Input field for product type (required)
                 Forms\Components\TextInput::make('type')
                     ->required(),
