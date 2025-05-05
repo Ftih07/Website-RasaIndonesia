@@ -316,12 +316,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const sortOrder = document.getElementById("sort-order");
     const businessType = document.getElementById("business-type");
     const searchKeyword = document.getElementById("search-keyword");
+    const countrySelect = document.getElementById("country");
+    const citySelect = document.getElementById("city");
     const searchButton = document.getElementById("search-button");
 
     searchButton.addEventListener("click", function () {
         const selectedCategory = foodCategory.value;
         const selectedSort = sortOrder.value;
         const selectedType = businessType.value;
+        const selectedCountry = countrySelect ? countrySelect.value : "all";
+        const selectedCity = citySelect ? citySelect.value : "all";
         const keyword = searchKeyword.value.trim();
 
         // Construct URL with query parameters
@@ -329,6 +333,9 @@ document.addEventListener("DOMContentLoaded", function () {
         url.searchParams.set("category", selectedCategory);
         url.searchParams.set("sort", selectedSort);
         url.searchParams.set("type", selectedType);
+        url.searchParams.set("country", selectedCountry);
+        url.searchParams.set("city", selectedCity);
+
         if (keyword) {
             url.searchParams.set("keyword", keyword);
         } else {

@@ -95,6 +95,14 @@ class BusinessResource extends Resource
                     ->label('Business Name')
                     ->required(),
 
+                // Text input for business country
+                Forms\Components\TextInput::make('country')
+                    ->label('Business Country'),
+
+                // Text input for business city
+                Forms\Components\TextInput::make('city')
+                    ->label('Business City'),
+
                 // Textarea input for business description
                 Forms\Components\Textarea::make('description')
                     ->label('Business Description'),
@@ -314,6 +322,14 @@ class BusinessResource extends Resource
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('address')->limit(50),
+                Tables\Columns\TextColumn::make('country')
+                    ->label('Country')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('city')
+                    ->label('City')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('document')
                     ->url(fn($record) => asset('storage/' . $record->document), true)
                     ->label('Download Sticker'),

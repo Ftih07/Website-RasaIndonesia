@@ -118,6 +118,31 @@
                                     <div class="col-lg-12 m-auto">
                                         <div class="menu-tab text-center">
                                             <ul class="filters">
+
+                                                <!-- Dropdown for Country -->
+                                                <li class="filter">
+                                                    <select id="country" class="form-select">
+                                                        <option value="all" {{ request('country') == 'all' ? 'selected' : '' }}>All Countries</option>
+                                                        @foreach ($countries as $country)
+                                                        <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>
+                                                            {{ $country }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </li>
+
+                                                <!-- Dropdown for City -->
+                                                <li class="filter">
+                                                    <select id="city" class="form-select">
+                                                        <option value="all" {{ request('city') == 'all' ? 'selected' : '' }}>All Cities</option>
+                                                        @foreach ($cities as $city)
+                                                        <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>
+                                                            {{ $city }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </li>
+
                                                 <!-- Dropdown for Food Categories -->
                                                 <li class="filter">
                                                     <select id="food-category" class="form-select">

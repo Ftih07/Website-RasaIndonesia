@@ -77,28 +77,30 @@ class HomeController extends Controller
             return [
                 'id' => $business->id,
                 'name' => $business->name,
+                'slug' => $business->slug, // ✅ Tambahkan ini
                 'latitude' => $business->latitude,
                 'longitude' => $business->longitude,
                 'type' => [
                     'id' => optional($business->type)->id,
-                    'title' => optional($business->type)->title ?? 'N/A', // Handle missing type
+                    'title' => optional($business->type)->title ?? 'N/A',
                 ],
-                'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1), // Calculate average rating
-                'total_responses' => $business->testimonials->count(), // Count total testimonials
+                'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1),
+                'total_responses' => $business->testimonials->count(),
                 'galleries' => $business->galleries->map(function ($gallery) {
                     return [
                         'title' => $gallery->title,
-                        'image' => asset('storage/' . $gallery->image), // Convert image path to URL
+                        'image' => asset('storage/' . $gallery->image),
                     ];
                 }),
             ];
         });
 
+
         // Return JSON response with business data
         return response()->json($businesses);
     }
 
-    // Display businesses filtered by category, type, and keyword search
+    // Display businesses filtered by category, type, keyword, country, and city
     public function tokorestoran(Request $request)
     {
         $query = Business::with('testimonials', 'food_categories', 'type');
@@ -117,12 +119,22 @@ class HomeController extends Controller
             });
         }
 
+        // Filter by country
+        if ($request->filled('country') && $request->country !== 'all') {
+            $query->where('country', $request->country);
+        }
+
+        // Filter by city
+        if ($request->filled('city') && $request->city !== 'all') {
+            $query->where('city', $request->city);
+        }
+
         // Search by name
         if ($request->filled('keyword')) {
             $query->where('name', 'like', '%' . $request->keyword . '%');
         }
 
-        // Sort businesess
+        // Sort businesses
         if ($request->filled('sort')) {
             $order = $request->sort === 'oldest' ? 'asc' : 'desc';
             $query->orderBy('created_at', $order);
@@ -139,6 +151,16 @@ class HomeController extends Controller
         $foodCategories = FoodCategory::all();
         $businessTypes = Type::all();
 
-        return view('tokorestoran', compact('businesses', 'foodCategories', 'businessTypes'));
+        // Get unique countries and cities for filters
+        $countries = Business::select('country')->distinct()->pluck('country')->filter()->sort()->values();
+        $cities = Business::select('city')->distinct()->pluck('city')->filter()->sort()->values();
+
+        return view('tokorestoran', compact(
+            'businesses',
+            'foodCategories',
+            'businessTypes',
+            'countries',
+            'cities'
+        ));
     }
 }

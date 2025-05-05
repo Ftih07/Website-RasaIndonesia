@@ -1113,7 +1113,7 @@
                                                 <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
                                                     <div class="buttons-maps">
                                                     <a
-                                                        href="/business/${business.id}"
+                                                        href="/business/${business.slug}"
                                                         target="_blank"
                                                         class="btn-maps btn-details"
                                                     >

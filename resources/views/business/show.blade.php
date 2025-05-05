@@ -1437,18 +1437,21 @@
                     menu.variants.forEach(variant => {
                         const variantElem = document.createElement('div');
                         variantElem.className = 'col-md-6';
+
+                        const priceDisplay = variant.price ? `$${variant.price}` : ''; // Cek dulu
+
                         variantElem.innerHTML = `
-                    <div class="variant-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="variant-name">${variant.name}</span>
-                            </div>
-                            <div>
-                                <span class="variant-price text-orange">$${variant.price}</span>
-                            </div>
-                        </div>
+            <div class="variant-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="variant-name">${variant.name}</span>
                     </div>
-                `;
+                    <div>
+                        <span class="variant-price text-orange">${priceDisplay}</span>
+                    </div>
+                </div>
+            </div>
+        `;
                         variantsContainer.appendChild(variantElem);
                     });
                 } else {
