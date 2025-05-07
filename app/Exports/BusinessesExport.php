@@ -28,15 +28,17 @@ class BusinessesExport implements
     {
         return [
             'ID', // Row 1
+            'Business Name', // Row 7
             'Type', // Row 2
             'Business Data Update On', // Row 3
             'Business Unique ID', // Row 4
             'Business QR Code Name', // Row 5
             'Food Categories', // Row 6
-            'Business Name', // Row 7
             'Description', // Row 8
             'Logo', // Row 9
             'Address', // Row 10
+            'Business Country', // Row 10
+            'Business City', // Row 10
             'Iframe URL',// Row 11
             'Open Hours',// Row 12
             'Services',// Row 13
@@ -58,6 +60,7 @@ class BusinessesExport implements
     {
         return [
             $business->id,
+            $business->name,
             $business->type->title ?? '',
             $business->updated_at
                 ? 'Updated On: ' . \Carbon\Carbon::parse($business->updated_at)->format('D F d, Y \a\t gA')
@@ -65,10 +68,11 @@ class BusinessesExport implements
             $business->unique_code,
             $business->qrLink->name ?? '',
             $business->food_categories->pluck('title')->join(', '),
-            $business->name,
             $business->description,
             $business->logo,
             $business->address,
+            $business->country,
+            $business->city,
             $business->iframe_url,
             json_encode($business->open_hours),
             json_encode($business->services),

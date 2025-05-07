@@ -320,6 +320,12 @@ class BusinessResource extends Resource
                 Tables\Columns\TextColumn::make('unique_code')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('type_id')
+                    ->label('Type Business')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn($state, $record) => $record->type?->title ?? '-')
+                    ->limit(20),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('address')->limit(50),
                 Tables\Columns\TextColumn::make('country')
@@ -379,7 +385,7 @@ class BusinessResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('generate_pdf')
-                    ->label('Generate PDF')
+                    ->label('Generate Sticker')
                     ->action(fn($record) => app(StickerController::class)->generate($record))
                     ->color('primary')
                     ->hidden(fn($record) => empty($record->unique_code)), // Sembunyikan kalau Unique Code kosong
