@@ -14,7 +14,7 @@ class TestimonialAuthController extends Controller
     {
         return view('auth.testimonial-register');
     }
-
+ 
     // Handle the registration process
     public function register(Request $request)
     {

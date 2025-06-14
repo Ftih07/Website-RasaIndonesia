@@ -23,7 +23,7 @@ class BusinessController extends Controller
         $types = Type::all();
         $typeFilter = $request->get('type', 'all');
 
-        // Ambil 3 bisnis lain dengan tipe yang sama (kalau difilter), dan bukan yang sedang ditampilkan
+        // Retrieve 3 other businesses of the same type (if filtered), and not the one currently displayed
         $otherBusinesses = Business::with('type')
             ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
                 $query->whereHas('type', function ($q) use ($typeFilter) {
@@ -31,12 +31,12 @@ class BusinessController extends Controller
                 });
             })
             ->where('id', '!=', $business->id)
-            ->whereNotNull('slug') // Tambahan agar tidak error jika slug null
-            ->inRandomOrder() // Menambahkan pengurutan acak
+            ->whereNotNull('slug')
+            ->inRandomOrder()
             ->take(3)
             ->get();
 
-        // Ambil testimoni berdasarkan filter rating & urutan
+        // Retrieve testimonials based on rating & order filters
         $ratingFilter = $request->get('rating');
         $sortOrder = $request->get('order', 'newest');
 
@@ -67,10 +67,10 @@ class BusinessController extends Controller
 
     public function menu($slug)
     {
-        // Ambil business berdasarkan slug, termasuk relasi products
+        // Get business by slug, including product relationships
         $business = Business::with('products')->where('slug', $slug)->firstOrFail();
 
-        // Ambil semua menu dari relasi products
+        // Retrieve all menus from the products relation
         $menus = $business->products()->latest()->get();
 
         return view('business.menu', compact('business', 'menus'));
