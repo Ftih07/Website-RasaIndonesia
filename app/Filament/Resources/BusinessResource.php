@@ -14,12 +14,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\SelectFilter;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\BusinessExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Tables\Actions\Action;
-use Illuminate\Support\Collection;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Filament\Tables\Filters\TrashedFilter;
 
 // Defining a resource class for Business entity
 class BusinessResource extends Resource
@@ -369,6 +366,7 @@ class BusinessResource extends Resource
             ])
 
             ->filters([
+                TrashedFilter::make(), // Menambahkan filter Trashed
                 SelectFilter::make('type_id')
                     ->label('Type Business')
                     ->relationship('type', 'title')
@@ -395,10 +393,16 @@ class BusinessResource extends Resource
                     ->color('danger')
                     ->url(fn($record) => route('export-business.pdf.single', $record->id))
                     ->openUrlInNewTab(),
+                Tables\Actions\RestoreAction::make(),   // tombol restore
+                Tables\Actions\ForceDeleteAction::make(), // tombol hapus permanen
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+
                     Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\RestoreBulkAction::make(),         // Restore banyak data
+                    Tables\Actions\ForceDeleteBulkAction::make(),     // Hapus permanen banyak data
 
                     Tables\Actions\BulkAction::make('export_pdf')
                         ->label('Export PDF')
