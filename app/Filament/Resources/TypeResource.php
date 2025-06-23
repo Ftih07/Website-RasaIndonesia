@@ -22,10 +22,15 @@ class TypeResource extends Resource
      */
     protected static ?string $model = Type::class;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Type::count(); // Menampilkan jumlah total data booking
+    }
+
     /**
      * @var string|null The navigation group where this resource will be categorized in the admin panel.
      */
-    protected static ?string $navigationGroup = 'Default Website';
+    protected static ?string $navigationGroup = 'Content Management';
 
     /**
      * @var int|null The sort order of this resource in the navigation.
@@ -35,7 +40,7 @@ class TypeResource extends Resource
     /**
      * @var string|null The icon for this resource in the Filament navigation.
      */
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
     /**
      * Define the form schema for creating and editing records.

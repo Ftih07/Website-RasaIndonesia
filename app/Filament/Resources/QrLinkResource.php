@@ -21,7 +21,15 @@ class QrLinkResource extends Resource
 {
     protected static ?string $model = QrLink::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Business Operations';
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return QrLink::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 
     public static function form(Form $form): Form
     {

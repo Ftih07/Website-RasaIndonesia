@@ -30,8 +30,38 @@ class NewsResource extends Resource
     // Define the Eloquent model that this resource manages.
     protected static ?string $model = News::class;
 
+    /**
+     * Get the badge value to display next to the navigation item for this resource.
+     * This method is often used to show a count of records or other relevant metrics.
+     *
+     * @return string|null The string value to display in the badge, or null if no badge should be shown.
+     */
+    public static function getNavigationBadge(): ?string
+    {
+        // Returns the total count of records in the 'gallery_businesses' table.
+        // This count will be displayed as a small badge next to the resource's
+        // navigation item in the Filament sidebar, indicating the total number of entries.
+        return News::count();
+    }
+
+    /**
+     * The navigation group for the resource in the Filament sidebar.
+     * Resources within the same group will be displayed together.
+     *
+     * @var string|null
+     */
+    protected static ?string $navigationGroup = 'Content Management';
+
+    /**
+     * The sort order for the resource within its navigation group.
+     * Resources with a lower number will appear higher in the sidebar.
+     *
+     * @var int|null
+     */
+    protected static ?int $navigationSort = 1;
+
     // Set the icon that will appear in the Filament navigation sidebar for this resource.
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
     /**
      * Define the form schema for creating and editing News records.

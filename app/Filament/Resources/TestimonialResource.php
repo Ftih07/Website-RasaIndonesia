@@ -18,11 +18,16 @@ class TestimonialResource extends Resource
     // Define the model associated with this resource
     protected static ?string $model = Testimonial::class;
 
-    protected static ?string $navigationGroup = 'Business';
+    public static function getNavigationBadge(): ?string
+    {
+        return Testimonial::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Business Operations';
     protected static ?int $navigationSort = 2;
 
     // Set the navigation icon for the resource
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
     /**
      * Define the form schema for creating or editing a testimonial

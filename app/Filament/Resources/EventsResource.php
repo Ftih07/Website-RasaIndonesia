@@ -29,7 +29,15 @@ class EventsResource extends Resource
 {
     protected static ?string $model = Events::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationBadge(): ?string
+    {
+        return Events::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Content Management';
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
     public static function form(Form $form): Form
     {

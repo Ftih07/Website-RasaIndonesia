@@ -20,11 +20,16 @@ class FoodCategoryResource extends Resource
     // Specifies the Eloquent model associated with this resource
     protected static ?string $model = FoodCategory::class;
 
-    protected static ?string $navigationGroup = 'Default Website';
+    public static function getNavigationBadge(): ?string
+    {
+        return FoodCategory::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Content Management';
     protected static ?int $navigationSort = 1;
 
     // Sets the navigation icon for the resource in the Filament admin panel
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     // Defines the form schema for creating and editing Food Categories
     public static function form(Form $form): Form

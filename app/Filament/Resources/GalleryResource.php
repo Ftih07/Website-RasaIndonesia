@@ -26,14 +26,28 @@ class GalleryResource extends Resource
     // Define the Eloquent model that this resource manages.
     protected static ?string $model = Gallery::class;
 
+    /**
+     * Get the badge value to display next to the navigation item for this resource.
+     * This method is often used to show a count of records or other relevant metrics.
+     *
+     * @return string|null The string value to display in the badge, or null if no badge should be shown.
+     */
+    public static function getNavigationBadge(): ?string
+    {
+        // Returns the total count of records in the 'gallery_businesses' table.
+        // This count will be displayed as a small badge next to the resource's
+        // navigation item in the Filament sidebar, indicating the total number of entries.
+        return Gallery::count();
+    }
+
     // Specifies the navigation group under which this resource will be listed in the Filament sidebar.
-    protected static ?string $navigationGroup = 'Default Website';
+    protected static ?string $navigationGroup = 'Content Management';
 
     // Sets the sorting order for this resource within its navigation group (lower numbers appear higher).
     protected static ?int $navigationSort = 1;
 
     // Define the icon that will appear in the Filament navigation sidebar for this resource.
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
 
     /**
      * Define the form schema for creating and editing Gallery records.

@@ -10,10 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ImportTestimonialSeeder extends Page
 {
+    // Specifies the navigation group under which this resource will be listed in the Filament sidebar.
+    protected static ?string $navigationGroup = 'Data Import Tools';
+
+    // Sets the sorting order for this resource within its navigation group (lower numbers appear higher).
+    protected static ?int $navigationSort = 1;
+
     use WithFileUploads; // Enables file upload functionality
 
     // Navigation icon for Filament panel
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-document-arrow-down';
 
     // Defines the Blade view associated with this page
     protected static string $view = 'filament.pages.import-testimonial-seeder';

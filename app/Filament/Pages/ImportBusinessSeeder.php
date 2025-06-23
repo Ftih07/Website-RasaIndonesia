@@ -18,13 +18,19 @@ use App\Models\Type; // Imports the Type Eloquent model.
  */
 class ImportBusinessSeeder extends Page
 {
+    // Specifies the navigation group under which this resource will be listed in the Filament sidebar.
+    protected static ?string $navigationGroup = 'Data Import Tools';
+
+    // Sets the sorting order for this resource within its navigation group (lower numbers appear higher).
+    protected static ?int $navigationSort = 1;
+
     // Livewire trait to enable file upload capabilities for this component.
     // This allows Livewire to handle temporary storage and processing of uploaded files.
     use WithFileUploads;
 
     // Sets the navigation icon for this page in the Filament admin sidebar.
     // The icon 'heroicon-o-rectangle-stack' is a generic icon from Heroicons.
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cloud-arrow-down';
 
     // Defines the Blade view file that will be rendered for this page.
     // This view typically contains the UI for file upload and type selection.

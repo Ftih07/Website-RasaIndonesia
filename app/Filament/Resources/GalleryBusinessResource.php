@@ -18,11 +18,16 @@ class GalleryBusinessResource extends Resource
     // Defines the associated model for this resource
     protected static ?string $model = GalleryBusiness::class;
 
-    protected static ?string $navigationGroup = 'Business';
+    public static function getNavigationBadge(): ?string
+    {
+        return GalleryBusiness::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Business Operations';
     protected static ?int $navigationSort = 2;
 
     // Sets the navigation icon for this resource in Filament admin panel
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
 
     // Defines the form structure for creating and editing records
     public static function form(Form $form): Form
@@ -32,11 +37,11 @@ class GalleryBusinessResource extends Resource
                 Forms\Components\TextInput::make('business_id')
                     ->required() // Field is required
                     ->numeric(), // Ensures input is a numeric value
-                
+
                 Forms\Components\TextInput::make('title')
                     ->required() // Field is required
                     ->maxLength(255), // Sets maximum length for input
-                
+
                 Forms\Components\FileUpload::make('image')
                     ->image() // Ensures uploaded file is an image
                     ->required(), // Field is required
@@ -51,17 +56,17 @@ class GalleryBusinessResource extends Resource
                 Tables\Columns\TextColumn::make('business_id')
                     ->numeric() // Ensures numeric display
                     ->sortable(), // Allows sorting by business_id
-                
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(), // Enables search functionality
-                
+
                 Tables\Columns\ImageColumn::make('image'), // Displays image in table
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime() // Formats as date-time
                     ->sortable() // Allows sorting by created_at
                     ->toggleable(isToggledHiddenByDefault: true), // Can be hidden by default
-                
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime() // Formats as date-time
                     ->sortable() // Allows sorting by updated_at

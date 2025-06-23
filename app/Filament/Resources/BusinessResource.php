@@ -24,11 +24,16 @@ class BusinessResource extends Resource
     // Specifies the Eloquent model associated with this resource
     protected static ?string $model = Business::class;
 
-    protected static ?string $navigationGroup = 'Business';
+    public static function getNavigationBadge(): ?string
+    {
+        return Business::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Business Operations';
     protected static ?int $navigationSort = 2;
 
     // Sets the navigation icon for the resource
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     // Defines the form structure for creating and editing Business records
     public static function form(Form $form): Form

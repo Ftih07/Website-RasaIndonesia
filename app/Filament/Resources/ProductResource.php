@@ -18,11 +18,16 @@ class ProductResource extends Resource
     // Specifies the model that this resource is associated with
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationGroup = 'Business';
+    public static function getNavigationBadge(): ?string
+    {
+        return Product::count(); // Menampilkan jumlah total data booking
+    }
+
+    protected static ?string $navigationGroup = 'Business Operations';
     protected static ?int $navigationSort = 2;
 
     // Defines the navigation icon for the Filament admin panel
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     /**
      * Defines the form schema for creating or editing a product.
@@ -46,8 +51,8 @@ class ProductResource extends Resource
 
                 // File upload field for product image (image file required)
                 Forms\Components\FileUpload::make('image')
-                    ->image() ,
-                    
+                    ->image(),
+
                 // Input field for product type (required)
                 Forms\Components\TextInput::make('type')
                     ->required(),
