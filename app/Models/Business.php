@@ -197,5 +197,75 @@ class Business extends Model
                 $business->slug = Str::slug($business->name . '-' . uniqid());
             }
         });
+    } 
+
+    /**
+     * Accessor to calculate the completeness status of the business profile.
+     * This method evaluates several key attributes and relationships to determine
+     * how complete the business's information is, returning a human-readable status string.
+     *
+     * @return string The completeness status (e.g., 'Complete', 'Good', 'Incomplete', 'Needs Work').
+     */
+    public function getCompletenessStatusAttribute(): string
+    {
+        // Initialize a score counter for completed fields.
+        $score = 0;
+        // Define the total number of criteria used to determine completeness.
+        $total = 8;
+
+        // Check if the 'name' attribute is filled.
+        if ($this->name) {
+            $score++;
+        }
+
+        // Check if the 'address' attribute is filled.
+        if ($this->address) {
+            $score++;
+        }
+
+        // Check if the 'type_id' attribute (indicating a business type is assigned) is filled.
+        if ($this->type_id) {
+            $score++;
+        }
+
+        // Check if the 'contact' attribute is an array and contains at least one entry.
+        // The 'contact' attribute is likely stored as JSON in the database and cast to an array.
+        if (is_array($this->contact) && count($this->contact) > 0) {
+            $score++;
+        }
+
+        // Check if the 'logo' attribute (presumably a path to an image) is filled.
+        if ($this->logo) {
+            $score++;
+        }
+
+        // Check if the 'description' attribute is filled.
+        if ($this->description) {
+            $score++;
+        }
+
+        // Check if the 'open_hours' attribute is an array and contains at least one entry.
+        // Similar to 'contact', this is likely a JSON-cast array.
+        if (is_array($this->open_hours) && count($this->open_hours) > 0) {
+            $score++;
+        }
+
+        // Check if the business has any related products.
+        // The 'products()' method refers to an Eloquent relationship (e.g., hasMany).
+        if ($this->products()->count() > 0) {
+            $score++;
+        }
+
+        // Calculate the percentage of completeness based on the score and total criteria.
+        $percentage = ($score / $total) * 100;
+
+        // Determine the completeness status string based on the calculated percentage.
+        // 'match (true)' is used for cleaner conditional logic similar to a switch statement.
+        return match (true) {
+            $percentage >= 90 => 'Complete',     // 90% or more: Complete
+            $percentage >= 70 => 'Good',         // 70% to 89%: Good
+            $percentage >= 50 => 'Incomplete',   // 50% to 69%: Incomplete
+            default => 'Needs Work'              // Less than 50%: Needs Work
+        };
     }
 }
