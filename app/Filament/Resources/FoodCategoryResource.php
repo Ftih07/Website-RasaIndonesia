@@ -109,7 +109,11 @@ class FoodCategoryResource extends Resource
                     ->color('success') // Sets the badge color to green.
                     ->suffix(' linked') // Adds ' linked' after the count (e.g., '5 linked').
                     ->sortable() // Allows sorting by the number of linked businesses.
-                    ->toggleable(), // Can be toggled visible/hidden by the user.
+                    ->toggleable() // Can be toggled visible/hidden by the user.
+                    ->tooltip(function ($record) { 
+                        $businessNames = $record->businesses->pluck('name')->implode(', ');
+                        return 'Linked Businesses: ' . ($businessNames ?: 'None');
+                    }),
 
                 // Column for displaying the creation timestamp.
                 TextColumn::make('created_at')
@@ -202,8 +206,6 @@ class FoodCategoryResource extends Resource
                 // Groups common bulk actions for selected records.
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(), // Bulk delete (soft delete).
-                    Tables\Actions\RestoreBulkAction::make(), // Bulk restore (for soft-deleted records).
-                    Tables\Actions\ForceDeleteBulkAction::make(), // Bulk force delete (permanent deletion).
                     // Custom bulk action to export selected food categories to a CSV file.
                     Tables\Actions\BulkAction::make('export')
                         ->label('Export Selected') // Label for the export button.
@@ -280,5 +282,11 @@ class FoodCategoryResource extends Resource
     public static function getGlobalSearchAttributes(): array
     {
         return ['title'];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with('businesses');
     }
 }
