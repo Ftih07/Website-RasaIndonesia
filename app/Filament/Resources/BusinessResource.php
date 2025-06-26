@@ -610,6 +610,11 @@ class BusinessResource extends Resource
     {
         return $table
             ->columns([
+                // Displays the business ID.
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible.
                 // Displays the business logo.
                 Tables\Columns\ImageColumn::make('logo')
                     ->label('Logo') // Column header label
@@ -762,6 +767,19 @@ class BusinessResource extends Resource
                     ->dateTime('M j, Y') // Formats the date as "Month Day, Year" (e.g., Jul 24, 2025)
                     ->sortable() // Allows sorting by creation date
                     ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible.
+
+                // Displays the last updated date of the business record with day name and formatted time.
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Last Updated') // Column header label
+                    ->dateTime('l, F d, Y \a\t ga') // Formats the date as "Monday, May 05, 2025 at 11AM"
+                    ->sortable() // Allows sorting by last updated date
+                    ->since() // Also displays relative time (e.g., "2 hours ago")
+                    ->tooltip(
+                        fn(Business $record): string =>
+                        'Updated: ' . $record->updated_at->format('l, F d, Y \a\t ga') // Tooltip with full formatted date and time
+                    )
+                    ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible.
+
             ])
             ->defaultSort('created_at', 'desc') // Default sorting: creation date, descending.
             ->headerActions([
@@ -964,7 +982,7 @@ class BusinessResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(), // Bulk delete
                     Tables\Actions\RestoreBulkAction::make(), // Bulk restore
                     Tables\Actions\ForceDeleteBulkAction::make(), // Bulk force delete
- 
+
                     // Bulk action to export selected businesses to a single PDF.
                     Tables\Actions\BulkAction::make('export_pdf')
                         ->label('Export Selected PDF') // Label for the action

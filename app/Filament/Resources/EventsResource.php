@@ -251,6 +251,11 @@ class EventsResource extends Resource
     {
         return $table
             ->columns([
+                // Displays the business ID.
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible.
                 // Event Image column.
                 ImageColumn::make('image_events')
                     ->label('Image')
@@ -352,6 +357,21 @@ class EventsResource extends Resource
                     ->sortable()
                     ->since() // Displays time elapsed since creation (e.g., "2 days ago")
                     ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible
+
+                // Last Updated Date Column: Displays when the event record was last modified.
+                TextColumn::make('updated_at')
+                    ->label('Last Updated') // Sets the display label for the column header in the table.
+                    ->dateTime('M d, Y H:i') // Formats the date and time for display (e.g., "Jun 26, 2025 16:14").
+                    ->sortable() // Allows users to sort the table by this column (ascending/descending).
+                    ->since() // Displays a human-readable "time ago" format (e.g., "2 hours ago", "yesterday").
+                    ->tooltip( // Adds a tooltip that appears when hovering over the column content.
+                        fn(Events $record): string => // Defines a function that returns the tooltip text.
+                        // Inside the tooltip, it displays the exact update date and time in a detailed format.
+                        'Updated: ' . $record->updated_at->format('F j, Y \a\t g:i A')
+                    )
+                    // Makes this column hidden by default, but users can toggle its visibility
+                    // using the "Columns" dropdown in the table header.
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 // Soft Delete Filter: Allows filtering by trashed (soft-deleted) records.
