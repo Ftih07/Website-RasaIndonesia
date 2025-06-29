@@ -24,7 +24,7 @@ class EventCheckIn extends Page
 
     // Organizes this custom page under a specific group in the Filament sidebar navigation.
     // This helps in structuring the navigation menu, especially with many pages or resources.
-    protected static ?string $navigationGroup = 'Event Management';
+    protected static ?string $navigationGroup = 'Prosperity Expo';
 
     // You can add methods here to define properties or logic specific to this custom page,
     // such as handling form submissions, fetching data, or interacting with other components
