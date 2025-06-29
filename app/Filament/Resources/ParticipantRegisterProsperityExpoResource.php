@@ -78,7 +78,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
 
                         // Text input field for participant's contact number
                         Forms\Components\TextInput::make('contact')
-                            ->label('Phone Number')
+                            ->label('Phone Number / WhatsApp Number')
                             ->tel() // Adds telephone number validation
                             ->required()
                             ->maxLength(20)
@@ -94,14 +94,14 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                             ->schema([
                                 // Text input for company name
                                 Forms\Components\TextInput::make('company_name')
-                                    ->label('Company Name')
+                                    ->label('Company Name / Brand')
                                     ->required()
                                     ->maxLength(255)
                                     ->placeholder('PT. Company Name'),
 
                                 // Text input for job position
                                 Forms\Components\TextInput::make('position')
-                                    ->label('Job Position')
+                                    ->label('Position / Title')
                                     ->required()
                                     ->maxLength(255)
                                     ->placeholder('CEO, Manager, etc.'),
@@ -109,14 +109,14 @@ class ParticipantRegisterProsperityExpoResource extends Resource
 
                         // Text input for company type
                         Forms\Components\TextInput::make('company_type')
-                            ->label('Company Type')
+                            ->label('Type of Business / Industry')
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Manufacturing, Trading, Services, etc.'),
 
                         // Textarea for product/service description
                         Forms\Components\Textarea::make('product_description')
-                            ->label('Product/Service Description')
+                            ->label('Brief Description of Products/Services')
                             ->required()
                             ->rows(3) // Sets the number of visible rows for the textarea
                             ->maxLength(1000)
@@ -136,7 +136,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                     ->schema([
                         // Radio button group for participant type (Exhibitor/Sponsor)
                         Forms\Components\Radio::make('participant_type')
-                            ->label('Participation Package')
+                            ->label('Participantion Type')
                             ->required()
                             ->options(static::getParticipantTypeOptions()) // Options are pulled from a helper method
                             ->descriptions([ // Adds descriptive text below each radio option
@@ -250,6 +250,15 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                         'not_found' => 'Absent',
                         default => 'Not Checked',
                     }),
+
+                Tables\Columns\TextColumn::make('company_profile')
+                    ->label('Company Profile')
+                    ->formatStateUsing(function (?string $state) {
+                        return $state
+                            ? '<a href="' . asset('storage/' . $state) . '" target="_blank">View File</a>'
+                            : '-';
+                    })
+                    ->html(),
 
                 // Text column for registration date and time
                 Tables\Columns\TextColumn::make('created_at')
