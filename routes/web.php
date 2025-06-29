@@ -15,6 +15,11 @@ use App\Exports\BusinessesExport;
 use App\Http\Controllers\BusinessExportController;
 use Maatwebsite\Excel\Facades\Excel;
 
+// Import the controller class that will handle these routes.
+// This line ensures that Laravel knows where to find the `ProsperityExpoRegistrationController`.
+use App\Http\Controllers\ProsperityExpoRegistrationController;
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -117,3 +122,34 @@ Route::get('/export-business-pdf/{id}', [BusinessExportController::class, 'expor
 
 Route::get('businesses/export-all-pdf', [BusinessExportController::class, 'exportAllPdf'])
     ->name('export-all-businesses-pdf');
+
+// Define a GET route for displaying the registration form.
+// When a user visits the URL '/prosperity-expo' using a GET request (e.g., by typing it in the browser),
+// Laravel will call the `create` method in the `ProsperityExpoRegistrationController`.
+// The `->name('prosperity-expo.create')` assigns a unique name to this route,
+// which makes it easier to generate URLs in your application (e.g., using `route('prosperity-expo.create')`).
+Route::get('/prosperity-expo', [ProsperityExpoRegistrationController::class, 'create'])->name('prosperity-expo.create');
+
+// Define a POST route for handling the submission of the registration form.
+// When a user fills out the registration form and submits it, the form data is sent
+// via a POST request to the URL '/prosperity-expo'.
+// Laravel will then call the `store` method in the `ProsperityExpoRegistrationController`
+// to process and save the submitted data.
+// This route is also given a name for easy URL generation.
+Route::post('/prosperity-expo', [ProsperityExpoRegistrationController::class, 'store'])->name('prosperity-expo.store');
+
+// Define a GET route for the thank you page after successful registration.
+// This route includes a wildcard segment '{qr_code}' in the URL, meaning it expects a unique QR code
+// value to be passed. For example, '/prosperity-expo/thank-you/some-unique-qr-code'.
+// Laravel will call the `thankYou` method in the `ProsperityExpoRegistrationController`,
+// passing the value of '{qr_code}' as an argument to that method.
+// This route is named 'prosperity-expo.thankyou'.
+Route::get('/prosperity-expo/thank-you/{qr_code}', [ProsperityExpoRegistrationController::class, 'thankYou'])->name('prosperity-expo.thankyou');
+
+// Define a GET route for downloading the registration confirmation PDF.
+// Similar to the thank you page, this route also expects a '{qr_code}' in the URL.
+// When a user accesses this URL (e.g., '/prosperity-expo/download/another-unique-qr-code'),
+// Laravel will execute the `downloadPdf` method in the `ProsperityExpoRegistrationController`,
+// passing the QR code value. This method will then handle serving the PDF file for download.
+// This route is named 'prosperity-expo.download'.
+Route::get('/prosperity-expo/download/{qr_code}', [ProsperityExpoRegistrationController::class, 'downloadPdf'])->name('prosperity-expo.download');

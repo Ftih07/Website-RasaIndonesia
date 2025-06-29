@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
+// Import the API controller class that will handle this route.
+// This line ensures that Laravel knows where to find the `EventCheckInController`.
+use App\Http\Controllers\Api\EventCheckInController;
+
 /**
  * User Route
  * Returns the authenticated user data.
@@ -53,3 +57,20 @@ Route::get('/nearby-businesses', function (Request $request) {
  * Uses HomeController to handle the logic for retrieving nearby businesses.
  */
 Route::get('/nearby-businesses', [HomeController::class, 'getNearbyBusinesses']);
+
+// Define a GET route for the event check-in API.
+// This route is designed to be an API endpoint, typically used by a scanner or another system
+// to check in participants using their unique QR code.
+//
+// - URL: '/check-in/{qrCode}'
+//   - '/check-in': The base path for the check-in functionality.
+//   - '{qrCode}': A wildcard segment. This means any value placed here in the URL
+//     will be captured and passed as an argument to the controller method.
+//     For example, if the URL is '/check-in/a1b2c3d4-e5f6-7890-1234-567890abcdef',
+//     'a1b2c3d4-e5f6-7890-1234-567890abcdef' will be passed as the `$qrCode` parameter.
+//
+// - Controller Action: `[EventCheckInController::class, 'check']`
+//   - This tells Laravel to call the `check` method within the `EventCheckInController` class
+//     when this route is accessed. The `$qrCode` value from the URL will be automatically
+//     injected into the `check` method as an argument.
+Route::get('/check-in/{qrCode}', [EventCheckInController::class, 'check']);
