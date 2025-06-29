@@ -817,8 +817,6 @@
                 <ol class="steps-list">
                     <li>Save or screenshot your QR code above for event check-in</li>
                     <li>Download your PDF certificate as backup documentation</li>
-                    <li>Check your email for detailed event information and schedule</li>
-                    <li>Prepare your exhibition materials and company profile</li>
                     <li>Arrive at the venue with your QR code ready for scanning</li>
                 </ol>
             </div>

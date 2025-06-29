@@ -189,7 +189,7 @@
 
     {{-- Confirmation title displaying success status --}}
     <div class="confirmation-title">
-        ✓ REGISTRATION CONFIRMED
+        REGISTRATION CONFIRMED
     </div>
 
     {{-- Participant Information section --}}
@@ -251,9 +251,7 @@
         <div class="instructions-title">Event Day Instructions:</div>
         <div class="instructions-text">
             • Bring this PDF confirmation (printed or digital)<br>
-            • Arrive 30 minutes before your scheduled session<br>
             • Present QR code at registration desk for quick check-in<br>
-            • Valid ID may be required for verification<br>
             • Contact event support if you encounter any issues
         </div>
     </div>

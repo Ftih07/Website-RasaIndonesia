@@ -1,141 +1,143 @@
 <x-filament::page>
-    {{-- This is a Filament Blade component that provides the basic layout and styling for a Filament page. --}}
     <div>
-        <div class="max-w-4xl mx-auto">
-            <!-- Header Section: Provides a title and description for the check-in page. -->
-            <div class="mb-8 text-center">
-                {{-- Icon for the header, styled with Tailwind CSS for a circular background. --}}
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                    {{-- SVG icon representing a QR code or scanner. --}}
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+        {{-- This is a Filament Blade component that provides the basic layout and styling for a Filament page. --}}
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <!-- Header Section: Provides a title and description for the check-in page. -->
+                <div class="mb-8 text-center">
+                    {{-- Icon for the header, styled with Tailwind CSS for a circular background. --}}
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4 transition-colors duration-200">
+                        {{-- SVG icon representing a QR code or scanner. --}}
+                        <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                        </svg>
+                    </div>
+                    {{-- Page title. --}}
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-200">QR Code Check-In</h1>
+                    {{-- Page description. --}}
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 transition-colors duration-200">Scan participant QR codes for event check-in</p>
+                </div>
+
+                {{-- Main content area, structured in a responsive grid. --}}
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+                    <!-- Scanner Section: Contains the camera feed and controls for QR scanning. -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+                            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-200">Camera Scanner</h2>
+                            {{-- Scanner status indicator (e.g., Initializing, Active, Stopped). --}}
+                            <div class="flex items-center space-x-2">
+                                <div id="scanner-status" class="flex items-center">
+                                    <div class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full mr-2 transition-colors duration-200"></div>
+                                    <span class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">Initializing...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scanner Container: Where the camera feed will be displayed. -->
+                        <div class="relative">
+                            {{-- This div is where the html5-qrcode library will render the camera stream. --}}
+                            <div id="reader" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700 min-h-[250px] sm:min-h-[300px] transition-colors duration-200"></div>
+
+                            <!-- Scanner Controls: Buttons to start/stop the scanner and select camera. -->
+                            <div class="mt-4 flex flex-col sm:flex-row flex-wrap gap-2">
+                                {{-- Button to start the QR code scanner. --}}
+                                <button id="start-scanner" class="flex-1 sm:flex-none px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6-8h8a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2v-8a2 2 0 012-2z"></path>
+                                    </svg>
+                                    <span class="text-sm sm:text-base">Start Scanner</span>
+                                </button>
+
+                                {{-- Button to stop the QR code scanner (initially disabled). --}}
+                                <button id="stop-scanner" class="flex-1 sm:flex-none px-4 py-2 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200" disabled>
+                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6v4H9z"></path>
+                                    </svg>
+                                    <span class="text-sm sm:text-base">Stop Scanner</span>
+                                </button>
+
+                                {{-- Dropdown to select available cameras. --}}
+                                <select id="camera-select" class="flex-1 sm:flex-none px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm sm:text-base transition-colors duration-200">
+                                    <option value="">Select Camera</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Manual QR Input: Allows staff to type in a QR code if scanning is not possible. -->
+                        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600 transition-colors duration-200">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 transition-colors duration-200">Manual QR Code Entry</h3>
+                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                {{-- Input field for manual QR code entry. --}}
+                                <input
+                                    type="text"
+                                    id="manual-qr-input"
+                                    placeholder="Enter QR code manually..."
+                                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm sm:text-base transition-colors duration-200">
+                                {{-- Button to trigger manual check-in. --}}
+                                <button
+                                    id="manual-check-btn"
+                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 text-sm sm:text-base transition-all duration-200">
+                                    Check In
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Section: Displays the outcome of the last check-in attempt. -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+                        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-200">Check-In Results</h2>
+
+                        <!-- Result Display: Shows details of the scanned participant or an error message. -->
+                        <div id="result-container" class="space-y-4">
+                            {{-- Initial placeholder message before any scan. --}}
+                            <div class="text-center py-8 text-gray-500 dark:text-gray-400 transition-colors duration-200">
+                                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <p class="text-sm sm:text-base">Scan a QR code to see participant details</p>
+                            </div>
+                        </div>
+
+                        <!-- Statistics: Shows counts of successful and failed check-ins for the session. -->
+                        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600 transition-colors duration-200">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 transition-colors duration-200">Session Statistics</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                {{-- Displays the count of successful check-ins. --}}
+                                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-3 rounded-md transition-colors duration-200">
+                                    <div class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400 transition-colors duration-200" id="success-count">0</div>
+                                    <div class="text-xs sm:text-sm text-green-800 dark:text-green-300 transition-colors duration-200">Successful Check-ins</div>
+                                </div>
+                                {{-- Displays the count of failed check-in attempts. --}}
+                                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-md transition-colors duration-200">
+                                    <div class="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400 transition-colors duration-200" id="error-count">0</div>
+                                    <div class="text-xs sm:text-sm text-red-800 dark:text-red-300 transition-colors duration-200">Failed Attempts</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Check-ins Section: Displays a list of the most recent check-in activities. -->
+                <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+                    <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-200">Recent Check-ins</h2>
+                    <div id="recent-checkins" class="space-y-3">
+                        {{-- Placeholder message when no recent check-ins exist. --}}
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4 text-sm sm:text-base transition-colors duration-200">No check-ins yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay: A full-screen overlay to indicate processing. -->
+            <div id="loading-overlay" class="fixed inset-0 bg-gray-900/80 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-all duration-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3 shadow-xl border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+                    {{-- Spinning loader icon. --}}
+                    <svg class="animate-spin w-5 h-5 text-blue-600 dark:text-blue-400 transition-colors duration-200" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
+                    <span class="text-gray-900 dark:text-white text-sm sm:text-base transition-colors duration-200">Processing check-in...</span>
                 </div>
-                {{-- Page title. --}}
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">QR Code Check-In</h1>
-                {{-- Page description. --}}
-                <p class="text-gray-600">Scan participant QR codes for event check-in</p>
-            </div>
-
-            {{-- Main content area, structured in a two-column grid for larger screens. --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Scanner Section: Contains the camera feed and controls for QR scanning. -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-900">Camera Scanner</h2>
-                        {{-- Scanner status indicator (e.g., Initializing, Active, Stopped). --}}
-                        <div class="flex items-center space-x-2">
-                            <div id="scanner-status" class="flex items-center">
-                                <div class="w-2 h-2 bg-gray-400 rounded-full mr-2"></div>
-                                <span class="text-sm text-gray-500">Initializing...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Scanner Container: Where the camera feed will be displayed. -->
-                    <div class="relative">
-                        {{-- This div is where the html5-qrcode library will render the camera stream. --}}
-                        <div id="reader" class="border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50"></div>
-
-                        <!-- Scanner Controls: Buttons to start/stop the scanner and select camera. -->
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            {{-- Button to start the QR code scanner. --}}
-                            <button id="start-scanner" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6-8h8a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2v-8a2 2 0 012-2z"></path>
-                                </svg>
-                                Start Scanner
-                            </button>
-
-                            {{-- Button to stop the QR code scanner (initially disabled). --}}
-                            <button id="stop-scanner" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6v4H9z"></path>
-                                </svg>
-                                Stop Scanner
-                            </button>
-
-                            {{-- Dropdown to select available cameras. --}}
-                            <select id="camera-select" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Select Camera</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Manual QR Input: Allows staff to type in a QR code if scanning is not possible. -->
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900 mb-3">Manual QR Code Entry</h3>
-                        <div class="flex space-x-2">
-                            {{-- Input field for manual QR code entry. --}}
-                            <input
-                                type="text"
-                                id="manual-qr-input"
-                                placeholder="Enter QR code manually..."
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            {{-- Button to trigger manual check-in. --}}
-                            <button
-                                id="manual-check-btn"
-                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-                                Check In
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Results Section: Displays the outcome of the last check-in attempt. -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Check-In Results</h2>
-
-                    <!-- Result Display: Shows details of the scanned participant or an error message. -->
-                    <div id="result-container" class="space-y-4">
-                        {{-- Initial placeholder message before any scan. --}}
-                        <div class="text-center py-8 text-gray-500">
-                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                            </svg>
-                            <p>Scan a QR code to see participant details</p>
-                        </div>
-                    </div>
-
-                    <!-- Statistics: Shows counts of successful and failed check-ins for the session. -->
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900 mb-3">Session Statistics</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            {{-- Displays the count of successful check-ins. --}}
-                            <div class="bg-green-50 p-3 rounded-md">
-                                <div class="text-2xl font-bold text-green-600" id="success-count">0</div>
-                                <div class="text-sm text-green-800">Successful Check-ins</div>
-                            </div>
-                            {{-- Displays the count of failed check-in attempts. --}}
-                            <div class="bg-red-50 p-3 rounded-md">
-                                <div class="text-2xl font-bold text-red-600" id="error-count">0</div>
-                                <div class="text-sm text-red-800">Failed Attempts</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Check-ins Section: Displays a list of the most recent check-in activities. -->
-            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Check-ins</h2>
-                <div id="recent-checkins" class="space-y-3">
-                    {{-- Placeholder message when no recent check-ins exist. --}}
-                    <p class="text-gray-500 text-center py-4">No check-ins yet</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Loading Overlay: A full-screen overlay to indicate processing. -->
-        <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                {{-- Spinning loader icon. --}}
-                <svg class="animate-spin w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Processing check-in...</span>
             </div>
         </div>
     </div>
