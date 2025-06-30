@@ -726,6 +726,229 @@
                 /* Ensures a larger touch target */
             }
         }
+
+        /* Header Partners Section - Tambahkan CSS ini ke dalam <style> tag */
+
+        /* Header Partners Container */
+        .header-partners {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        /* Header Partners Content */
+        .header-partners-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Partners Title */
+        .header-partners-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Decorative line under title */
+        .header-partners-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 1px;
+        }
+
+        /* Header Logos Container */
+        .header-logos-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 35px;
+            flex-wrap: wrap;
+        }
+
+        /* Individual Header Logo Item */
+        .header-logo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 15px;
+            padding: 18px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle background pattern for logo items */
+        .header-logo-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Header Logo Item Hover Effect */
+        .header-logo-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-logo-item:hover::before {
+            opacity: 1;
+        }
+
+        /* Header Partner Logo Image */
+        .header-partner-logo {
+            max-height: 55px;
+            max-width: 140px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(0.95);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Logo Hover Effect */
+        .header-logo-item:hover .header-partner-logo {
+            filter: brightness(1);
+            transform: scale(1.05);
+        }
+
+        /* Animation for individual logos */
+        .header-logo-item:nth-child(1) {
+            animation: slideInFromLeft 0.6s ease-out 0.8s both;
+        }
+
+        .header-logo-item:nth-child(2) {
+            animation: slideInFromBottom 0.6s ease-out 1s both;
+        }
+
+        .header-logo-item:nth-child(3) {
+            animation: slideInFromRight 0.6s ease-out 1.2s both;
+        }
+
+        /* Keyframes for logo animations */
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design for Header Logos */
+        @media (max-width: 768px) {
+            .header-partners {
+                padding: 20px 20px;
+            }
+
+            .header-logos-container {
+                gap: 25px;
+            }
+
+            .header-logo-item {
+                padding: 15px 20px;
+            }
+
+            .header-partner-logo {
+                max-height: 45px;
+                max-width: 120px;
+            }
+
+            .header-partners-title {
+                font-size: 0.85rem;
+                margin-bottom: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-partners {
+                padding: 18px 15px;
+            }
+
+            .header-logos-container {
+                gap: 20px;
+            }
+
+            .header-logo-item {
+                padding: 12px 15px;
+                flex: 1;
+                min-width: 100px;
+                max-width: 130px;
+            }
+
+            .header-partner-logo {
+                max-height: 40px;
+                max-width: 100px;
+            }
+
+            .header-partners-title {
+                font-size: 0.8rem;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Print optimization */
+        @media print {
+            .header-partners {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .header-logo-item {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+        }
     </style>
 </head>
 
@@ -752,7 +975,23 @@
                 </div>
             </div>
         </div>
-
+        <!-- Partner Logos Header Section - Tambahkan setelah closing div success-header dan sebelum content-section -->
+        <div class="header-partners">
+            <div class="header-partners-content">
+                <p class="header-partners-title">Official Partners</p>
+                <div class="header-logos-container">
+                    <div class="header-logo-item">
+                        <img src="https://framerusercontent.com/images/fGCgpHRiychMw8xfk26Tri4H0w.png" alt="Katalis" class="header-partner-logo">
+                    </div>
+                    <div class="header-logo-item">
+                        <img src="https://cdn-az.allevents.in/events4/banners/7c40abc0bbe380f162da8a9afd2fb72e2ae150b0610da261abfaab51667528be-rimg-w400-h400-gmir.png?v=1681264687" alt="KBRI Canberra" class="header-partner-logo">
+                    </div>
+                    <div class="header-logo-item">
+                        <img src="https://tanya-atdag.au/wp-content/uploads/2025/01/Logo-Atdag-Canberra.png" alt="Atdag Canberra" class="header-partner-logo">
+                    </div>
+                </div>
+            </div>
+        </div>
         {{-- Main form container --}}
         <div class="form-container">
             {{-- Blade directive to display validation errors if any --}}
@@ -855,7 +1094,7 @@
 
                 {{-- Company Profile Document Upload --}}
                 <div class="form-group">
-                    <label><i class="fas fa-file-upload"></i> Company Profile Document</label>
+                    <label><i class="fas fa-file-upload"></i> Company Profile Document (Optional)</label>
                     <div class="file-upload">
                         <input type="file" name="company_profile" id="company_profile" accept=".pdf,.doc,.docx">
                         <label for="company_profile" class="file-upload-label">

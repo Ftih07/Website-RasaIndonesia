@@ -192,6 +192,24 @@
         REGISTRATION CONFIRMED
     </div>
 
+    <!-- Official Partners Section - Styled to match overall PDF theme -->
+    <div style="margin: 30px 0; border-top: 3px solid #2c5aa0; padding-top: 15px; background-color: #f8f9fa;">
+        <p style="font-size: 16px; font-weight: bold; color: #2c5aa0; text-align: center; margin-bottom: 15px;">Official Partners</p>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 33.33%; text-align: center; padding: 10px;">
+                    <img src="assets/logo/katalis.png" alt="Katalis" style="width: 100px; height: auto;">
+                </td>
+                <td style="width: 33.33%; text-align: center; padding: 10px;">
+                    <img src="assets/logo/kbri.webp" alt="KBRI Canberra" style="width: 80px; height: auto;">
+                </td>
+                <td style="width: 33.33%; text-align: center; padding: 10px;">
+                    <img src="assets/logo/atdag.png" alt="Atdag Canberra" style="width: 140px; height: auto;">
+                </td>
+            </tr>
+        </table>
+    </div>
+
     {{-- Participant Information section --}}
     <div class="participant-info">
         <h2 class="section-title">Participant Information</h2>
@@ -265,7 +283,7 @@
     <div class="footer">
         <p><strong>Indonesia-Australia Prosperity Expo 2025</strong></p>
         <p>Building Economic Bridges • Creating Opportunities • Fostering Sustainable Growth</p>
-        <p>For inquiries: info@prosperity-expo.com | www.prosperity-expo.com</p>
+        <p>For inquiries: sales.expo@kupu-gsc.co.id | www.prosperity-expo.com | Agi : +62 815-7300-0739 | Dewi : +62 818-201-311</p>
     </div>
 </body>
 
