@@ -823,6 +823,15 @@
                                 <p style="margin-top: 8px; font-size: 0.9rem; color: #64748b;">Premium visibility and branding opportunities</p>
                             </div>
                         </label>
+                        <label class="radio-option" for="Visitor">
+                            <input type="radio" id="Visitor" name="participant_type" value="Visitor : Free" required>
+                            <div class="radio-custom"></div>
+                            <div class="radio-label">
+                                <strong>Visitor</strong>
+                                <span class="price-tag">Free</span>
+                                <p style="margin-top: 8px; font-size: 0.9rem; color: #64748b;">Visit the exhibition for free, discover a wide range of offerings, and forge valuable connections.</p>
+                            </div>
+                        </label>
                     </div>
                 </div>
 

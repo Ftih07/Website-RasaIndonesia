@@ -765,6 +765,26 @@
                             <div class="info-value">{{ date('F j, Y') }}</div>
                         </div>
                     </div>
+                    {{-- Display Participant Type --}}
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="info-text">
+                            <div class="info-label">Participat Type</div>
+                            <div class="info-value">{{ $participant->participant_type }}</div>
+                        </div>
+                    </div>
+                    {{-- Display Contact User --}}
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="info-text">
+                            <div class="info-label">Phone / WhatsApp Number </div>
+                            <div class="info-value">{{ $participant->contact }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

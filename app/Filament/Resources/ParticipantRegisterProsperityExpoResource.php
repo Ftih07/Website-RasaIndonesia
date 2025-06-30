@@ -134,7 +134,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                 Forms\Components\Section::make('Participation Details')
                     ->description('Event participation type and pricing')
                     ->schema([
-                        // Radio button group for participant type (Exhibitor/Sponsor)
+                        // Radio button group for participant type (Exhibitor/Sponsor/Visitor)
                         Forms\Components\Radio::make('participant_type')
                             ->label('Participantion Type')
                             ->required()
@@ -142,6 +142,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                             ->descriptions([ // Adds descriptive text below each radio option
                                 'Exhibitor : Rp. 10.000.000' => 'Standard exhibition booth with basic amenities',
                                 'Sponsor : Rp. 25.000.000' => 'Premium sponsorship package with enhanced visibility',
+                                'Visitor : Free' => 'Visit the exhibition for free, discover a wide range of offerings, and forge valuable connections.',
                             ])
                             ->inline(false), // Displays options vertically
 
@@ -221,11 +222,16 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                     ->color(fn(string $state): string => match (true) { // Sets badge color based on state
                         str_contains($state, 'Sponsor') => 'success',
                         str_contains($state, 'Exhibitor') => 'info',
-                        default => 'gray',
+                        str_contains($state, 'Visitor') => 'gray', // Added for Visitor
+                        default => 'gray', // Default fallback
                     })
                     ->formatStateUsing( // Formats the displayed text for the badge
-                        fn(string $state): string =>
-                        str_contains($state, 'Sponsor') ? 'Sponsor' : 'Exhibitor'
+                        fn(string $state): string => match (true) {
+                            str_contains($state, 'Sponsor') => 'Sponsor',
+                            str_contains($state, 'Exhibitor') => 'Exhibitor',
+                            str_contains($state, 'Visitor') => 'Visitor', // Added for Visitor
+                            default => 'N/A', // Default fallback
+                        }
                     ),
 
                 // Text column for QR Code
@@ -280,6 +286,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                     ->options([ // Explicitly defined options for the filter
                         'Exhibitor : Rp. 10.000.000' => 'Exhibitor',
                         'Sponsor : Rp. 25.000.000' => 'Sponsor',
+                        'Visitor : Free' => 'Visitor',
                     ])
                     ->placeholder('All Packages'),
 
@@ -449,6 +456,7 @@ class ParticipantRegisterProsperityExpoResource extends Resource
         return [
             'Exhibitor : Rp. 10.000.000' => 'Exhibitor : Rp. 10.000.000',
             'Sponsor : Rp. 25.000.000' => 'Sponsor : Rp. 25.000.000',
+            'Visitor : Free' => 'Visitor : Free',
         ];
     }
 

@@ -216,6 +216,11 @@
                 <td>Position</td>
                 <td>{{ $participant->position }}</td>
             </tr>
+            {{-- Table row for Participant Type --}}
+            <tr>
+                <td>Participant Type</td>
+                <td>{{ $participant->participant_type }}</td>
+            </tr>
             {{-- Table row for Contact Number --}}
             <tr>
                 <td>Contact Number</td>
