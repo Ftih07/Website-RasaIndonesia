@@ -7,7 +7,17 @@ use Illuminate\Database\Eloquent\Model; // Imports the base Eloquent Model class
 class Product extends Model
 {
     // Specifies the attributes that are mass assignable
-    protected $fillable = ['business_id', 'name', 'image', 'type', 'desc', 'variants', 'serving', 'price'];
+    protected $fillable = [
+        'business_id',
+        'name',
+        'image',
+        'type',
+        'desc',
+        'variants',
+        'serving',
+        'price',
+        'max_distance',
+    ];
 
     /**
      * Define a relationship where a product belongs to a business.
@@ -23,4 +33,14 @@ class Product extends Model
     protected $casts = [
         'variants' => 'array',
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_product');
+    }
+
+    public function optionGroups()
+    {
+        return $this->belongsToMany(ProductOptionGroup::class, 'product_option_group_product', 'product_id', 'product_option_groups_id');
+    }
 }

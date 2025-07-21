@@ -46,6 +46,12 @@ return Application::configure(basePath: dirname(__DIR__)) // Start configuring t
         // By placing it here, it will track *every* incoming web request.
         $middleware->append(TrackTraffic::class);
 
+        $middleware->alias([
+            'check.role' => \App\Http\Middleware\CheckRole::class,
+            'token.expired' => \App\Http\Middleware\TokenExpired::class, // contoh
+            'login.throttle' => \App\Http\Middleware\LoginThrottle::class, // ✅ Tambahkan ini
+        ]);
+
         // --- Important Middleware Context ---
         // You can configure different middleware groups or add more global middleware here.
         // For example, to apply middleware to specific groups:

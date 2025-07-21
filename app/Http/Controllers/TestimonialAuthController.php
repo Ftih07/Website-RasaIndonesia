@@ -2,109 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestimonialUser;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Import authentication support
-use Illuminate\Support\Facades\Hash; // Import Hash for password encryption
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Middleware\LoginThrottle;
 
 class TestimonialAuthController extends Controller
 {
-    // Show the registration form
     public function showRegisterForm()
     {
         return view('auth.testimonial-register');
     }
- 
-    // Handle the registration process
+
     public function register(Request $request)
     {
-        // Validate the incoming request data
         $request->validate([
-            'username' => 'required|unique:testimonial_users,username|max:255', // Username must be unique
-            'password' => 'required|min:3', // Password must have at least 3 characters
+            'username' => 'required|unique:users,email|max:255',
+            'password' => 'required|min:3|confirmed', // Tambahkan konfirmasi password
         ]);
 
-        // Insert the new user into the testimonial_users table
-        \DB::table('testimonial_users')->insert([
-            'username' => $request->username,
+        $user = User::create([
+            'name' => $request->username,
+            'email' => $request->username,
             'password' => bcrypt($request->password),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'address' => $request->address,
+            'contact' => $request->contact,
         ]);
 
-        // Redirect to the login page with a success message
+        $role = Role::where('name', 'customer')->first();
+        $user->roles()->attach($role->id);
+
         return redirect()->route('testimonial.login')->with('success', 'Account registered successfully!');
     }
 
-    // Show the login form
     public function showLoginForm()
     {
         return view('auth.testimonial-login');
     }
 
-    // Show the login form
     public function login(Request $request)
     {
-        // Validate login credentials
         $request->validate([
             'username' => 'required',
             'password' => 'required',
         ]);
 
-        // Attempt to log in using the 'testimonial' guard
-        if (auth()->guard('testimonial')->attempt($request->only('username', 'password'))) {
-            // If successful, redirect to the home page
-            return redirect()->route('home')->with('success', 'You are now logged in!');
+        $user = User::where('email', $request->username)
+            ->orWhere('name', $request->username)
+            ->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            $seconds = LoginThrottle::recordFailedAttempt($request);
+
+            $message = 'Username atau password salah.';
+            if ($seconds !== null) {
+                $message .= ' Coba lagi dalam ' . now()->addSeconds($seconds)->diffForHumans(null, true) . '.';
+            }
+
+            return back()->withErrors(['error' => $message]);
         }
 
-        // If login fails, return to the login page with an error message
-        return back()->withErrors(['error' => 'Invalid username or password']);
+        // Cek role
+        if (!$user->roles()->whereIn('name', ['customer', 'seller'])->exists()) {
+            return back()->withErrors(['error' => 'Anda tidak memiliki akses.']);
+        }
+
+        // Login berhasil, reset percobaan
+        LoginThrottle::resetAttempts($request);
+
+        Auth::login($user, true);
+        session(['auth_token_created' => now()]);
+
+        return redirect()->route('home')->with('success', 'Login berhasil!');
     }
 
-    // Handle user logout
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::guard('testimonial')->logout(); // Log out the user from the 'testimonial' guard
-        return redirect()->route('testimonial.login'); // Redirect to the login page
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('testimonial.login');
     }
 
-    // Show the profile edit form
     public function editProfile()
     {
-        $user = auth('testimonial')->user(); // Get the authenticated user
-        return view('auth.testimonial-profile-edit', compact('user')); // Pass user data to the view
+        $user = auth()->user();
+        return view('auth.testimonial-profile-edit', compact('user'));
     }
 
-    // Handle profile update
     public function updateProfile(Request $request)
     {
-        $user = auth('testimonial')->user(); // Get the authenticated user
+        $user = auth()->user();
 
         $request->validate([
             'username' => 'required|string|max:255',
-            'password' => 'nullable|string|min:3|confirmed', // Password update is optional
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow only image files
+            'contact' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'password' => 'nullable|string|min:3|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Update the username
-        $user->username = $request->username;
+        $user->name = $request->username;
+        $user->contact = $request->contact;
+        $user->address = $request->address;
 
-        // Update password only if provided
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password); // Hash and store the new password
+            $user->password = Hash::make($request->password);
         }
 
-        // Update profile picture if a new file is uploaded
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
-            $path = $file->store('profile_pictures', 'public'); // Store the uploaded image in the 'public' disk
-            $user->profile_picture = $path; // Save the file path in the database
+            $path = $file->store('profile_pictures', 'public');
+            $user->profile_image = $path;
         }
 
-        // Save the updated user information
         $user->save();
 
-        // Redirect back with a success message
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage; // <- ini harus ada
 class Testimonial extends Model
 {
     // Specifies the attributes that are mass assignable
-    protected $fillable = ['business_id', 'testimonial_user_id', 'name', 'description', 'rating', 'image_url', 'publishedAtDate'];
+    protected $fillable = ['business_id', 'testimonial_user_id', 'user_id', 'name', 'description', 'rating', 'image_url', 'image_url_product', 'publishedAtDate', 'reply', 'replied_at', 'replied_by',];
 
     /**
      * Define a relationship where a testimonial belongs to a business.
@@ -30,6 +30,26 @@ class Testimonial extends Model
     public function testimonial_user()
     {
         return $this->belongsTo(TestimonialUser::class, 'testimonial_user_id'); // Defines a one-to-many inverse relationship with a custom foreign key
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function replier()
+    {
+        return $this->belongsTo(User::class, 'replied_by');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(TestimonialLike::class);
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
     }
 
     // app/Models/Testimonial.php

@@ -13,6 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+
 class TestimonialResource extends Resource
 {
     // Define the model associated with this resource
@@ -36,85 +41,86 @@ class TestimonialResource extends Resource
     {
         return $form
             ->schema([
-                // Dropdown for selecting the user who provided the testimonial
-                Forms\Components\Select::make('testimonial_user_id')
+                // Relasi user_id ke tabel users
+                Select::make('user_id')
                     ->label('User')
-                    ->relationship('testimonial_user', 'username') // Adjust based on TestimonialUser model
+                    ->relationship('user', 'name') // Pastikan relasi `user()` ada di model Testimonial
                     ->searchable()
                     ->preload()
                     ->required(),
 
-                // Business ID input field
-                Forms\Components\TextInput::make('business_id')
-                    ->required()
-                    ->numeric(),
+                // Relasi ke bisnis
+                Select::make('business_id')
+                    ->label('Business')
+                    ->relationship('business', 'name') // Pastikan relasi `business()` ada di model Testimonial
+                    ->searchable()
+                    ->preload()
+                    ->required(),
 
-                // Name input field
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
 
-                // Description text area
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
 
-                // Rating input field (numeric value)
-                Forms\Components\TextInput::make('rating')
+                TextInput::make('rating')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(5),
 
-                Forms\Components\TextInput::make('image_url')
+                TextInput::make('image_url')
                     ->label('Image URL')
                     ->url()
-                    ->columnSpanFull(), // optional: biar 1 baris penuh
+                    ->maxLength(255),
+
+                TextInput::make('image_url_product')
+                    ->label('Product Image URL')
+                    ->url()
+                    ->maxLength(255),
             ]);
     }
 
-    /**
-     * Define the table schema for displaying testimonials
-     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Column to display Business ID
-                Tables\Columns\TextColumn::make('business_id')
-                    ->numeric()
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable()
                     ->sortable(),
 
-                // Column to display testimonial name
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('business.name')
+                    ->label('Business')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('name')
                     ->searchable(),
 
-                // Column to display testimonial rating
-                Tables\Columns\TextColumn::make('rating')
+                TextColumn::make('rating')
                     ->numeric()
                     ->sortable(),
 
-                // Column to display creation date
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
 
-                // Column to display update date
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
-                // Define filters if needed
+                //
             ])
             ->actions([
-                // Define row actions
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                // Define bulk actions
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),

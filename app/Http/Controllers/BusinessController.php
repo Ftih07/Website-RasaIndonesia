@@ -7,6 +7,7 @@ use App\Models\Testimonial;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\NotificationHelper; // tambahkan di atas
 
 class BusinessController extends Controller
 {
@@ -26,9 +27,13 @@ class BusinessController extends Controller
         // Retrieve 3 other businesses of the same type (if filtered), and not the one currently displayed
         $otherBusinesses = Business::with('type')
             ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
-                $query->whereHas('type', function ($q) use ($typeFilter) {
-                    $q->where('title', $typeFilter);
-                });
+                if ($typeFilter === 'null') {
+                    $query->whereNull('type_id');
+                } else {
+                    $query->whereHas('type', function ($q) use ($typeFilter) {
+                        $q->where('title', $typeFilter);
+                    });
+                }
             })
             ->where('id', '!=', $business->id)
             ->whereNotNull('slug')
@@ -76,31 +81,62 @@ class BusinessController extends Controller
         return view('business.menu', compact('business', 'menus'));
     }
 
-    /**
-     * Store a new testimonial in the database.
-     */
-    public function storeTestimonial(Request $request, $slug)
+
+    public function create()
     {
-        if (!auth('testimonial')->check()) {
-            return redirect()->route('testimonial.login');
+        $types = Type::all();
+        return view('business.register', compact('types'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type_id' => 'required|exists:types,id',
+            'description' => 'nullable|string',
+            'country' => 'nullable|string',
+            'city' => 'nullable|string',
+            'address' => 'nullable|string',
+            'location' => 'nullable|string',
+        ]);
+
+
+        $logoPath = $request->hasFile('logo')
+            ? $request->file('logo')->store('logos', 'public')
+            : null;
+
+        Business::create([
+            'user_id' => auth()->id(),
+            'type_id' => $request->type_id, // ⬅️ ini penting agar relasinya tersimpan
+            'name' => $request->name,
+            'description' => $request->description,
+            'country' => $request->country,
+            'city' => $request->city,
+            'address' => $request->address,
+            'location' => $request->location,
+            'is_verified' => false,
+        ]);
+
+        NotificationHelper::send(
+            auth()->id(),
+            'Bisnismu sedang menunggu verifikasi',
+            'Tim kami akan memverifikasi bisnismu dalam waktu dekat.',
+            route('dashboard') // Ganti dengan route seller kamu
+        );
+
+        return redirect()->route('home')->with('success', 'Business submitted for verification!');
+    }
+
+    public function destroy()
+    {
+        $business = auth()->user()->business;
+
+        if (!$business) {
+            return redirect()->back()->with('error', 'You don\'t have a business to delete.');
         }
 
-        $business = Business::where('slug', $slug)->firstOrFail();
+        $business->delete(); // Akan trigger BusinessObserver
 
-        $request->validate([
-            'description' => 'required|string|max:500',
-            'rating' => 'required|integer|min:1|max:5',
-        ]);
-
-        Testimonial::create([
-            'business_id' => $business->id,
-            'testimonial_user_id' => auth('testimonial')->id(),
-            'name' => auth('testimonial')->user()->username,
-            'description' => $request->description,
-            'rating' => $request->rating,
-        ]);
-
-        return redirect()->route('business.show', ['slug' => $slug])
-            ->with('success', 'Testimonial added successfully!');
+        return redirect()->route('home')->with('success', 'Your business has been deleted.');
     }
 }

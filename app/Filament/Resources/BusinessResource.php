@@ -21,6 +21,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\MultiSelect;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\Select;
 
@@ -271,15 +272,6 @@ class BusinessResource extends Resource
                                             ->label('Business Hours')
                                             ->keyLabel('Day') // Label for the key column (e.g., "Monday").
                                             ->valueLabel('Hours') // Label for the value column (e.g., "9:00 AM - 6:00 PM").
-                                            ->default([ // Default values for typical business hours.
-                                                'Monday' => '9:00 AM - 6:00 PM',
-                                                'Tuesday' => '9:00 AM - 6:00 PM',
-                                                'Wednesday' => '9:00 AM - 6:00 PM',
-                                                'Thursday' => '9:00 AM - 6:00 PM',
-                                                'Friday' => '9:00 AM - 6:00 PM',
-                                                'Saturday' => '9:00 AM - 6:00 PM',
-                                                'Sunday' => 'Closed',
-                                            ]),
                                     ]),
 
                                 // Section for 'Services'.
@@ -503,96 +495,104 @@ class BusinessResource extends Resource
                                     ])
                                     ->description('Showcase your business with beautiful images'),
 
-                                // Section for 'Products & Menu Items'.
-                                Forms\Components\Section::make('Products & Menu Items')
+                            ]),
+
+                    ])
+                    ->columnSpanFull() // Makes the tabs span the full width of the form.
+                    ->persistTabInQueryString(), // Retains the active tab across page loads via URL query string.
+
+
+                Forms\Components\Tabs::make('Business Product Management')
+                    ->tabs([
+                        // Tab Produk
+                        Tabs\Tab::make('Product Management')
+                            ->schema([
+                                Forms\Components\Section::make('Menu Products')
                                     ->schema([
-                                        // Repeater for 'Menu Products', related to the 'products' relationship.
                                         Forms\Components\Repeater::make('products')
-                                            ->label('Menu Products')
-                                            ->relationship('products') // Links to the 'products' Eloquent relationship.
+                                            ->relationship('products')
                                             ->schema([
-                                                // Group for Product Name and Category, displayed in two columns.
-                                                Forms\Components\Group::make()
-                                                    ->schema([
-                                                        // Text input for 'Product Name'.
-                                                        Forms\Components\TextInput::make('name')
-                                                            ->label('Product Name')
-                                                            ->required() // This field is mandatory.
-                                                            ->placeholder('Enter product name'),
-
-                                                        // Select field for 'Category' (Food or Drink).
-                                                        Forms\Components\Select::make('type')
-                                                            ->label('Category')
-                                                            ->options([ // Predefined options for product types.
-                                                                'food' => 'Food',
-                                                                'drink' => 'Drink',
-                                                            ])
-                                                            ->required(), // This field is mandatory.
-                                                    ])
-                                                    ->columns(2), // Arranges fields in two columns within this group.
-
-                                                // File upload for 'Product Image'.
+                                                Forms\Components\TextInput::make('name')->required(),
                                                 Forms\Components\FileUpload::make('image')
-                                                    ->label('Product Image')
-                                                    ->directory('product-images') // Specifies the storage directory for product images.
-                                                    ->image() // Restricts uploads to image files.
-                                                    ->imageEditor() // Enables an image editor.
-                                                    ->maxSize(3072), // Sets maximum file size to 3MB.
+                                                    ->image()->directory('product-images'),
+                                                Forms\Components\TextInput::make('price')
+                                                    ->numeric()->prefix('$'),
+                                                Forms\Components\TextInput::make('serving'),
+                                                Forms\Components\Textarea::make('desc'),
 
-                                                // Group for Base Price and Serving Size, displayed in two columns.
-                                                Forms\Components\Group::make()
+                                                Forms\Components\TextInput::make('max_distance')
+                                                    ->label('Max Distance (km)')
+                                                    ->numeric()
+                                                    ->minValue(1)
+                                                    ->helperText('Produk hanya tersedia dalam radius ini dari lokasi user'),
+
+                                                // OPTION GROUPS (many-to-many)
+                                                MultiSelect::make('optionGroups')
+                                                    ->label('Option Groups')
+                                                    ->relationship(
+                                                        name: 'optionGroups',
+                                                        titleAttribute: 'name',
+                                                        modifyQueryUsing: fn(\Illuminate\Database\Eloquent\Builder $query, callable $get) =>
+                                                        $query->where('business_id', $get('../../id')),
+                                                    ),
+
+
+                                                // CATEGORIES (many-to-many)
+                                                MultiSelect::make('categories')
+                                                    ->label('Categories')
+                                                    ->relationship(
+                                                        name: 'categories',
+                                                        titleAttribute: 'name',
+                                                        modifyQueryUsing: fn(\Illuminate\Database\Eloquent\Builder $query, callable $get) =>
+                                                        $query->where('business_id', $get('../../id')), // Mengambil ID dari parent Business
+                                                    )
+
+                                            ])
+                                            ->collapsed()
+                                            ->columns(1),
+                                    ]),
+                            ]),
+
+
+                        // Tab Option Group
+                        Forms\Components\Tabs\Tab::make('Product Option Groups')
+                            ->schema([
+                                Forms\Components\Section::make('Product Option Groups')
+                                    ->schema([
+                                        Forms\Components\Repeater::make('productOptionGroups')
+                                            ->relationship('productOptionGroups') // <- relasi business -> group
+                                            ->schema([
+                                                Forms\Components\TextInput::make('name')->required(),
+                                                Forms\Components\Toggle::make('is_required'),
+                                                Forms\Components\TextInput::make('max_selection')->numeric(),
+                                                Forms\Components\Repeater::make('options')
+                                                    ->relationship('options') // <- relasi group -> options
                                                     ->schema([
-                                                        // Numeric input for 'Base Price'.
-                                                        Forms\Components\TextInput::make('price')
-                                                            ->label('Base Price')
-                                                            ->numeric() // Ensures input is numeric.
-                                                            ->required() // This field is mandatory.
-                                                            ->prefix('$') // Adds a dollar sign prefix.
-                                                            ->placeholder('0.00'),
-
-                                                        // Text input for 'Serving Size'.
-                                                        Forms\Components\TextInput::make('serving')
-                                                            ->label('Serving Size')
-                                                            ->placeholder('e.g., 1 portion, 250ml'),
-                                                    ])
-                                                    ->columns(2), // Arranges fields in two columns within this group.
-
-                                                // Textarea for 'Description' of the product.
-                                                Forms\Components\Textarea::make('desc')
-                                                    ->label('Description')
-                                                    ->placeholder('Describe your product')
-                                                    ->rows(2), // Sets the visible height of the textarea.
-
-                                                // Repeater for 'Product Variants', allowing multiple variations.
-                                                Forms\Components\Repeater::make('variants')
-                                                    ->label('Product Variants')
-                                                    ->schema([
-                                                        // Text input for 'Variant Name'.
-                                                        Forms\Components\TextInput::make('name')
-                                                            ->label('Variant Name')
-                                                            ->required() // This field is mandatory.
-                                                            ->placeholder('e.g., Large, Extra Spicy'),
-
-                                                        // Numeric input for 'Additional Price' for the variant.
+                                                        Forms\Components\TextInput::make('name')->required(),
                                                         Forms\Components\TextInput::make('price')
                                                             ->label('Additional Price')
-                                                            ->numeric() // Ensures input is numeric.
-                                                            ->required() // This field is mandatory.
-                                                            ->prefix('+$') // Adds a "+$" prefix.
-                                                            ->placeholder('0.00'),
-                                                    ])
-                                                    ->default([]) // Starts with no default variants.
-                                                    ->collapsed() // Starts in a collapsed state.
-                                                    ->columns(2) // Arranges fields in two columns within each repeated item.
-                                                    ->defaultItems(0), // Starts with no default items.
-                                            ])
-                                            ->columns(1) // Arranges repeater fields in one column.
-                                            ->collapsible() // Allows collapsing of individual product items.
-                                            ->collapsed() // Starts in a collapsed state.
-                                            ->defaultItems(0), // Starts with no default items.
+                                                            ->numeric()
+                                                            ->prefix('+ $')
+                                                            ->default(0),
+                                                    ]),
+                                            ]),
                                     ])
-                                    ->description('Add your menu items and products with pricing'),
                             ]),
+
+                        // Tab Kategori
+                        Forms\Components\Tabs\Tab::make('Categories')
+                            ->schema([
+                                Forms\Components\Section::make('Product Categories')
+                                    ->schema([
+                                        Forms\Components\Repeater::make('categories')
+                                            ->relationship('categories') // <- relasi business -> categories
+                                            ->schema([
+                                                Forms\Components\TextInput::make('name')->required(),
+                                            ])
+                                    ]),
+                            ]),
+
+
                     ])
                     ->columnSpanFull() // Makes the tabs span the full width of the form.
                     ->persistTabInQueryString(), // Retains the active tab across page loads via URL query string.
@@ -615,6 +615,17 @@ class BusinessResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true), // Hidden by default, can be toggled visible.
+
+                Tables\Columns\TextColumn::make('user_id')
+                    ->label('Status Klaim')
+                    ->badge() // Aktifkan tampilan badge
+                    ->formatStateUsing(function ($state) {
+                        return $state === null ? 'Belum diklaim' : 'Sudah diklaim';
+                    })
+                    ->color(function ($state) {
+                        return $state === null ? 'warning' : 'success';
+                    }),
+
                 // Displays the business logo.
                 Tables\Columns\ImageColumn::make('logo')
                     ->label('Logo') // Column header label
@@ -831,9 +842,6 @@ class BusinessResource extends Resource
                 return \App\Models\Business::query()->withCount('products');
             })
             ->filters([
-                // Filter for trashed (soft-deleted) records.
-                TrashedFilter::make(),
-
                 // Filter businesses by their type using a select dropdown.
                 SelectFilter::make('type_id')
                     ->label('Business Type') // Filter label
@@ -980,8 +988,6 @@ class BusinessResource extends Resource
                 // Group of bulk actions applied to selected records.
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(), // Bulk delete
-                    Tables\Actions\RestoreBulkAction::make(), // Bulk restore
-                    Tables\Actions\ForceDeleteBulkAction::make(), // Bulk force delete
 
                     // Bulk action to export selected businesses to a single PDF.
                     Tables\Actions\BulkAction::make('export_pdf')

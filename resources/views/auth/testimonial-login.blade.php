@@ -30,36 +30,6 @@
 </head>
 
 <body>
-    <!-- start of header  -->
-    <header class="site-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header-logo">
-                        <a href="{{ route('home') }}" class="decoration-none">
-                            <span class="text-#FF8243">Taste</span> of Indonesia
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-10">
-                    <div class="main-navigation">
-                        <button class="menu-toggle"><span></span><span></span></button>
-                        <nav class="header-menu">
-                            <ul class="menu food-nav-menu">
-                                <li><a href="{{ route('home') }}">Home</a></li>
-                                <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                <li><a href="{{ route('home') }}#menu">Store & Restaurant</a></li>
-                                <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
-                                <li><a href="{{ route('home') }}#qna">QnA</a></li>
-                                <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- Login Form  -->
     <section>
         <div class="form-box">
@@ -113,6 +83,9 @@
                             <a href="{{ route('testimonial.register') }}">Register</a>
                         </p>
                     </div>
+                    <a href="{{ route('google.redirect') }}" class="btn btn-danger w-full text-white">
+                        <i class="fab fa-google mr-2"></i> Login/Register with Google
+                    </a>
                 </form>
             </div>
         </div>

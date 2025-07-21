@@ -12,8 +12,87 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QrLinkDownloadController;
 use App\Http\Controllers\TestimonialAuthController;
 use App\Exports\BusinessesExport;
+use App\Http\Controllers\BusinessClaimController;
 use App\Http\Controllers\BusinessExportController;
+use App\Http\Controllers\DashboardController;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRole;
+use App\Http\Controllers\DashboardBusinessController;
+
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Dashboard\TestimonialController;
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+Route::middleware(['auth', CheckRole::class . ':admin,superadmin'])->group(function () {
+    Route::get('/admin/dashboard', fn() => view('admin.dashboard'));
+});
+
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'token.expired', 'check.role:seller'])->name('dashboard');
+Route::put('/dashboard', [DashboardController::class, 'update'])->middleware(['auth', 'token.expired', 'check.role:seller'])->name('dashboard.update');
+
+Route::get('/dashboard/business', [DashboardBusinessController::class, 'index'])
+    ->middleware(['auth', 'token.expired', 'check.role:seller'])
+    ->name('dashboard.business');
+
+Route::put('/dashboard/business', [DashboardBusinessController::class, 'update'])
+    ->middleware(['auth', 'token.expired', 'check.role:seller'])
+    ->name('dashboard.business.update');
+
+Route::delete('/dashboard', [BusinessController::class, 'destroy'])->name('dashboard.destroy');
+
+Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:seller'])->group(function () {
+    Route::get('/product', [\App\Http\Controllers\ProductDashboardController::class, 'index'])->name('dashboard.product');
+    Route::post('/product', [\App\Http\Controllers\ProductDashboardController::class, 'store'])->name('dashboard.product.store');
+    Route::delete('/product/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'destroy'])->name('dashboard.product.destroy');
+    Route::get('/dashboard/product/{id}/edit', [\App\Http\Controllers\ProductDashboardController::class, 'edit'])->name('dashboard.product.edit');
+    Route::put('/dashboard/product/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'update'])->name('dashboard.product.update');
+
+    // Option Groups
+    Route::post('/product/option-group', [\App\Http\Controllers\ProductDashboardController::class, 'storeOptionGroup'])->name('dashboard.product.optionGroup.store');
+    Route::delete('/product/option-group/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'destroyOptionGroup'])->name('dashboard.product.optionGroup.destroy');
+    Route::put('/product/option-group/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'updateOptionGroup'])->name('dashboard.product.optionGroup.update');
+
+    // Categories
+    Route::post('/product/category', [\App\Http\Controllers\ProductDashboardController::class, 'storeCategory'])->name('dashboard.product.category.store');
+    Route::delete('/product/category/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'destroyCategory'])->name('dashboard.product.category.destroy');
+    Route::put('/product/category/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'updateCategory'])->name('dashboard.product.category.update');
+});
+
+Route::middleware(['auth', 'check.role:seller'])->group(function () {
+    Route::get('/dashboard/testimonial', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'index'])->name('dashboard.testimonial');
+    Route::post('/dashboard/testimonial/{testimonial}/reply', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'reply'])->name('dashboard.testimonial.reply');
+    Route::post('/dashboard/testimonial/{testimonial}/like', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'like'])->name('dashboard.testimonial.like');
+});
+
+// Untuk customer
+Route::middleware(['auth', 'check.role:customer'])->group(function () {
+    Route::post('/testimonial/{testimonial}/like', [TestimonialController::class, 'like'])->name('testimonial.like');
+    Route::put('/testimonial/{testimonial}', [TestimonialController::class, 'update'])->name('testimonial.update');
+    Route::delete('/testimonial/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonial.destroy');
+    Route::post('/business/{slug}/testimonials', [TestimonialController::class, 'store'])->name('testimonial.store');
+});
+
+
+
+
+
+
+Route::middleware(['auth', 'check.role:customer'])->group(function () {
+    Route::get('/register-business', [BusinessController::class, 'create'])->name('business.register');
+    Route::post('/register-business', [BusinessController::class, 'store'])->name('business.register.store');
+
+    Route::get('/claim-business', [BusinessClaimController::class, 'create'])->name('business.claim');
+    Route::post('/claim-business', [BusinessClaimController::class, 'store'])->name('business.claim.store');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::delete('/notifications/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
+});
+
 
 // Import the controller class that will handle these routes.
 // This line ensures that Laravel knows where to find the `ProsperityExpoRegistrationController`.
@@ -41,7 +120,7 @@ Route::get('/show', function () {
  */
 Route::get('/', function () {
     return view('home');
-})->middleware('auth:testimonial')->name('home');
+})->middleware('auth')->name('home');
 
 /**
  * Business Details Route
@@ -49,14 +128,14 @@ Route::get('/', function () {
  */
 Route::get('/business/{slug}', [BusinessController::class, 'show'])->name('business.show');
 
-/**
- * Authenticated Routes Group
- * Requires user authentication to add testimonials to businesses.
- */
-Route::middleware('auth:testimonial')->group(function () {
-    Route::post('/business/{slug}/testimonials', [BusinessController::class, 'storeTestimonial'])
-        ->name('business.testimonials.store');
-});
+
+
+
+
+
+
+
+/*******************************************************************************************************************/
 
 /**
  * HomeController Routes
@@ -75,7 +154,10 @@ Route::get('/testimonial/register', [TestimonialAuthController::class, 'showRegi
 Route::post('/testimonial/register', [TestimonialAuthController::class, 'register']);
 Route::get('/testimonial/login', [TestimonialAuthController::class, 'showLoginForm'])
     ->name('testimonial.login');
-Route::post('/testimonial/login', [TestimonialAuthController::class, 'login']);
+
+Route::post('/testimonial/login', [TestimonialAuthController::class, 'login'])
+    ->middleware('login.throttle');
+
 Route::post('/testimonial/logout', [TestimonialAuthController::class, 'logout'])
     ->name('testimonial.logout');
 

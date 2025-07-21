@@ -56,12 +56,6 @@
     align-items: center;
 }
 
-.main-navigation .menu li {
-    display: inline-block;
-    position: relative;
-    margin: 0 6px;
-}
-
 .main-navigation .menu li:first-child {
     margin-left: 0;
 }
@@ -90,19 +84,13 @@ ul {
 }
 
 .main-navigation .menu ul a {
-    width: 200px;
-}
-
-.main-navigation .menu li:hover > ul,
-.main-navigation .menu li.focus > ul {
-    left: auto;
+    width: auto;
 }
 
 .main-navigation .menu li a {
     display: flex;
     transition: 0.3s;
     position: relative;
-    justify-content: center;
     align-items: center;
     color: #0d0d25;
     text-transform: capitalize;

@@ -19,40 +19,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fancybox.min.css') }}">
 
     <title>Register | Taste of Indonesia</title>
-    <link rel="stylesheet" href="{{ asset('assets/css/testimonial-register.css') }}"></head>
+    <link rel="stylesheet" href="{{ asset('assets/css/testimonial-register.css') }}">
+</head>
 
 <body>
-    <!-- start of header  -->
-    <header class="site-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header-logo">
-                        <a href="{{ route('home') }}" class="decoration-none">
-                            <span class="text-#FF8243">Taste</span> of Indonesia
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-10">
-                    <div class="main-navigation">
-                        <button class="menu-toggle"><span></span><span></span></button>
-                        <nav class="header-menu">
-                            <ul class="menu food-nav-menu">
-                                <li><a href="{{ route('home') }}">Home</a></li>
-                                <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                <li><a href="{{ route('home') }}#menu">Store & Restaurant</a></li>
-                                <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
-                                <li><a href="{{ route('home') }}#qna">QnA</a></li>
-                                <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Register Form  -->
+    <!-- Register Form -->
     <section>
         <div class="form-box">
             <div class="form-value">
@@ -65,54 +36,72 @@
 
                 <form method="POST" action="{{ route('testimonial.register') }}">
                     <h2>Register</h2>
+                    @csrf
 
-                    <!-- Display success or error messages -->
+                    {{-- Success/Error --}}
+                    @if (session('success'))
+                    <div style="color: green; text-align: center; margin-bottom: 10px">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
                     @if ($errors->any())
                     <div style="color: red; text-align: center; margin-bottom: 10px">
                         {{ $errors->first() }}
                     </div>
-                    @endif @if (session('success'))
-                    <div style="color: green; text-align: center; margin-bottom: 10px">
-                        {{ session('success') }}
-                    </div>
-                    @endif @csrf
+                    @endif
 
-                    <!-- Username -->
+                    {{-- Username / Email --}}
                     <div class="inputbox">
                         <ion-icon name="mail-outline"></ion-icon>
-                        <input
-                            type="text"
-                            name="username"
-                            required
-                            value="{{ old('username') }}" />
-                        <label for="">Username</label>
+                        <input type="text" name="username" required value="{{ old('username') }}" />
+                        <label>Email / Username</label>
                     </div>
 
-                    <!-- Password -->
+                    {{-- Address --}}
                     <div class="inputbox">
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            required />
-                        <label for="">Password</label>
-                        <ion-icon
-                            name="eye-off-outline"
-                            id="togglePassword"
-                            onclick="togglePassword()"></ion-icon>
+                        <ion-icon name="home-outline"></ion-icon>
+                        <input type="text" name="address" required value="{{ old('address') }}" />
+                        <label>Address</label>
+                    </div>
+
+                    {{-- Contact --}}
+                    <div class="inputbox">
+                        <ion-icon name="call-outline"></ion-icon>
+                        <input type="text" name="contact" required value="{{ old('contact') }}" />
+                        <label>Contact</label>
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="inputbox">
+                        <input type="password" name="password" id="password" required />
+                        <label>Password</label>
+                        <ion-icon name="eye-off-outline" id="togglePassword" onclick="togglePassword()"></ion-icon>
+                    </div>
+
+                    {{-- Confirm Password --}}
+                    <div class="inputbox">
+                        <input type="password" name="password_confirmation" required />
+                        <label>Confirm Password</label>
                     </div>
 
                     <button type="submit">Register</button>
+
                     <div class="register">
                         <p>
                             Already have an account?
                             <a href="{{ route('testimonial.login') }}">Login</a>
                         </p>
                     </div>
+                    <a href="{{ route('google.redirect') }}" class="btn btn-danger w-full text-white">
+                        <i class="fab fa-google mr-2"></i> Login/Register with Google
+                    </a>
                 </form>
+
             </div>
         </div>
     </section>
+
 
     <!-- footer starts  -->
     <footer class="site-footer">
@@ -193,7 +182,7 @@
                 passwordInput.type = "password"; // Hide password
                 toggleIcon.setAttribute("name", "eye-off-outline"); // Change icon to closed eye
             }
-        } 
+        }
     </script>
 </body>
 

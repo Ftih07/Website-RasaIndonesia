@@ -25,35 +25,7 @@
 </head>
 
 <body>
-    <!-- start of header  -->
-    <header class="site-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header-logo">
-                        <a href="{{ route('home') }}" class="decoration-none">
-                            <span class="text-#FF8243">Taste</span> of Indonesia
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-10">
-                    <div class="main-navigation">
-                        <button class="menu-toggle"><span></span><span></span></button>
-                        <nav class="header-menu">
-                            <ul class="menu food-nav-menu">
-                                <li><a href="{{ route('home') }}">Home</a></li>
-                                <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                <li><a href="{{ route('home') }}#menu">Store & Restaurant</a></li>
-                                <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
-                                <li><a href="{{ route('home') }}#qna">QnA</a></li>
-                                <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    @include('partials.navbar')
 
     <!-- Edit Form  -->
     <section>
@@ -82,19 +54,43 @@
                         <input
                             type="text"
                             name="username"
-                            value="{{ $user->username }}"
+                            value="{{ old('username', $user->name) }}"
                             required
                             class="form-input" />
                         <label for="">Username</label>
                     </div>
 
+                        <div class="inputbox">
+                            <input type="password" name="password" class="form-input" id="password" />
+                            <label for="">Password</label>
+                            <ion-icon
+                                name="eye-off-outline"
+                                id="togglePassword"
+                                onclick="togglePassword()"></ion-icon>
+                        </div>
+
+                    <!-- Contact -->
                     <div class="inputbox">
-                        <input type="password" name="password" class="form-input" id="password" />
-                        <label for="">Password</label>
-                        <ion-icon
-                            name="eye-off-outline"
-                            id="togglePassword"
-                            onclick="togglePassword()"></ion-icon>
+                        <ion-icon name="call-outline"></ion-icon>
+                        <input
+                            type="text"
+                            name="contact"
+                            value="{{ old('contact', $user->contact) }}"
+                            required
+                            class="form-input" />
+                        <label for="">Contact</label>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="inputbox">
+                        <ion-icon name="home-outline"></ion-icon>
+                        <input
+                            type="text"
+                            name="address"
+                            value="{{ old('address', $user->address) }}"
+                            required
+                            class="form-input" />
+                        <label for="">Address</label>
                     </div>
 
                     <div class="inputbox">
@@ -114,7 +110,7 @@
                     <div class="image-preview-container">
                         <img
                             id="profilePreview"
-                            src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'default-profile.jpg' }}"
+                            src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('assets/images/default-profile.jpg') }}"
                             alt="Profile Picture"
                             class="profile-preview" />
                     </div>
@@ -132,7 +128,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- footer starts  -->
     <footer class="site-footer">
         <div class="bottom-footer">

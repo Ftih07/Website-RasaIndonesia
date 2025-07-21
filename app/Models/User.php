@@ -9,6 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
+/**
+ * @method bool hasRole(string $roleName)
+ */
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -23,6 +26,9 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'profile_image',
+        'address',
+        'contact'
     ];
 
     /**
@@ -50,6 +56,62 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        if ($panel->getId() === 'admin') {
+            return $this->id === 2;
+        }
+
+        return false; // default deny
+    }
+
+    public function business()
+    {
+        return $this->hasOne(Business::class);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function addRole(string $roleName): void
+    {
+        $role = \App\Models\Role::where('name', $roleName)->first();
+        if ($role && !$this->hasRole($roleName)) {
+            $this->roles()->attach($role->id);
+        }
+    }
+
+    public function assignRole(string $roleName): void
+    {
+        $this->addRole($roleName);
+    }
+
+    public function removeRole(string $roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+
+        if ($role) {
+            $this->roles()->detach($role->id);
+        }
+    }
+
+    public function businessClaim()
+    {
+        return $this->hasOne(\App\Models\BusinessClaim::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(\App\Models\Notification::class);
+    }
+
+    public function testimonialLikes()
+    {
+        return $this->hasMany(TestimonialLike::class);
     }
 }

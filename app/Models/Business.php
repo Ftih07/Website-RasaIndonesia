@@ -15,11 +15,6 @@ use Illuminate\Database\Eloquent\SoftDeletes; // Trait to enable soft deletion f
  */
 class Business extends Model
 {
-    // Use the SoftDeletes trait to enable soft deleting records.
-    // This means instead of permanent deletion, records will have their 'deleted_at'
-    // timestamp set, allowing for easy restoration and historical data retention.
-    use SoftDeletes;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -53,6 +48,8 @@ class Business extends Model
         'document',         // Path or reference to related documents.
         'order',            // Information related to ordering (e.g., ubereast, doordash).
         'reserve',          // Information related to reservations.
+        'user_id',
+        'is_verified'
     ];
 
     /**
@@ -197,7 +194,7 @@ class Business extends Model
                 $business->slug = Str::slug($business->name . '-' . uniqid());
             }
         });
-    } 
+    }
 
     /**
      * Accessor to calculate the completeness status of the business profile.
@@ -267,5 +264,25 @@ class Business extends Model
             $percentage >= 50 => 'Incomplete',   // 50% to 69%: Incomplete
             default => 'Needs Work'              // Less than 50%: Needs Work
         };
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function productOptionGroups()
+    {
+        return $this->hasMany(ProductOptionGroup::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function optionGroups()
+    {
+        return $this->hasMany(\App\Models\ProductOptionGroup::class);
     }
 }

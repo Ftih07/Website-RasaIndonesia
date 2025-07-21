@@ -33,64 +33,8 @@
 
 
 <body class="body-fixed">
-    <!-- start of header  -->
-    <header class="site-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header-logo">
-                        <a href="{{ route('home') }}" class="decoration-none">
-                            <span class="text-#FF8243">Taste</span> of Indonesia
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-10">
-                    <div class="main-navigation">
-                        <button class="menu-toggle"><span></span><span></span></button>
-                        <nav class="header-menu">
-                            <ul class="menu food-nav-menu">
-                                <li><a href="{{ route('home') }}">Home</a></li>
-                                <li><a href="{{ route('home') }}#about">About Us</a></li>
-                                <li><a href="#">Store & Restaurant</a></li>
-                                <li><a href="{{ route('home') }}#gallery">Gallery</a></li>
-                                <li><a href="{{ route('home') }}#qna">QnA</a></li>
-                                <li><a href="{{ route('home') }}#contact">Contact Us</a></li>
-                                <li> @guest('testimonial')
-                                    <!-- Jika belum login -->
-                                    <button class="button-filter" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
-                                        Login
-                                    </button>
-                                    @else
-                                    <!-- Jika sudah login -->
-                                    <div class="profile-dropdown">
-                                        <!-- Foto Profil -->
-                                        <div class="profile-image" onclick="toggleDropdown()">
-                                            <img src="{{ auth('testimonial')->user()->profile_picture 
-                ? asset('storage/' . auth('testimonial')->user()->profile_picture) 
-                : asset('assets/images/default-profile.png') }}"
-                                                alt="Profile"
-                                                style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
-                                        </div>
+    @include('partials.navbar')
 
-
-                                        <!-- Dropdown Menu -->
-                                        <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
-                                            <a href="{{ route('testimonial.profile.edit') }}">Edit Profile</a>
-                                            <form method="POST" action="{{ route('testimonial.logout') }}">
-                                                @csrf
-                                                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-align: center;">Logout</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    @endguest
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
     <!-- header ends  -->
     <section class="two-col-sec section">
@@ -113,15 +57,22 @@
 
                     <div class="sec-text-hero">
                         <h2>{{ $business->name }}</h2>
-                        <h3>{{ $business->type->title ?? 'N/A' }}
-                            -
+
+                        @if($business->user_id === null)
+                        <span class="badge bg-warning text-dark">Belum diklaim</span>
+                        <p class="text-muted">Bisnis ini belum memiliki pengelola di sistem kami.</p>
+                        @else
+                        <h3>
+                            {{ $business->type->title ?? 'N/A' }} -
                             @foreach ($business->food_categories as $category)
                             {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
                             @endforeach
                         </h3>
                         <p>Updated On: {{ \Carbon\Carbon::parse($business->updated_at)->format('D F d, Y \a\t gA') }}</p>
                         <p>{{ $business->description }}</p>
+                        @endif
                     </div>
+
 
                     <div class="container-hero">
                         <div class="card">
@@ -316,7 +267,7 @@
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show-menu" id="menu">
                         @foreach($latestMenus as $menu)
-                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}" data-cat="{{ $menu->type }}">
+                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type ?? 'no-type' }}" data-cat="{{ $menu->type ?? 'no-type' }}">
                             <div class="dish-box text-center" data-menu-id="{{ $menu->id }}">
                                 <div class="dist-img">
                                     <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
@@ -330,7 +281,7 @@
                                     <ul>
                                         <li>
                                             <p>Type</p>
-                                            <b>{{ ucfirst($menu->type) }}</b>
+                                            <b>{{ ucfirst($menu->type ?? 'no type') }}</b>
                                         </li>
 
                                         <li>
@@ -743,6 +694,79 @@
                         </div>
                     </div>
                 </div>
+
+                @if(auth()->check())
+                @php
+                $userTestimonials = $testimonials->where('user_id', auth()->id());
+                @endphp
+
+                @if($userTestimonials->isNotEmpty())
+                <div class="mt-5">
+                    <h4 class="text-center mb-4">📝 Review Anda tentang bisnis ini</h4>
+                    <div class="row">
+                        @foreach($userTestimonials as $userTestimonial)
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm">
+                                {{-- Optional: Product image --}}
+                                @if($userTestimonial->image_url_product)
+                                <img src="{{ $userTestimonial->image_url_product }}" class="card-img-top" alt="Product Image">
+                                @endif
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $userTestimonial->name }}</h5>
+                                    <div class="mb-2 text-muted small">
+                                        {{ \Carbon\Carbon::parse($userTestimonial->publishedAtDate)->format('d M Y, g:i A') }}
+                                    </div>
+                                    <div class="mb-2">⭐ {{ $userTestimonial->rating }}/5</div>
+                                    <p class="card-text">{{ $userTestimonial->description }}</p>
+
+                                    {{-- Optional: testimonial image --}}
+                                    @if($userTestimonial->image_url)
+                                    <div class="mt-2">
+                                        <img src="{{ $userTestimonial->image_url }}" alt="Image" class="img-fluid rounded" style="max-height: 150px;">
+                                    </div>
+                                    @endif
+                                </div>
+
+                                {{-- Jumlah like --}}
+                                <div class="px-3 pb-3">
+                                    <small class="text-muted">{{ $userTestimonial->likes->count() }} orang merasa terbantu</small>
+                                </div>
+
+                                {{-- Balasan --}}
+                                @if($userTestimonial->reply)
+                                <div class="bg-light p-3 mx-3 mb-3 rounded border">
+                                    <strong>{{ $userTestimonial->replier->name ?? 'Penjual' }} <span class="badge bg-success">Penjual</span></strong>
+                                    <small class="text-muted"> - {{ \Carbon\Carbon::parse($userTestimonial->replied_at)->diffForHumans() }}</small>
+                                    <p class="mb-0 mt-1">{{ $userTestimonial->reply }}</p>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <!-- Tombol Edit -->
+                            <button
+                                class="btn btn-sm btn-outline-primary"
+                                onclick="showEditTestimonialModal({{ $userTestimonial->id }}, '{{ addslashes($userTestimonial->description) }}', {{ $userTestimonial->rating }})">
+                                ✏️ Edit
+                            </button>
+
+                            <!-- Tombol Hapus -->
+                            <form action="{{ route('testimonial.destroy', $userTestimonial->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus testimonial ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    🗑️ Hapus
+                                </button>
+                            </form>
+                        </div>
+
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+                @endif
+
                 <div class="swiper-container team-slider">
                     @if($testimonials->isEmpty())
                     <div class="alert alert-warning text-center">
@@ -764,12 +788,13 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="testimonials-box-text">
                                     <h3 class="h3-title">
                                         {{ isset($testimonial->testimonial_user) ? $testimonial->testimonial_user->username : $testimonial->name }}
                                     </h3>
 
-                                    <div class="testimonial-date">
+                                    <div class="testimonial-date mb-2">
                                         <span class="date-icon"><i class="uil uil-calendar-alt"></i></span>
                                         <span class="date-text">{{ \Carbon\Carbon::parse($testimonial->publishedAtDate)->format('M d, Y') }}</span>
                                         <span class="time-text">{{ \Carbon\Carbon::parse($testimonial->publishedAtDate)->format('g:i A') }}</span>
@@ -778,9 +803,46 @@
                                     <p class="testimonial-description" data-description="{{ $testimonial->description }}">
                                         {{ $testimonial->description }}
                                     </p>
+
+                                    {{-- Optional testimonial image --}}
+                                    @if($testimonial->image_url)
+                                    <div class="mt-2">
+                                        <img src="{{ $testimonial->image_url }}" alt="Testimonial Image" class="img-fluid rounded" style="max-height: 200px;">
+                                    </div>
+                                    @endif
+
+                                    {{-- Apakah komentar ini membantu? --}}
+                                    <div class="mt-3">
+                                        @auth
+                                        @if($testimonial->likes->contains('user_id', auth()->id()))
+                                        <span class="text-success">👍 Terima kasih!</span>
+                                        @else
+                                        <form method="POST" action="{{ route('testimonial.like', $testimonial) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-primary">👍 Apakah komentar ini membantu?</button>
+                                        </form>
+                                        @endif
+                                        @else
+                                        <a href="{{ route('login') }}" class="text-primary">👍 Login untuk memberi Like</a>
+                                        @endauth
+
+                                        <p class="text-muted small mt-1">
+                                            {{ $testimonial->likes->count() }} orang merasa terbantu
+                                        </p>
+                                    </div>
+
+                                    {{-- Balasan seller (kalau ada) --}}
+                                    @if($testimonial->reply)
+                                    <div class="bg-light p-2 mt-3 rounded border">
+                                        <strong>{{ $testimonial->replier->name ?? 'Admin' }} <span class="badge bg-success">Penjual</span></strong>
+                                        <small class="text-muted"> - {{ \Carbon\Carbon::parse($testimonial->replied_at)->diffForHumans() }}</small>
+                                        <p class="mb-0 mt-1">{{ $testimonial->reply }}</p>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+
                         @endforeach
                     </div>
                     @endif
@@ -800,16 +862,46 @@
             </div>
         </div>
         <div class="text-center mt-0">
-            @if(auth('testimonial')->check())
+            @if(auth()->check())
             <button class="button-add-testimonial" data-bs-toggle="modal" data-bs-target="#addTestimonialModal">
                 Add Your Testimonial
             </button>
             @else
-            <a href="{{ route('testimonial.login') }}" class="button-add">Login to Add Testimonial</a>
+            <a href="{{ route('login') }}" class="button-add">Login to Add Testimonial</a>
             @endif
         </div>
 
     </section>
+
+    <!-- Edit Testimonial Modal -->
+    <div class="modal fade" id="editTestimonialModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="" id="editTestimonialForm">
+                @csrf
+                @method('PUT')
+                <input type="hidden" id="editTestimonialId" name="testimonial_id">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Testimonial</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editTestimonialDescription" class="form-label">Deskripsi</label>
+                            <textarea id="editTestimonialDescription" name="description" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTestimonialRating" class="form-label">Rating</label>
+                            <input type="number" id="editTestimonialRating" name="rating" min="1" max="5" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Testimonial Modal -->
     <div id="testimonialModal" class="modal-testimoni-description" style="display: none;">
@@ -834,7 +926,6 @@
     </div>
 
     <!-- Modal Add Testimonial -->
-
     <div id="customModal" class="modal">
         <div class="modal-content-testimonial">
             <div class="modal-header">
@@ -843,7 +934,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="testimonialForm" method="POST" action="{{ route('business.testimonials.store', ['slug' => $business->slug]) }}">
+                <form id="testimonialForm" method="POST" action="{{ route('testimonial.store', ['slug' => $business->slug]) }}">
                     @csrf
                     <div class="form-group">
                         <label for="description">Your Experience</label>
@@ -923,6 +1014,9 @@
                                 </div>
                                 <div class="dish-title">
                                     <h3 class="h3-title">{{ $otherBusiness->name }}</h3>
+                                    @if ($business->user_id === null)
+                                    <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
+                                    @endif
                                     <p>{{ $otherBusiness->type->title ?? 'N/A' }}</p>
                                 </div>
                                 <div class="info-container">
@@ -1002,101 +1096,7 @@
         </section>
     </div>
 
-    <!-- footer starts  -->
-    <footer class="site-footer">
-        <div class="top-footer section">
-            <div class="sec-wp">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="footer-info">
-                                <div class="footer-logo">
-                                    <div class="header-logo">
-                                        <a href="index.html" class="decoration-none">
-                                            <span class="text-#FF8243">Taste </span>of Indonesia
-                                        </a>
-                                    </div>
-                                </div>
-                                <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.
-                                </p>
-                                <div class="social-icon">
-                                    <ul>
-                                        <li>
-                                            <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
-                                                <i class="uil uil-facebook-f"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
-                                                <i class="uil uil-instagram"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
-                                                <i class="uil uil-youtube"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
-                                                <i class="fab fa-tiktok"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="footer-flex-box">
-                                <div class="footer-menu food-nav-menu">
-                                    <h3 class="h3-title">Site Navigation</h3>
-                                    <ul class="column-2">
-                                        <li><a href="#home" class="footer-active-menu">Home</a></li>
-                                        <li><a href="#about">About Us</a></li>
-                                        <li><a href="#menu">Store & Restaurant</a></li>
-                                        <li><a href="#gallery">Gallery</a></li>
-                                        <li><a href="#qna">QnA</a></li>
-                                        <li><a href="#contact">Contact Us</a></li>
-                                    </ul>
-                                </div>
-                                <div class="footer-menu">
-                                    <h3 class="h3-title">Contact Support</h3>
-                                    <ul>
-                                        <div class="info-container">
-                                            <a href="https://tanya-atdag.au/en/" target="_blank">
-                                                <div class="info-item">
-                                                    <i class="uil uil-globe"></i>
-                                                    <p>tanya-atdag.au</p>
-                                                </div>
-                                            </a>
-                                            <a href="mailto:atase.perdagangan@gmail.com">
-                                                <div class="info-item">
-                                                    <i class="uil uil-envelope"></i>
-                                                    <p>atase.perdagangan@gmail.com</p>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="bottom-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <div class="copyright-text">
-                            <p>Copyright &copy; 2025 <span class="name">Taste </span>of Indonesia. All Rights Reserved.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <button class="scrolltop"><i class="uil uil-angle-up"></i></button>
-            </div>
-        </div>
-    </footer>
+    @include('partials.footer')
 
     <script
         type="module"
@@ -1487,6 +1487,19 @@
             }
         });
     </script>
+
+    <script>
+        function showEditTestimonialModal(id, description, rating) {
+            const form = document.getElementById('editTestimonialForm');
+            form.action = `/testimonial/${id}`; // <- ubah action di sini
+            document.getElementById('editTestimonialId').value = id;
+            document.getElementById('editTestimonialDescription').value = description;
+            document.getElementById('editTestimonialRating').value = rating;
+            const modal = new bootstrap.Modal(document.getElementById('editTestimonialModal'));
+            modal.show();
+        }
+    </script>
+
 
 </body>
 
