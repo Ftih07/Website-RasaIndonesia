@@ -4,7 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prosperity Expo Registration 2025</title>
+    
+    {{-- Primary Meta Tags --}}
+    <title>Register for Prosperity Expo 2025 - Indonesia-Australia Trade & Investment Exhibition</title>
+    <link rel="icon" href="{{ asset('assets/images/logo/IAPEX_Logo.png') }}" type="image/x-icon" />
+
+    <meta name="description" content="Register now for Prosperity Expo 2025, the premier Indonesia-Australia Trade & Investment Exhibition. Secure your spot as an exhibitor, sponsor, or visitor to foster economic collaboration.">
+    <meta name="keywords" content="Prosperity Expo, registration, daftar pameran, Indonesia Australia, trade exhibition, investment forum, exhibitor, sponsor, visitor, business event, 2025 expo">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph / Facebook Meta Tags --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Register for Prosperity Expo 2025">
+    <meta property="og:description" content="Register now for Prosperity Expo 2025, the premier Indonesia-Australia Trade & Investment Exhibition. Secure your spot as an exhibitor, sponsor, or visitor to foster economic collaboration.">
+    <meta property="og:image" content="{{ asset('assets/images/logo/IAPEX_Logo.png') }}"> 
+    <meta property="og:image:alt" content="Prosperity Expo 2025 Registration Banner">
+
+    {{-- Twitter Meta Tags --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Register for Prosperity Expo 2025">
+    <meta name="twitter:description" content="Register now for Prosperity Expo 2025, the premier Indonesia-Australia Trade & Investment Exhibition. Secure your spot as an exhibitor, sponsor, or visitor to foster economic collaboration.">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo/IAPEX_Logo.png') }}"> 
+    <meta name="twitter:image:alt" content="Prosperity Expo 2025 Registration Banner">
+
     {{-- Link to Font Awesome for icons --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>

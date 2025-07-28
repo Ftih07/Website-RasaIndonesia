@@ -98,7 +98,8 @@ class ProsperityExpoRegistrationController extends Controller
         Storage::put($filePath, $pdf->output());
 
         // 8. Redirect the user to the thank you page, passing the QR code for lookup.
-        return redirect()->route('prosperity-expo.thankyou', ['qr_code' => $participant->qr_code]);
+        return redirect()->route('prosperity-expo.thankyou', ['qr_code' => $participant->qr_code])
+            ->with('show_ticket_modal', true);
     }
 
     /**

@@ -4,7 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{-- Favicon --}}
+    <link rel="icon" href="{{ asset('assets/images/logo/IAPEX_Logo.png') }}" type="image/x-icon" />
+
+    {{-- Primary Meta Tags --}}
     <title>Registration Successful - Prosperity Expo 2025</title>
+    <meta name="description" content="Your registration for Prosperity Expo 2025 has been successfully confirmed. Get your QR code for event access and download your certificate.">
+    <meta name="robots" content="noindex, nofollow"> {{-- Mencegah halaman ini diindeks dan diikuti link-nya --}}
+    <link rel="canonical" href="{{ url()->current() }}"> {{-- Menggunakan URL saat ini sebagai canonical --}}
+
+    {{-- Open Graph / Facebook Meta Tags --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}"> {{-- Menggunakan URL saat ini --}}
+    <meta property="og:title" content="Registration Confirmed for Prosperity Expo 2025">
+    <meta property="og:description" content="Your registration for Prosperity Expo 2025 has been successfully confirmed. Get your QR code for event access and download your certificate.">
+    <meta property="og:image" content="{{ asset('assets/images/logo/IAPEX_Logo.png') }}"> {{-- Menggunakan logo sebagai og:image --}}
+    <meta property="og:image:alt" content="Prosperity Expo 2025 Official Logo - Registration Confirmed">
+
+    {{-- Twitter Meta Tags --}}
+    <meta name="twitter:card" content="summary"> {{-- Menggunakan 'summary' karena gambar logo mungkin lebih cocok untuk card kecil --}}
+    <meta name="twitter:url" content="{{ url()->current() }}"> {{-- Menggunakan URL saat ini --}}
+    <meta name="twitter:title" content="Registration Confirmed for Prosperity Expo 2025">
+    <meta name="twitter:description" content="Your registration for Prosperity Expo 2025 has been successfully confirmed. Get your QR code for event access and download your certificate.">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo/IAPEX_Logo.png') }}"> {{-- Menggunakan logo sebagai twitter:image --}}
+    <meta name="twitter:image:alt" content="Prosperity Expo 2025 Official Logo - Registration Confirmed">
+
     {{-- Link to Font Awesome for icons --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -921,6 +946,272 @@
                 /* Hide buttons when printing */
             }
         }
+
+        /* Modal Styling - Tambahkan di dalam tag <style> */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            animation: modalFadeIn 0.3s ease-out forwards;
+            padding: 20px;
+        }
+
+        @keyframes modalFadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            transform: translateY(30px);
+            animation: modalSlideUp 0.4s ease-out 0.1s forwards;
+            overflow: hidden;
+        }
+
+        @keyframes modalSlideUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #64748b;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .modal-qr-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-qr-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-qr-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+        .modal-qr-container img {
+            border-radius: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .modal-user-section {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .modal-user-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal-user-icon i {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .modal-user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .modal-user-type {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .modal-btn:hover::before {
+            left: 100%;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .modal-btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive untuk modal */
+        @media (max-width: 480px) {
+            .modal-card {
+                margin: 10px;
+                padding: 25px 20px;
+                max-width: none;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Print styles untuk modal */
+        @media print {
+            .modal-overlay {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -1132,6 +1423,180 @@
             <p>Building bridges for trade, investment, and sustainable growth</p>
         </div>
     </div>
+
+    @if(session('show_ticket_modal'))
+    <div id="ticketModal" class="modal-overlay">
+        <div class="modal-card">
+            <button onclick="closeModal()" class="modal-close" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-ticket-alt" style="color: #10b981;"></i>
+                    Your Event Pass
+                </h2>
+                <p class="modal-subtitle">Save this for event check-in</p>
+            </div>
+
+            <div class="modal-qr-section">
+                @php
+                $qrImage = base64_encode(QrCode::format('png')->size(150)->generate($participant->qr_code));
+                @endphp
+                <div class="modal-qr-container">
+                    <img src="data:image/png;base64,{{ $qrImage }}" alt="Event Access QR Code" />
+                </div>
+            </div>
+
+            <div class="modal-user-section">
+                <div class="modal-user-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="modal-user-name">{{ $participant->name }}</div>
+                <div class="modal-user-type">{{ $participant->participant_type }}</div>
+            </div>
+
+            <div class="modal-actions">
+                <a href="{{ route('prosperity-expo.download', $participant->qr_code) }}"
+                    class="modal-btn modal-btn-primary">
+                    <i class="fas fa-download"></i>
+                    Download PDF
+                </a>
+                <button onclick="window.print()" class="modal-btn modal-btn-secondary">
+                    <i class="fas fa-print"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <script>
+        // Fungsi untuk menutup modal
+        function closeModal() {
+            const modal = document.getElementById('ticketModal');
+            if (modal) {
+                modal.style.animation = 'modalFadeOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        // Fungsi untuk menampilkan modal
+        function showModal() {
+            const modal = document.getElementById('ticketModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.style.animation = 'modalFadeIn 0.3s ease-out forwards';
+            }
+        }
+
+        // Event listeners
+        window.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('ticketModal');
+            if (modal) {
+                showModal();
+
+                // Close modal when clicking overlay
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal();
+                    }
+                });
+
+                // Close modal with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.style.display !== 'none') {
+                        closeModal();
+                    }
+                });
+            }
+        });
+
+        // Tambahkan keyframe untuk fade out animation di CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes modalFadeOut {
+                0% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Existing confetti and other JavaScript code...
+        window.addEventListener('load', function() {
+            const colors = ['#10b981', '#667eea', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+            function createConfetti() {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.zIndex = '1000';
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+
+                document.body.appendChild(confetti);
+
+                const fallAnimation = confetti.animate([{
+                        transform: 'translateY(0px) rotate(0deg)',
+                        opacity: 1
+                    },
+                    {
+                        transform: `translateY(${window.innerHeight + 10}px) rotate(360deg)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: 3000 + Math.random() * 2000,
+                    easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)'
+                });
+
+                fallAnimation.onfinish = () => confetti.remove();
+            }
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createConfetti, i * 100);
+            }
+        });
+
+        document.querySelector('.qr-container').addEventListener('click', function() {
+            this.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+
+            const tooltip = document.createElement('div');
+            tooltip.textContent = 'QR Code ready for check-in!';
+            tooltip.style.position = 'absolute';
+            tooltip.style.background = '#10b981';
+            tooltip.style.color = 'white';
+            tooltip.style.padding = '8px 12px';
+            tooltip.style.borderRadius = '6px';
+            tooltip.style.fontSize = '0.9rem';
+            tooltip.style.top = '-40px';
+            tooltip.style.left = '50%';
+            tooltip.style.transform = 'translateX(-50%)';
+            tooltip.style.zIndex = '1001';
+            tooltip.style.animation = 'fadeInUp 0.3s ease-out';
+
+            this.style.position = 'relative';
+            this.appendChild(tooltip);
+
+            setTimeout(() => tooltip.remove(), 2000);
+        });
+
+        window.addEventListener('beforeprint', function() {
+            document.body.style.background = 'white';
+        });
+
+        window.addEventListener('afterprint', function() {
+            document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        });
+    </script>
 
     {{-- JavaScript for page enhancements --}}
     <script>
