@@ -2,23 +2,67 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Taste of Indonesia</title>
+    <title>Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores</title>
+    <meta name="description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta name="keywords" content="Indonesian food Australia, Indonesian restaurants, halal Indonesian food, Taste of Indonesia, Indonesian cuisine, Indonesian stores">
+    <meta name="author" content="Taste of Indonesia">
+    <meta name="copyright" content="Taste of Indonesia Australia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tasteofindonesia.com.au/">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo/logo.png') }}">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#e63946">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Taste of Indonesia Australia">
+    <meta property="og:url" content="https://tasteofindonesia.com.au/">
+    <meta property="og:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores">
+    <meta property="og:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta property="og:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
+    <meta property="og:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://tasteofindonesia.com.au/">
+    <meta name="twitter:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores">
+    <meta name="twitter:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta name="twitter:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
+    <meta name="twitter:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
+
+    <!-- Hreflang -->
+    <link rel="alternate" href="https://tasteofindonesia.com.au/" hreflang="en-au" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Taste of Indonesia Australia",
+            "url": "https://tasteofindonesia.com.au",
+            "logo": "https://tasteofindonesia.com.au/assets/images/logo/logo.png",
+            "sameAs": [
+                "https://web.facebook.com/profile.php?id=61575256322990",
+                "https://www.instagram.com/tasteofindonesia.com.au/"
+            ]
+        }
+    </script>
 
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
     <!-- bootstrap  -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
- 
+
     <!-- for swiper slider  -->
     <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
 
@@ -621,10 +665,6 @@
 
         </div>
     </div>
-
-
-
-
 
     <!-- jquery  -->
     <script src="assets/js/jquery-3.5.1.min.js"></script>

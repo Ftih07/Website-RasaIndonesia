@@ -7,7 +7,62 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taste of Indonesia</title>
+    
+    <title>Indonesian Stores & Restaurants in Australia | Taste of Indonesia</title>
+    <meta name="description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
+    <meta name="keywords" content="Indonesian restaurants Australia, Indonesian stores, halal Indonesian food, Indonesian groceries, Taste of Indonesia">
+    <meta name="author" content="Taste of Indonesia">
+    <meta name="copyright" content="Taste of Indonesia Australia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tasteofindonesia.com.au/store-and-restaurant">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo/logo.png') }}">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#e63946">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Taste of Indonesia Australia">
+    <meta property="og:url" content="https://tasteofindonesia.com.au/store-and-restaurant">
+    <meta property="og:title" content="Indonesian Stores & Restaurants in Australia | Taste of Indonesia">
+    <meta property="og:description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
+    <meta property="og:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
+    <meta property="og:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://tasteofindonesia.com.au/store-and-restaurant">
+    <meta name="twitter:title" content="Indonesian Stores & Restaurants in Australia | Taste of Indonesia">
+    <meta name="twitter:description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
+    <meta name="twitter:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
+    <meta name="twitter:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
+
+    <!-- Hreflang -->
+    <link rel="alternate" href="https://tasteofindonesia.com.au/store-and-restaurant" hreflang="en-au" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Indonesian Stores & Restaurants in Australia | Taste of Indonesia",
+            "url": "https://tasteofindonesia.com.au/store-and-restaurant",
+            "description": "Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.",
+            "publisher": {
+                "@type": "Organization",
+                "name": "Taste of Indonesia Australia",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://tasteofindonesia.com.au/assets/images/logo/logo.png"
+                }
+            }
+        }
+    </script>
+
     <!-- for icons  -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
