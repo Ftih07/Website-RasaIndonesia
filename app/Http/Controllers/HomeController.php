@@ -101,7 +101,7 @@ class HomeController extends Controller
     }
 
     // Display businesses filtered by category, type, keyword, country, and city
-    public function tokorestoran(Request $request)
+    public function storeandrestaurant(Request $request)
     {
         $query = Business::with('testimonials', 'food_categories', 'type');
 
@@ -155,7 +155,7 @@ class HomeController extends Controller
         $countries = Business::select('country')->distinct()->pluck('country')->filter()->sort()->values();
         $cities = Business::select('city')->distinct()->pluck('city')->filter()->sort()->values();
 
-        return view('tokorestoran', compact(
+        return view('store-and-restaurant', compact(
             'businesses',
             'foodCategories',
             'businessTypes',

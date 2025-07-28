@@ -823,7 +823,7 @@
                                         </form>
                                         @endif
                                         @else
-                                        <a href="{{ route('login') }}" class="text-primary">👍 Login untuk memberi Like</a>
+                                        <a href="{{ route('testimonial.login') }}" class="text-primary">👍 Login untuk memberi Like</a>
                                         @endauth
 
                                         <p class="text-muted small mt-1">
@@ -867,7 +867,7 @@
                 Add Your Testimonial
             </button>
             @else
-            <a href="{{ route('login') }}" class="button-add">Login to Add Testimonial</a>
+            <a href="{{ route('testimonial.login') }}" class="button-add">Login to Add Testimonial</a>
             @endif
         </div>
 

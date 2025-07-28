@@ -143,7 +143,7 @@ Route::get('/business/{slug}', [BusinessController::class, 'show'])->name('busin
  */
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/show', [HomeController::class, 'show'])->name('show');
-Route::get('/tokorestoran', [HomeController::class, 'tokorestoran'])->name('tokorestoran');
+Route::get('/store-and-restaurant', [HomeController::class, 'storeandrestaurant'])->name('tokorestoran');
 
 /**
  * Testimonial Authentication Routes
