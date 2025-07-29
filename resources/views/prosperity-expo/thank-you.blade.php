@@ -947,7 +947,7 @@
             }
         }
 
-        /* Modal Styling - Tambahkan di dalam tag <style> */
+        /* Modal Styling - Enhanced dengan Logo Header */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -975,11 +975,21 @@
             }
         }
 
+        @keyframes modalFadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
         .modal-card {
             background: white;
             border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
+            padding: 0;
+            max-width: 450px;
             width: 100%;
             position: relative;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
@@ -1000,24 +1010,80 @@
             }
         }
 
-        .modal-card::before {
+        /* Header dengan Logo - Dikurangi padding */
+        .modal-header-logos {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 15px;
+            /* Dikurangi dari 20px */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header-logos::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .modal-logos-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            /* Dikurangi dari 15px */
+            position: relative;
+            z-index: 2;
+        }
+
+        .modal-logo-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            /* Dikurangi dari 12px */
+            padding: 8px;
+            /* Dikurangi dari 12px */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-logo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-partner-logo {
+            max-width: 70px;
+            /* Dikurangi dari 80px */
+            max-height: 40px;
+            /* Dikurangi dari 50px */
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+        /* Modal Content - Dikurangi padding */
+        .modal-content {
+            padding: 20px;
+            /* Dikurangi dari 30px */
         }
 
         .modal-close {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: none;
+            background: rgba(255, 255, 255, 0.9);
             border: none;
-            font-size: 24px;
-            color: #64748b;
+            font-size: 20px;
+            color: #1e293b;
             cursor: pointer;
             width: 35px;
             height: 35px;
@@ -1026,47 +1092,59 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(10px);
         }
 
         .modal-close:hover {
-            background: #f1f5f9;
-            color: #1e293b;
+            background: rgba(255, 255, 255, 1);
             transform: rotate(90deg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .modal-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            /* Dikurangi dari 25px */
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            /* Dikurangi dari 1.5rem */
             font-weight: 700;
             color: #1e293b;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            /* Dikurangi dari 8px */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            /* Dikurangi dari 10px */
         }
 
         .modal-subtitle {
             color: #64748b;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            /* Dikurangi dari 0.95rem */
         }
 
+        /* QR Section - Dikurangi spacing */
         .modal-qr-section {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            /* Dikurangi dari 25px */
         }
 
         .modal-qr-container {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            /* Dikurangi dari 15px */
+            padding: 15px;
+            /* Dikurangi dari 20px */
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            /* Dikurangi dari 15px */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
@@ -1088,64 +1166,81 @@
             z-index: 2;
         }
 
+        /* User Section - Dikurangi padding dan spacing */
         .modal-user-section {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 20px;
+            margin-bottom: 20px;
+            /* Dikurangi dari 25px */
+            padding: 15px;
+            /* Dikurangi dari 20px */
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border-radius: 15px;
+            border-radius: 12px;
+            /* Dikurangi dari 15px */
             border: 1px solid #e2e8f0;
         }
 
         .modal-user-icon {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            /* Dikurangi dari 70px */
+            height: 60px;
+            /* Dikurangi dari 70px */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
+            margin: 0 auto 12px;
+            /* Dikurangi dari 15px */
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
         .modal-user-icon i {
             color: white;
-            font-size: 2rem;
+            font-size: 1.8rem;
+            /* Dikurangi dari 2rem */
         }
 
         .modal-user-name {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            /* Dikurangi dari 1.2rem */
             font-weight: 600;
             color: #1e293b;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            /* Dikurangi dari 5px */
         }
 
         .modal-user-type {
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            /* Dikurangi dari 0.9rem */
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
+        /* Action Buttons - Dikurangi padding */
         .modal-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            /* Dikurangi dari 12px */
             justify-content: center;
         }
 
         .modal-btn {
-            padding: 12px 20px;
+            padding: 10px 18px;
+            /* Dikurangi dari 12px 20px */
             border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
+            border-radius: 8px;
+            /* Dikurangi dari 10px */
+            font-size: 0.9rem;
+            /* Dikurangi dari 0.95rem */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            /* Dikurangi dari 8px */
             text-decoration: none;
             position: relative;
             overflow: hidden;
@@ -1188,21 +1283,46 @@
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* Responsive untuk modal */
+        /* Responsive - Adjust untuk mobile */
         @media (max-width: 480px) {
             .modal-card {
                 margin: 10px;
-                padding: 25px 20px;
                 max-width: none;
+            }
+
+            .modal-content {
+                padding: 15px;
+                /* Dikurangi dari 25px 20px */
+            }
+
+            .modal-logos-container {
+                gap: 8px;
+                /* Dikurangi dari 10px */
+            }
+
+            .modal-logo-item {
+                padding: 6px;
+                /* Dikurangi dari 8px */
+            }
+
+            .modal-partner-logo {
+                max-width: 50px;
+                /* Dikurangi dari 60px */
+                max-height: 32px;
+                /* Dikurangi dari 40px */
             }
 
             .modal-actions {
                 flex-direction: column;
+                gap: 8px;
+                /* Dikurangi spacing */
             }
 
             .modal-btn {
                 width: 100%;
                 justify-content: center;
+                padding: 10px 16px;
+                /* Adjust padding untuk mobile */
             }
         }
 
@@ -1427,45 +1547,61 @@
     @if(session('show_ticket_modal'))
     <div id="ticketModal" class="modal-overlay">
         <div class="modal-card">
-            <button onclick="closeModal()" class="modal-close" title="Close">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <div class="modal-header">
-                <h2 class="modal-title">
-                    <i class="fas fa-ticket-alt" style="color: #10b981;"></i>
-                    Your Event Pass
-                </h2>
-                <p class="modal-subtitle">Save this for event check-in</p>
-            </div>
-
-            <div class="modal-qr-section">
-                @php
-                $qrImage = base64_encode(QrCode::format('png')->size(150)->generate($participant->qr_code));
-                @endphp
-                <div class="modal-qr-container">
-                    <img src="data:image/png;base64,{{ $qrImage }}" alt="Event Access QR Code" />
-                </div>
-            </div>
-
-            <div class="modal-user-section">
-                <div class="modal-user-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="modal-user-name">{{ $participant->name }}</div>
-                <div class="modal-user-type">{{ $participant->participant_type }}</div>
-            </div>
-
-            <div class="modal-actions">
-                <a href="{{ route('prosperity-expo.download', $participant->qr_code) }}"
-                    class="modal-btn modal-btn-primary">
-                    <i class="fas fa-download"></i>
-                    Download PDF
-                </a>
-                <button onclick="window.print()" class="modal-btn modal-btn-secondary">
-                    <i class="fas fa-print"></i>
-                    Print
+            <div class="modal-header-logos">
+                <button onclick="closeModal()" class="modal-close" title="Close">
+                    <i class="fas fa-times"></i>
                 </button>
+
+                <div class="modal-logos-container">
+                    <div class="modal-logo-item">
+                        <img src="https://framerusercontent.com/images/fGCgpHRiychMw8xfk26Tri4H0w.png" alt="Katalis" class="modal-partner-logo">
+                    </div>
+                    <div class="modal-logo-item">
+                        <img src="https://cdn-az.allevents.in/events4/banners/7c40abc0bbe380f162da8a9afd2fb72e2ae150b0610da261abfaab51667528be-rimg-w400-h400-gmir.png?v=1681264687" alt="KBRI Canberra" class="modal-partner-logo">
+                    </div>
+                    <div class="modal-logo-item">
+                        <img src="https://tanya-atdag.au/wp-content/uploads/2025/01/Logo-Atdag-Canberra.png" alt="Atdag Canberra" class="modal-partner-logo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        <i class="fas fa-ticket-alt" style="color: #10b981;"></i>
+                        Your Event Pass
+                    </h2>
+                    <p class="modal-subtitle">Save this for event check-in</p>
+                </div>
+
+                <div class="modal-qr-section">
+                    @php
+                    $qrImage = base64_encode(QrCode::format('png')->size(150)->generate($participant->qr_code));
+                    @endphp
+                    <div class="modal-qr-container">
+                        <img src="data:image/png;base64,{{ $qrImage }}" alt="Event Access QR Code" />
+                    </div>
+                </div>
+
+                <div class="modal-user-section">
+                    <div class="modal-user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="modal-user-name">{{ $participant->name }}</div>
+                    <div class="modal-user-type">{{ $participant->participant_type }}</div>
+                </div>
+
+                <div class="modal-actions">
+                    <a href="{{ route('prosperity-expo.download', $participant->qr_code) }}"
+                        class="modal-btn modal-btn-primary">
+                        <i class="fas fa-download"></i>
+                        Download PDF
+                    </a>
+                    <button onclick="window.print()" class="modal-btn modal-btn-secondary">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
+                </div>
             </div>
         </div>
     </div>
