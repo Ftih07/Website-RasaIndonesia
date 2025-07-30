@@ -4,8 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Taste of Indonesia</title>
 
+
+    <!-- Basic Meta Tags -->
+    <title>Sign In | Taste of Indonesia</title>
+    <meta name="description" content="Login to Taste of Indonesia and continue your culinary journey across Australia. Discover authentic Indonesian restaurants, cultural events, and connect with the Indonesian community.">
+    <meta name="keywords" content="Taste of Indonesia login, Indonesian food Australia, sign in Taste of Indonesia, ICAV, ATDAG Canberra, Indonesian culinary community">
+    <meta name="author" content="Taste of Indonesia">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sign In | Taste of Indonesia">
+    <meta property="og:description" content="Login to Taste of Indonesia to explore authentic Indonesian restaurants, join culinary events, and connect with Indonesian food lovers in Australia.">
+    <meta property="og:image" content="{{ asset('assets/images/logo/Logo-ICAV.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Taste of Indonesia">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sign In | Taste of Indonesia">
+    <meta name="twitter:description" content="Sign in to your Taste of Indonesia account and continue your journey discovering authentic Indonesian flavors in Australia.">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo/Logo-ICAV.png') }}">
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FFD700">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
