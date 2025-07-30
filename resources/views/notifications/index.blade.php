@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-light bg-white shadow-sm border-0" style="border-bottom: 1px solid #f0f0f0;">
@@ -12,7 +17,7 @@
             </a>
             <div class="navbar-brand mb-0 d-flex align-items-center">
                 <div class="notification-icon-nav me-2">
-                    <i class="fas fa-bell text-indonesian-gold"></i>
+                    <i class="fas fa-bell text-white"></i>
                 </div>
                 <span class="text-indonesian-brown fw-bold">Notifications</span>
             </div>

@@ -75,60 +75,22 @@
 
     <!-- custom css  -->
     <link rel="stylesheet" href="assets/css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="body-fixed">
-    <!-- Overlay Countdown -->
-    <div id="countdown-overlay" class="overlay">
-        <div class="countdown-container">
-            <!-- LOGO SECTION -->
-            <div class="logo-section">
-                <img src="assets/images/logo/Logo-Atdag-Canberra-background.png" alt="Atase Perdagangan Canberra" />
-                <img src="assets/images/logo/Logo-ICAV-background.png" alt="ICAV" />
-            </div>
-
-            <!-- LAUNCHING TEXT -->
-            <p class="launching-text">LAUNCHING SOON WEBSITE</p>
-
-            <!-- TITLE -->
-            <h1 class="title">
-                <span class="highlight">Taste</span> of Indonesia
-            </h1>
-
-            <!-- COUNTDOWN -->
-            <div id="countdown"></div>
-
-            <!-- BUTTONS -->
-            <div class="buttons">
-                <button id="enter-button" class="btn btn-enter" onclick="hideCountdown()">
-                    Enter Website
-                </button>
-                <a href="#" class="btn btn-try" onclick="hideCountdown()">
-                    Try Now
-                </a>
-            </div>
-
-            <!-- DESCRIPTION -->
-            <p class="description">
-                Taste of Indonesia is a web-based platform that provides information
-                about various stores and restaurants that serve Indonesian food across
-                Australia.
-            </p>
-
-            <!-- EVENT INFO -->
-            <div class="event-info">
-                <span>📅 22–23 March <br> 10 AM–4 PM</span> |
-                <span>📍 Queen Victoria Market C &amp; D Shed</span> |
-                <span>📦 Indonesia Street Food Festival</span>
-            </div>
-
-            <!-- COLLABORATION -->
-            <p class="collaboration">
-                In collaboration with <br />
-                MELBOURNE FOOD &amp; WINE SPECIAL EVENTS 2025
-            </p>
-        </div>
-    </div>
+    @if(session('success'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
+    @endif
 
     @include('partials.navbar')
 

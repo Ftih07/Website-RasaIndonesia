@@ -122,6 +122,8 @@ class TestimonialAuthController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Profile updated successfully!');
+        // Redirect ke home dengan flash message sukses
+        return redirect('/')
+            ->with('success', 'Profile updated successfully!');
     }
 }
