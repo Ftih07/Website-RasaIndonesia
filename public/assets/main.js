@@ -320,31 +320,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const citySelect = document.getElementById("city");
     const searchButton = document.getElementById("search-button");
 
-    searchButton.addEventListener("click", function () {
-        const selectedCategory = foodCategory.value;
-        const selectedSort = sortOrder.value;
-        const selectedType = businessType.value;
-        const selectedCountry = countrySelect ? countrySelect.value : "all";
-        const selectedCity = citySelect ? citySelect.value : "all";
-        const keyword = searchKeyword.value.trim();
+    // ✅ Tambahkan pengecekan
+    if (searchButton) {
+        searchButton.addEventListener("click", function () {
+            const selectedCategory = foodCategory ? foodCategory.value : "all";
+            const selectedSort = sortOrder ? sortOrder.value : "default";
+            const selectedType = businessType ? businessType.value : "all";
+            const selectedCountry = countrySelect ? countrySelect.value : "all";
+            const selectedCity = citySelect ? citySelect.value : "all";
+            const keyword = searchKeyword ? searchKeyword.value.trim() : "";
 
-        // Construct URL with query parameters
-        const url = new URL(window.location.href);
-        url.searchParams.set("category", selectedCategory);
-        url.searchParams.set("sort", selectedSort);
-        url.searchParams.set("type", selectedType);
-        url.searchParams.set("country", selectedCountry);
-        url.searchParams.set("city", selectedCity);
+            // Construct URL with query parameters
+            const url = new URL(window.location.href);
+            url.searchParams.set("category", selectedCategory);
+            url.searchParams.set("sort", selectedSort);
+            url.searchParams.set("type", selectedType);
+            url.searchParams.set("country", selectedCountry);
+            url.searchParams.set("city", selectedCity);
 
-        if (keyword) {
-            url.searchParams.set("keyword", keyword);
-        } else {
-            url.searchParams.delete("keyword"); // Remove keyword if empty
-        }
+            if (keyword) {
+                url.searchParams.set("keyword", keyword);
+            } else {
+                url.searchParams.delete("keyword");
+            }
 
-        // Reload page with updated filters
-        window.location.href = url;
-    });
+            // Reload page with updated filters
+            window.location.href = url;
+        });
+    }
 });
 
 $(document).ready(function ($) {

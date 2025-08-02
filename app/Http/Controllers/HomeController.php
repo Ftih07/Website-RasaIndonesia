@@ -55,29 +55,30 @@ class HomeController extends Controller
     // Get nearby businesses based on latitude and longitude
     public function getNearbyBusinesses(Request $request)
     {
-        // Retrieve latitude and longitude from query parameters
         $latitude = $request->query('lat');
         $longitude = $request->query('lng');
+        $radius = $request->query('radius', 10); // default 10 km
 
-        // Initialize query with related models
         $query = Business::with(['type', 'testimonials', 'galleries']);
 
-        // If latitude and longitude are provided, calculate distance
+        // Jika ada lat/lng, filter berdasarkan jarak
         if ($latitude && $longitude) {
             $query->selectRaw("
-                *, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) 
-                * cos(radians(longitude) - radians(?)) + sin(radians(?)) 
-                * sin(radians(latitude)))) AS distance", [$latitude, $longitude, $latitude])
-                ->having('distance', '<', 10) // Filter businesses within a 10 km radius
-                ->orderBy('distance'); // Order results by distance (nearest first)
+            *, (6371 * acos(
+                cos(radians(?)) * cos(radians(latitude)) 
+                * cos(radians(longitude) - radians(?)) 
+                + sin(radians(?)) * sin(radians(latitude))
+            )) AS distance", [$latitude, $longitude, $latitude])
+                ->having('distance', '<', $radius) // radius dalam KM
+                ->orderBy('distance');
         }
 
-        // Retrieve businesses and format response
+        // Kalau tidak ada lat/lng → ambil semua bisnis (tanpa filter jarak)
         $businesses = $query->get()->map(function ($business) {
             return [
                 'id' => $business->id,
                 'name' => $business->name,
-                'slug' => $business->slug, // ✅ Tambahkan ini
+                'slug' => $business->slug,
                 'latitude' => $business->latitude,
                 'longitude' => $business->longitude,
                 'type' => [
@@ -86,17 +87,13 @@ class HomeController extends Controller
                 ],
                 'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1),
                 'total_responses' => $business->testimonials->count(),
-                'galleries' => $business->galleries->map(function ($gallery) {
-                    return [
-                        'title' => $gallery->title,
-                        'image' => asset('storage/' . $gallery->image),
-                    ];
-                }),
+                'galleries' => $business->galleries->map(fn($gallery) => [
+                    'title' => $gallery->title,
+                    'image' => asset('storage/' . $gallery->image),
+                ]),
             ];
         });
 
-
-        // Return JSON response with business data
         return response()->json($businesses);
     }
 

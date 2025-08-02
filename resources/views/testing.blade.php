@@ -81,11 +81,12 @@
 
 <body class="body-fixed">
     @if(session('success'))
-    <!-- prettier-ignore -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             icon: 'success',
-            title: '{{ session('success') }}', // ✅ tidak ada spasi
+            title: '{{ session('
+            success ') }}',
             showConfirmButton: false,
             timer: 2000
         });
@@ -130,7 +131,7 @@
                             <div class="col-lg-6">
                                 <div class="banner-img-wp">
                                     <!-- Background Image Section -->
-                                    <div class="banner-img" style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
+                                    <div class="banner-img" style="background-image: url(https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2024/07/16062938/Ragam-Makanan-Khas-Indonesia-yang-Lezat-dan-Kaya-Nutrisi.jpg.webp);">
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +222,7 @@
                         <div class="col-lg-8 m-auto">
                             <!-- About Us Video Section -->
                             <div class="about-video">
-                                <div class="about-video-img" style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
+                                <div class="about-video-img" style="background-image: url(https://blog.bankmega.com/wp-content/uploads/2022/11/Makanan-Khas-Tradisional.jpg);">
                                 </div>
                             </div>
                         </div>
@@ -246,152 +247,15 @@
                             </div>
                         </div>
 
-                        <!-- Map -->
+                        <!-- Map Section -->
                         <section class="about-sec section">
                             <div class="container">
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-8">
-                                        <div class="scrapping-map-wrapper">
-
-                                            <div class="how-to-use">
-                                                <div class="tutorial-header">
-                                                    <h4 class="tutorial-title">How to Use</h4>
-                                                    <p class="tutorial-subtitle">
-                                                        Discover amazing Indonesian cuisine near you with our
-                                                        interactive map. Follow these simple steps to get started!
-                                                    </p>
-                                                </div>
-
-                                                <div class="tutorial-grid">
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">📍</span>
-                                                        <h4>Find Your Location</h4>
-                                                        <p>
-                                                            Click <b>My Location</b> to detect your current
-                                                            position. Allow location permission when prompted for
-                                                            the best experience.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">📏</span>
-                                                        <h4>Set Your Radius</h4>
-                                                        <p>
-                                                            Choose a <b>Radius</b> (5km, 10km, or 20km) to filter
-                                                            and discover Indonesian restaurants within your
-                                                            preferred distance.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">🗺️</span>
-                                                        <h4>Explore Details</h4>
-                                                        <p>
-                                                            Click any marker to view restaurant details, customer
-                                                            ratings, photo galleries, and authentic Indonesian
-                                                            cuisine offerings.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">🚗</span>
-                                                        <h4>Get Directions</h4>
-                                                        <p>
-                                                            Use the <b>Directions</b> button to open navigation in
-                                                            your preferred maps app and find the quickest route to
-                                                            your chosen restaurant.
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="permission-section">
-                                                    <h3 class="permission-title">🔐 Enable Location Permission</h3>
-                                                    <p class="permission-subtitle">
-                                                        Follow these steps to allow location access for the best map
-                                                        experience:
-                                                    </p>
-
-                                                    <div class="permission-grid">
-                                                        <div class="permission-device">
-                                                            <div class="device-header">
-                                                                <span class="device-icon">📱</span>
-                                                                <h4 class="device-title">Mobile Device</h4>
-                                                            </div>
-                                                            <ol class="permission-steps">
-                                                                <li>
-                                                                    Tap the <b>lock icon</b> or
-                                                                    <b>site info icon</b> in your browser's address
-                                                                    bar
-                                                                </li>
-                                                                <li>
-                                                                    Select <b>Permissions</b>, <b>Site settings</b>,
-                                                                    or <b>Page info</b>
-                                                                </li>
-                                                                <li>
-                                                                    Find <b>Location</b> and change it to
-                                                                    <b>Allow</b> or <b>Enable</b>
-                                                                </li>
-                                                                <li>
-                                                                    Refresh the page and click
-                                                                    <b>My Location</b> again
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-
-                                                        <div class="permission-device">
-                                                            <div class="device-header">
-                                                                <span class="device-icon">💻</span>
-                                                                <h4 class="device-title">Desktop Browser</h4>
-                                                            </div>
-                                                            <ol class="permission-steps">
-                                                                <li>
-                                                                    Click the <b>lock icon</b> or
-                                                                    <b>shield icon</b> in the browser address bar
-                                                                </li>
-                                                                <li>
-                                                                    Look for <b>Location permissions</b> in the
-                                                                    dropdown menu
-                                                                </li>
-                                                                <li>
-                                                                    Select <b>Allow</b> or <b>Always allow</b> for
-                                                                    this site
-                                                                </li>
-                                                                <li>
-                                                                    Reload the page and try the location feature
-                                                                    again
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="quick-tips">
-                                                        <h4>💡 Quick Tips</h4>
-                                                        <p>
-                                                            If you're still having issues, try clearing your browser
-                                                            cache, checking if location services are enabled on your
-                                                            device, or using a different browser. Most modern
-                                                            browsers support location services for a better user
-                                                            experience.
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8 m-auto">
+                                        <div class="about-video">
+                                            <div class="scrapping-map">
+                                                <div id="map" style="width: 100%; height: 500px;"></div>
                                             </div>
-
-                                            <div class="filter-bar">
-                                                <div class="filter-group">
-                                                    <label for="radius-select">Radius:</label>
-                                                    <select id="radius-select" class="form-select form-select-sm">
-                                                        <option value="5">5 km</option>
-                                                        <option value="10" selected>10 km</option>
-                                                        <option value="20">20 km</option>
-                                                    </select>
-                                                </div>
-                                                <button id="stop-location" class="btn-show-all">
-                                                    🔄 Show All
-                                                </button>
-                                            </div>
-
-                                            <div id="map" style="width: 100%; height: 500px; border-radius: 10px; overflow: hidden;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -431,7 +295,7 @@
                                     <div class="dish-box text-center">
                                         <!-- Business Logo -->
                                         <div class="dist-img">
-                                            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}" loading="lazy">
+                                            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}">
                                         </div>
                                         <!-- Business Rating -->
                                         <div class="dish-rating">
@@ -537,11 +401,12 @@
                                         @foreach($galleries as $gallery)
                                         <a href="{{ asset('storage/' . $gallery->image) }}" data-fancybox="table-slider"
                                             class="book-table-img back-img swiper-slide"
-                                            style="background-image: url('{{ asset('storage/' . $gallery->image) }}')"
-                                            loading="lazy">
+                                            style="background-image: url('{{ asset('storage/' . $gallery->image) }}')">
                                         </a>
                                         @endforeach
                                     </div>
+
+
                                     <div class="swiper-button-wp">
                                         <div class="swiper-button-prev swiper-button">
                                             <i class="uil uil-angle-left"></i>
@@ -799,114 +664,148 @@
     <script src="assets/js/smooth-scroll.js"></script>
     <!-- custom js  -->
     <script src="assets/main.js"></script>
+    <script>
+        /**
+         * Countdown Timer Script
+         * This script manages a countdown timer until a specified launch date.
+         * Once the countdown reaches zero, it displays an "Enter Website" button and auto-hides after 3 seconds.
+         */
+
+        let autoHideTimer; // Variable to store the auto-hide timer
+
+        /**
+         * Updates the countdown timer on the page.
+         * When the countdown reaches zero, it displays a message and starts an auto-hide timer.
+         */
+        function updateCountdown() {
+            const launchDate = new Date('March 22, 2025 11:00:00 GMT+11').getTime(); // Set the launch date
+            const now = new Date().getTime(); // Get the current time
+            const timeLeft = launchDate - now; // Calculate remaining time
+
+            if (timeLeft <= 0) {
+                // When the countdown is finished
+                document.getElementById('countdown').innerText = "The website is live!";
+                document.getElementById('enter-button').style.display = 'inline-block'; // Show enter button
+                startAutoHide(); // Start auto-hide timer (3 seconds)
+            } else {
+                // Calculate time units
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                // Update the countdown display
+                document.getElementById('countdown').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                // Repeat the function every second
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        /**
+         * Starts an auto-hide timer for the countdown overlay (3 seconds after countdown ends).
+         */
+        function startAutoHide() {
+            if (!autoHideTimer) { // Ensure timer starts only once
+                autoHideTimer = setTimeout(() => {
+                    hideCountdown();
+                }, 3000);
+            }
+        }
+
+        /**
+         * Hides the countdown overlay.
+         */
+        function hideCountdown() {
+            document.getElementById('countdown-overlay').style.display = 'none';
+        }
+
+        /**
+         * Event listener for the "Try Now" button.
+         * Clicking this button immediately hides the countdown overlay and cancels auto-hide timer.
+         */
+        document.querySelector('.btn.btn-try').addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default button action
+            clearTimeout(autoHideTimer); // Cancel auto-hide timer if active
+            hideCountdown();
+        });
+
+        /**
+         * Event listener for the "Enter Website" button.
+         * Clicking this button immediately hides the countdown overlay and cancels auto-hide timer.
+         */
+        document.getElementById('enter-button').addEventListener('click', () => {
+            clearTimeout(autoHideTimer); // Cancel auto-hide timer if active
+            hideCountdown();
+        });
+
+        // Start the countdown when the script loads
+        updateCountdown();
+    </script>
 
     <script>
-        let map; // 🔹 Global supaya bisa diakses semua function
-        let markers = [];
-        let userMarker = null;
-        let userCircle = null;
-        let directionsService;
-        let directionsRenderer;
+        /**
+         * Dropdown Toggle Script
+         * 
+         * This script handles the opening and closing of a dropdown menu when the profile image is clicked.
+         * It also ensures the dropdown closes when clicking outside of it.
+         */
 
+        /**
+         * Toggles the visibility of the dropdown menu.
+         */
+        function toggleDropdown() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        /**
+         * Event listener to close the dropdown when clicking outside of the dropdown area.
+         */
+        window.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const profileImage = document.querySelector('.profile-image');
+
+            // Check if the clicked area is outside the profile image
+            if (!profileImage.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        /**
+         * Google Maps Integration with User Location and Nearby Businesses
+         * This script initializes a Google Map, detects the user's location, and fetches nearby businesses.
+         */
         function initMap() {
+            // Default map location (Australia)
             const defaultLocation = {
                 lat: -25.6545305,
                 lng: 133.9214759
             };
 
-            map = new google.maps.Map(document.getElementById("map"), {
+            // Initialize the map
+            const map = new google.maps.Map(document.getElementById("map"), {
                 center: defaultLocation,
                 zoom: 4,
             });
 
-            // Tambahkan ini supaya directions bisa dipakai
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer({
-                map
-            });
-
+            // Add a button to get the user's location
             addLocationButton(map);
 
-            // 🔹 Kalau ada lokasi tersimpan → load marker
-            const savedLocation = localStorage.getItem("userLocation");
-            if (savedLocation) {
-                const userLocation = JSON.parse(savedLocation);
-                addUserMarkerAndCircle(userLocation, map);
-                fetchNearbyBusinesses(userLocation, map);
-            } else {
-                fetchNearbyBusinesses(null, map); // 🔹 Default tampilkan semua
-            }
+            /**
+             * Adds a "My Location" button to the map.
+             */
+            function addLocationButton(map) {
+                const locationButton = document.createElement("button");
 
-            // 🔹 Event ganti radius (kalau ada lokasi user)
-            document.getElementById("radius-select").addEventListener("change", () => {
-                const savedLoc = localStorage.getItem("userLocation");
-                if (!savedLoc) return;
-                const userLocation = JSON.parse(savedLoc);
-                addUserMarkerAndCircle(userLocation, map);
-                fetchNearbyBusinesses(userLocation, map);
-            });
+                locationButton.textContent = "📍 My Location";
+                locationButton.classList.add("custom-map-control-button");
 
-            // 🔹 Tombol Show All
-            document.getElementById("stop-location").addEventListener("click", () => {
-                localStorage.removeItem("userLocation"); // Hapus lokasi tersimpan
+                map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
 
-                if (userMarker) userMarker.setMap(null);
-                if (userCircle) userCircle.setMap(null);
-
-                fetchNearbyBusinesses(null, map); // Ambil semua bisnis
-            });
-        }
-
-        function addUserMarkerAndCircle(location, map) {
-            const radius = parseInt(document.getElementById("radius-select").value) * 1000;
-
-            if (userMarker) userMarker.setMap(null);
-            if (userCircle) userCircle.setMap(null);
-
-            userMarker = new google.maps.Marker({
-                position: location,
-                map,
-                title: "Your Location",
-                icon: {
-                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                }
-            });
-
-            userCircle = new google.maps.Circle({
-                strokeColor: "#007bff",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#007bff",
-                fillOpacity: 0.2,
-                map,
-                center: location,
-                radius: radius
-            });
-
-            // ✅ Biar map otomatis nge-zoom sesuai radius
-            const bounds = userCircle.getBounds();
-            if (bounds) {
-                map.fitBounds(bounds);
-            }
-        }
-
-        function addLocationButton(map) {
-            const locationButton = document.createElement("button");
-            locationButton.textContent = "📍 My Location";
-            locationButton.classList.add("custom-map-control-button");
-            map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
-
-            locationButton.addEventListener("click", () => {
-                Swal.fire({
-                    title: "Use your location?",
-                    text: "We will use your location to show nearby businesses.",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, use it",
-                    cancelButtonText: "Cancel"
-                }).then((result) => {
-                    if (!result.isConfirmed) return;
-
+                locationButton.addEventListener("click", () => {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(
                             (position) => {
@@ -915,29 +814,75 @@
                                     lng: position.coords.longitude,
                                 };
 
-                                localStorage.setItem("userLocation", JSON.stringify(userLocation));
-
-                                addUserMarkerAndCircle(userLocation, map);
-                                fetchNearbyBusinesses(userLocation, map);
+                                map.setCenter(userLocation);
+                                map.setZoom(15);
                             },
-                            () => Swal.fire("Failed", "Unable to retrieve your location.", "error")
+                            () => {
+                                alert("Fail to get location.");
+                            }
                         );
                     } else {
-                        Swal.fire("Error", "Your browser does not support geolocation.", "error");
+                        alert("Your browser doesn't have a Geolocation.");
                     }
                 });
-            });
+            }
+
+            // Try to get the user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    console.log("User Location:", userLocation);
+
+                    map.setCenter(userLocation);
+                    map.setZoom(14);
+
+                    // Add a blue marker for the user's location
+                    const userMarker = new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: "Your Location",
+                        icon: {
+                            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Marker biru
+                        }
+                    });
+
+                    // Add a circle around the user's location
+                    const userCircle = new google.maps.Circle({
+                        strokeColor: "#007bff",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: "#007bff",
+                        fillOpacity: 0.35,
+                        map,
+                        center: userLocation,
+                        radius: 300,
+                    });
+
+                    // Fetch nearby businesses
+                    fetchNearbyBusinesses(userLocation, map);
+
+                }, () => {
+                    console.warn("User's location cannot be accessed, switching to default location.");
+                    fetchNearbyBusinesses(null, map);
+                });
+            } else {
+                console.warn("Geolocation is not supported by this browser.");
+                fetchNearbyBusinesses(null, map);
+            }
         }
 
+        /**
+         * Fetches nearby businesses and adds markers to the map.
+         */
         function fetchNearbyBusinesses(location, map) {
-            // 🔹 Hapus marker lama
-            markers.forEach(marker => marker.setMap(null));
-            markers = [];
-
             let url = "/api/nearby-businesses";
+
             if (location && location.lat && location.lng) {
-                const radius = document.getElementById("radius-select").value;
-                url += `?lat=${location.lat}&lng=${location.lng}&radius=${radius}`;
+                url += `?lat=${location.lat}&lng=${location.lng}`;
             }
 
             fetch(url)
@@ -946,124 +891,133 @@
                     console.log("Data from API:", data);
 
                     if (!Array.isArray(data) || data.length === 0) {
-                        console.warn("No businesses found.");
+                        console.warn("Store & Restaurant data is empty or the format is incompatible.");
                         return;
                     }
 
-                    const bounds = new google.maps.LatLngBounds();
-
                     data.forEach(business => {
-                        if (!business.latitude || !business.longitude) return;
+                        if (business.latitude && business.longitude) {
+                            console.log("Adding marker in:", business.name); // Debugging
 
-                        const position = {
-                            lat: parseFloat(business.latitude),
-                            lng: parseFloat(business.longitude),
-                        };
+                            const marker = new google.maps.Marker({
+                                position: {
+                                    lat: parseFloat(business.latitude),
+                                    lng: parseFloat(business.longitude),
+                                },
+                                map: map,
+                                title: business.name,
+                                label: {
+                                    text: business.name,
+                                    color: "#fff",
+                                    fontSize: "14px",
+                                    fontWeight: "bold",
+                                    className: "marker-label",
+                                },
+                            });
 
-                        const marker = new google.maps.Marker({
-                            position,
-                            map: map,
-                            title: business.name,
-                            label: {
-                                text: business.name,
-                                color: "#fff",
-                                fontSize: "14px",
-                                fontWeight: "bold",
-                                className: "marker-label",
-                            },
-                        });
+                            /**
+                             * Opens Google Maps with directions from the user's location to a given destination.
+                             */
+                            window.getDirections = function(lat, lng) {
+                                if ("geolocation" in navigator) {
+                                    navigator.geolocation.getCurrentPosition(
+                                        (position) => {
+                                            const userLat = position.coords.latitude;
+                                            const userLng = position.coords.longitude;
+                                            const url = `https://www.google.com/maps/dir/${userLat},${userLng}/${lat},${lng}`;
+                                            window.open(url, "_blank");
+                                        },
+                                        (error) => {
+                                            console.error("Error to get the location: ", error);
+                                            alert("Failed to get your location. Please turn on location permission.");
+                                        }
+                                    );
+                                } else {
+                                    alert("Geolocation is not supported by this browser.");
+                                }
+                            };
 
-                        markers.push(marker);
-                        bounds.extend(position);
 
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `
-                            <div class="card-marker">
-                                <div class="gallery-swiper">
-                                    <div class="swiper-container">
-                                        <div class="swiper-wrapper">
-                                            ${business.galleries.map(g => `
-                                                <div class="swiper-slide">
-                                                    <img src="${g.image}" alt="${g.title}" />
+                            const infoWindow = new google.maps.InfoWindow({
+                                content: `
+                                        <div class="card-marker">
+                                            <div class="gallery-swiper">
+                                                <div class="swiper-container">
+                                                    <div class="swiper-wrapper">
+                                                        ${business.galleries.map(gallery => `
+                                                            <div class="swiper-slide">
+                                                                <img src="${gallery.image}" alt="${gallery.title}" />
+                                                            </div>
+                                                        `).join('')}
+                                                    </div>
+                                                    <!-- Pagination kustom -->
+                                                    <div class="swiper-pagination-maps"></div>
                                                 </div>
-                                            `).join('')}
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="card-title">${business.name}</div>
+                                                <div class="rating">
+                                                    ${renderStars(business.average_rating)}
+                                                    <span>${business.average_rating.toFixed(1)}</span>
+                                                    <span>(${business.total_responses} reviews)</span>
+                                                </div>
+                                                <div class="info">${business.type && business.type.title ? business.type.title : 'N/A'}</div>
+                                                    <div class="buttons-maps">
+                                                    <a
+                                                        href="/business/${business.slug}"
+                                                        target="_blank"
+                                                        class="btn-maps btn-details"
+                                                    >
+                                                        Details
+                                                    </a>
+                                                    <button
+                                                        onclick="getDirections(${business.latitude}, ${business.longitude})"
+                                                        class="btn-maps btn-route"
+                                                    >
+                                                        Directions
+                                                    </button>
+                                                    <a
+                                                        href="https://www.google.com/maps?q=${business.latitude},${business.longitude}"
+                                                        target="_blank"
+                                                        class="btn-maps btn-view-map"
+                                                    >
+                                                        View in Google Maps
+                                                    </a>
+                                                    </div>
+                                            </div>
                                         </div>
-                                        <div class="swiper-pagination-maps"></div>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-title">${business.name}</div>
-                                    <div class="rating">
-                                        ${renderStars(business.average_rating)}
-                                        <span>${business.average_rating.toFixed(1)}</span>
-                                        <span>(${business.total_responses} reviews)</span>
-                                    </div>
-                                    <div class="info">${business.type?.title || 'N/A'}</div>
-                                    <div class="buttons-maps">
-                                        <a href="/business/${business.slug}" target="_blank" class="btn-maps btn-details">Details</a>
-                                        <button onclick="getDirections(${business.latitude}, ${business.longitude})" class="btn-maps btn-route">Directions</button>
-                                        <a href="https://www.google.com/maps?q=${business.latitude},${business.longitude}" target="_blank" class="btn-maps btn-view-map">View in Google Maps</a>
-                                    </div>
-                                </div>
-                            </div>
-                        `,
-                            maxWidth: 300,
-                        });
+                                    `,
+                                maxWidth: 300,
+                            });
 
-                        marker.addListener("click", () => {
-                            infoWindow.open(map, marker);
-                            setTimeout(() => {
-                                new Swiper('.swiper-container', {
-                                    pagination: {
-                                        el: '.swiper-pagination-maps',
-                                        clickable: true
-                                    },
-                                    loop: true,
-                                });
-                            }, 500);
-                        });
+                            new google.maps.event.addListener(marker, 'click', function() {
+                                setTimeout(() => {
+                                    new Swiper('.swiper-container', {
+                                        navigation: {
+                                            nextEl: '.swiper-button-next',
+                                            prevEl: '.swiper-button-prev',
+                                        },
+                                        loop: true,
+                                    });
+                                }, 500);
+                            });
+
+                            function renderStars(rating) {
+                                const stars = Math.round(rating);
+                                const fullStars = '&#9733;'.repeat(stars);
+                                const emptyStars = '&#9734;'.repeat(5 - stars);
+                                return `${fullStars}${emptyStars}`;
+                            }
+
+                            marker.addListener("click", () => {
+                                infoWindow.open(map, marker);
+                            });
+                        }
                     });
-
-                    // 🔹 Kalau tidak ada lokasi → auto fit semua marker
-                    if (!location && data.length > 0) {
-                        map.fitBounds(bounds);
-                    }
                 })
-                .catch(error => console.error("Error fetching businesses:", error));
-        }
-
-        function getDirections(destLat, destLng) {
-            const savedLoc = localStorage.getItem("userLocation");
-
-            if (!savedLoc) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Location not found",
-                    text: "Please enable your location first before viewing directions."
+                .catch(error => {
+                    console.error("Error failed to get data from store & restaurant:", error);
                 });
-                return;
-            }
-
-            const userLocation = JSON.parse(savedLoc);
-            const request = {
-                origin: userLocation,
-                destination: {
-                    lat: parseFloat(destLat),
-                    lng: parseFloat(destLng)
-                },
-                travelMode: google.maps.TravelMode.DRIVING,
-            };
-
-            directionsService.route(request, (result, status) => {
-                if (status === "OK") {
-                    directionsRenderer.setDirections(result);
-                } else {
-                    console.warn("Directions API failed:", status);
-                    // 🔹 Fallback: Open Google Maps directly
-                    const url = `https://www.google.com/maps/dir/${userLocation.lat},${userLocation.lng}/${destLat},${destLng}`;
-                    window.open(url, "_blank");
-                }
-            });
         }
 
         /**
@@ -1071,9 +1025,7 @@
          */
         function renderStars(rating) {
             const stars = Math.round(rating);
-            const fullStars = '&#9733;'.repeat(stars);
-            const emptyStars = '&#9734;'.repeat(5 - stars);
-            return `${fullStars}${emptyStars}`;
+            return "★".repeat(stars) + "☆".repeat(5 - stars);
         }
 
         // Initialize the map when the page loads
