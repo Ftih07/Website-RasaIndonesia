@@ -24,6 +24,7 @@ class ProsperityExpoSentEmailResource extends Resource
     protected static ?string $model = ProsperityExpoSentEmail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Prosperity Expo';
 
     public static function form(Form $form): Form
     {
@@ -68,7 +69,7 @@ class ProsperityExpoSentEmailResource extends Resource
                             $record->update(['sent_at' => now()]);
                         }
                     })
-                    ->deselectRecordsAfterCompletion(), 
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 
@@ -86,5 +87,17 @@ class ProsperityExpoSentEmailResource extends Resource
             'create' => Pages\CreateProsperityExpoSentEmail::route('/create'),
             'edit' => Pages\EditProsperityExpoSentEmail::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * Get navigation badge (show count of participants)
+     * This method displays the total number of participants next to the navigation item in the sidebar.
+     *
+     * @return string|null
+     */
+    public static function getNavigationBadge(): ?string
+    {
+        // Counts all records in the associated model's table.
+        return static::getModel()::count();
     }
 }

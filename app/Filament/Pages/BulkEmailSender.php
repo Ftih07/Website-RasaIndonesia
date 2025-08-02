@@ -17,6 +17,7 @@ class BulkEmailSender extends Page implements Forms\Contracts\HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.bulk-email-sender';
+    protected static ?string $navigationGroup = 'Prosperity Expo';
 
     public $data = [
         'csv_file' => null,
