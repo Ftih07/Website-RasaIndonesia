@@ -25,6 +25,7 @@ class ParticipantRegisterProsperityExpoExport implements FromCollection, WithHea
             'product_description',
             'status',
             'created_at',
+            'qr_code',
         ]);
     }
 
@@ -42,6 +43,7 @@ class ParticipantRegisterProsperityExpoExport implements FromCollection, WithHea
             'Product Description',
             'Status',
             'Registered At',
+            'qr_code',
         ];
     }
 

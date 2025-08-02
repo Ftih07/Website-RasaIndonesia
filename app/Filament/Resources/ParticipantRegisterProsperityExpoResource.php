@@ -340,6 +340,32 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                                 ->send();
                         }
                     }),
+                // ✅ Export ke CSV
+                Tables\Actions\Action::make('export_csv')
+                    ->label('Export to CSV')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('info')
+                    ->action(function () {
+                        try {
+                            Notification::make()
+                                ->title('Export Started')
+                                ->body('Your CSV file is being generated...')
+                                ->success()
+                                ->send();
+
+                            return Excel::download(
+                                new ParticipantRegisterProsperityExpoExport,
+                                'prosperity-expo-participants-' . now()->format('Y-m-d') . '.csv',
+                                \Maatwebsite\Excel\Excel::CSV // 🔥 Writer type CSV
+                            );
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->title('Export Failed')
+                                ->body('There was an error generating the CSV file.')
+                                ->danger()
+                                ->send();
+                        }
+                    }),
             ])
             ->actions([
                 // View Action: Opens a slide-over modal to view participant details

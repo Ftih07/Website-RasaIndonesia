@@ -1500,9 +1500,10 @@
                     What's Next?
                 </h3>
                 <ol class="steps-list">
-                    <li>Save or screenshot your QR code above for event check-in</li>
-                    <li>Download your PDF certificate as backup documentation</li>
-                    <li>Arrive at the venue with your QR code ready for scanning</li>
+                    <li>Your QR code is ready! You can <strong>screenshot or download the PDF ticket</strong> now.</li>
+                    <li>A confirmation email with the same QR code will be sent to you within 1–2 days as a backup.</li>
+                    <li>Keep your QR code ready for event check-in at the registration desk.</li>
+                    <li>If needed, download your PDF ticket as backup documentation.</li>
                 </ol>
             </div>
 

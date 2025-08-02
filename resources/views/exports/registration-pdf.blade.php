@@ -273,9 +273,10 @@
     <div class="instructions">
         <div class="instructions-title">Event Day Instructions:</div>
         <div class="instructions-text">
-            • Bring this PDF confirmation (printed or digital)<br>
-            • Present QR code at registration desk for quick check-in<br>
-            • Contact event support if you encounter any issues
+            • Save this PDF or screenshot your QR code – this is your event pass.<br>
+            • You will also receive a confirmation email within 1–2 business days as a backup.<br>
+            • Present the QR code at the registration desk for quick check-in.<br>
+            • Contact event support if you encounter any issues.
         </div>
     </div>
 
