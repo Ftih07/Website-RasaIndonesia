@@ -11,6 +11,7 @@ use Filament\Resources\Resource; // Base class for Filament Resources
 use Filament\Tables; // Import for Filament Table components
 use Filament\Tables\Table; // Import for the Table class
 use Filament\Notifications\Notification; // Import for Filament notifications
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder; // Import for Eloquent query builder
 use Maatwebsite\Excel\Facades\Excel; // Import for Excel facade (for export functionality)
 
@@ -195,6 +196,15 @@ class ParticipantRegisterProsperityExpoResource extends Resource
         return $table
             ->columns([
                 // Text column for participant's name
+                ToggleColumn::make('email_sent')
+                    ->label('Email Sent')
+                    ->onColor('success') // warna ketika true
+                    ->offColor('danger') // warna ketika false
+                    ->sortable()
+                    ->afterStateUpdated(
+                        fn($state, $record) =>
+                        $record->update(['email_sent' => $state])
+                    ),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Participant Name')
                     ->searchable() // Allows searching by name

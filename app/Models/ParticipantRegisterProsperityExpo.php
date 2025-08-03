@@ -48,6 +48,7 @@ class ParticipantRegisterProsperityExpo extends Model
         'company_profile',
         'qr_code',
         'status',
+        'email_sent',
     ];
 
     // You can define relationships (e.g., hasMany, belongsTo) or other methods here
