@@ -2,231 +2,465 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\TrafficLog; // Import the TrafficLog Eloquent model.
-use Carbon\Carbon;          // Carbon library for date and time manipulation.
-use Filament\Widgets\ChartWidget; // Base class for Filament chart widgets.
+use App\Models\TrafficLog;
+use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
+use Filament\Forms\Components\Select;
 
 /**
- * TrafficChart
+ * Enhanced TrafficChart
  *
- * This Filament Chart Widget displays the website traffic analytics,
- * specifically focusing on daily visitor counts over the last 7 days.
- * It uses a line chart to visualize trends and uses dynamic colors
- * to indicate traffic volume for each day.
+ * This enhanced Filament Chart Widget displays comprehensive website traffic analytics
+ * with period filtering (day, week, month), improved UI/UX, and detailed statistics.
+ * Features dynamic colors, responsive design, and user-friendly interactions.
  */
 class TrafficChart extends ChartWidget
 {
     /**
-     * The heading for the chart widget displayed in the Filament dashboard.
-     * Includes an emoji for visual appeal.
-     *
-     * @var string|null
+     * The heading for the chart widget with enhanced visual appeal.
      */
-    protected static ?string $heading = '📊 Website Traffic Analytics';
+    protected static ?string $heading = '📈 Traffic Analytics Dashboard';
 
     /**
-     * A brief description displayed below the chart heading.
-     *
-     * @var string|null
+     * Enhanced description with dynamic period information.
      */
-    protected static ?string $description = 'Website visitor analysis for the last 7 days.';
+    protected static ?string $description = 'Comprehensive website visitor analysis with customizable time periods';
 
     /**
-     * The sort order for this widget on the dashboard.
-     * Lower numbers appear higher on the page.
-     *
-     * @var int|null
+     * Widget sort order on dashboard.
      */
     protected static ?int $sort = 2;
 
     /**
-     * The polling interval for the chart data in seconds.
-     * This defines how frequently the chart data will automatically refresh.
-     * Set to 30 seconds.
-     *
-     * @var string|null
+     * Auto-refresh interval for real-time updates.
      */
-    protected static ?string $pollingInterval = '30s';
+    protected static ?string $pollingInterval = '60s';
 
     /**
-     * Sets the maximum height for the chart container.
-     * This helps control the layout on the dashboard.
-     *
-     * @var string|null
+     * Responsive height for better mobile experience.
      */
-    protected static ?string $maxHeight = '300px';
+    protected static ?string $maxHeight = '400px';
 
     /**
-     * Retrieves the data for the chart.
-     * This method fetches daily traffic counts for the last 7 days,
-     * assigns dynamic colors based on traffic volume, and formats
-     * the data and labels for a line chart.
-     *
-     * @return array An associative array containing 'datasets' and 'labels' for the chart.
+     * Available filter options for period selection.
      */
-    protected function getData(): array
+    protected function getFilters(): ?array
     {
-        $data = [];             // Array to store the daily traffic counts.
-        $labels = [];           // Array to store the day names and dates for the x-axis labels.
-        $backgroundColors = []; // Array to store dynamic background colors for the chart area.
-        $borderColors = [];     // Array to store dynamic border colors for the line.
-
-        // Get current hour for potential future time-based visualization (though not used in this specific chart's data processing).
-        $currentHour = now()->format('H');
-
-        // Loop through the last 7 days (including today).
-        // The loop runs from $i = 6 down to 0 to get data in chronological order.
-        for ($i = 6; $i >= 0; $i--) {
-            // Get the Carbon instance for the current day in the loop.
-            $date = Carbon::today()->subDays($i);
-            // Format the day name (e.g., "Mon", "Tue").
-            // Using `locale('id')` was in the original, but changed to default for English consistency.
-            // If localization is required, ensure 'id' locale is set globally or passed explicitly.
-            $dayName = $date->format('D');
-            // Format the date as day/month (e.g., "24/06").
-            $dateFormatted = $date->format('d/m');
-            // Combine day name and formatted date for the label, with a newline for multi-line labels.
-            $labels[] = $dayName . "\n" . $dateFormatted;
-
-            // Count the number of traffic logs for the specific date.
-            $dailyTraffic = TrafficLog::whereDate('created_at', $date)->count();
-            // Add the daily traffic count to the data array.
-            $data[] = $dailyTraffic;
-
-            // Assign dynamic colors based on traffic volume for visual indication.
-            if ($dailyTraffic > 100) {
-                $backgroundColors[] = 'rgba(34, 197, 94, 0.2)'; // Light green for high traffic
-                $borderColors[] = 'rgb(34, 197, 94)';          // Solid green border
-            } elseif ($dailyTraffic > 50) {
-                $backgroundColors[] = 'rgba(59, 130, 246, 0.2)'; // Light blue for medium traffic
-                $borderColors[] = 'rgb(59, 130, 246)';           // Solid blue border
-            } else {
-                $backgroundColors[] = 'rgba(249, 115, 22, 0.2)'; // Light orange for low traffic
-                $borderColors[] = 'rgb(249, 115, 22)';           // Solid orange border
-            }
-        }
-
-        // --- Additional Traffic Statistics (calculated but not directly displayed in the chart data structure) ---
-        // These can be used for custom tooltips or other dashboard elements if needed.
-        $totalTraffic = array_sum($data);             // Total traffic over the 7 days.
-        $avgTraffic = round($totalTraffic / 7, 1);    // Average daily traffic.
-        $maxTraffic = max($data);                     // Maximum daily traffic.
-        $minTraffic = min($data);                     // Minimum daily traffic.
-
-        // Return the chart data structure required by Filament/Chart.js.
         return [
-            'datasets' => [
-                [
-                    'label' => 'Daily Visitors',      // Label for this dataset (e.g., in the legend).
-                    'data' => $data,                  // The actual numerical data points (daily traffic counts).
-                    'borderColor' => $borderColors,   // Dynamically assigned border colors for the line.
-                    'backgroundColor' => $backgroundColors, // Dynamically assigned background colors for the filled area under the line.
-                    'pointBackgroundColor' => $borderColors, // Background color of the data points.
-                    'pointBorderColor' => '#ffffff',  // Border color of the data points.
-                    'pointBorderWidth' => 2,          // Thickness of the point borders.
-                    'pointRadius' => 6,               // Radius of the data points.
-                    'pointHoverRadius' => 8,          // Radius of the data points on hover.
-                    'fill' => true,                   // Fills the area under the line.
-                    'tension' => 0.4,                 // Line tension (0 for straight lines, higher for more curve).
-                    'borderWidth' => 3,               // Thickness of the line itself.
-                ]
-            ],
-            'labels' => $labels, // Labels for the x-axis (day names and dates).
+            'day' => 'Today (24 Hours)',
+            'week' => 'Last 7 Days',
+            'month' => 'Last 30 Days',
+            'quarter' => 'Last 90 Days',
         ];
     }
 
     /**
-     * Specifies the type of chart to display.
-     * For this widget, it's a 'line' chart.
-     *
-     * @return string The chart type.
+     * Enhanced data retrieval with period filtering and comprehensive statistics.
      */
-    protected function getType(): string
+    protected function getData(): array
     {
-        return 'line'; // Indicates that this will be a line chart.
+        $data = [];
+        $labels = [];
+        $backgroundColors = [];
+        $borderColors = [];
+        $pointColors = [];
+
+        switch ($this->filter) {
+            case 'day':
+                return $this->getDayData();
+            case 'week':
+                return $this->getWeekData();
+            case 'month':
+                return $this->getMonthData();
+            case 'quarter':
+                return $this->getQuarterData();
+            default:
+                return $this->getWeekData();
+        }
     }
 
     /**
-     * Defines the options for the chart's appearance and behavior.
-     * These options are passed directly to Chart.js for rendering.
-     *
-     * @return array An associative array of Chart.js options.
+     * Get hourly data for today (24 hours).
+     */
+    private function getDayData(): array
+    {
+        $data = [];
+        $labels = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        for ($i = 23; $i >= 0; $i--) {
+            $hour = Carbon::now()->subHours($i);
+            $hourFormatted = $hour->format('H:00');
+            $labels[] = $hourFormatted;
+
+            $hourlyTraffic = TrafficLog::whereBetween('created_at', [
+                $hour->startOfHour(),
+                $hour->copy()->endOfHour()
+            ])->count();
+
+            $data[] = $hourlyTraffic;
+            $colors = $this->getColorsByVolume($hourlyTraffic, 'hourly');
+            $backgroundColors[] = $colors['background'];
+            $borderColors[] = $colors['border'];
+        }
+
+        return $this->formatChartData($data, $labels, $backgroundColors, $borderColors, 'Hourly Visitors');
+    }
+
+    /**
+     * Get daily data for the last 7 days (enhanced version).
+     */
+    private function getWeekData(): array
+    {
+        $data = [];
+        $labels = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $dayName = $date->format('D');
+            $dateFormatted = $date->format('d/m');
+            $labels[] = $dayName . "\n" . $dateFormatted;
+
+            $dailyTraffic = TrafficLog::whereDate('created_at', $date)->count();
+            $data[] = $dailyTraffic;
+
+            $colors = $this->getColorsByVolume($dailyTraffic, 'daily');
+            $backgroundColors[] = $colors['background'];
+            $borderColors[] = $colors['border'];
+        }
+
+        return $this->formatChartData($data, $labels, $backgroundColors, $borderColors, 'Daily Visitors');
+    }
+
+    /**
+     * Get daily data for the last 30 days.
+     */
+    private function getMonthData(): array
+    {
+        $data = [];
+        $labels = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        // Group data by weeks for better readability
+        for ($i = 29; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+
+            // Show only every 3rd day label to avoid crowding
+            if ($i % 3 == 0) {
+                $labels[] = $date->format('d/m');
+            } else {
+                $labels[] = '';
+            }
+
+            $dailyTraffic = TrafficLog::whereDate('created_at', $date)->count();
+            $data[] = $dailyTraffic;
+
+            $colors = $this->getColorsByVolume($dailyTraffic, 'daily');
+            $backgroundColors[] = $colors['background'];
+            $borderColors[] = $colors['border'];
+        }
+
+        return $this->formatChartData($data, $labels, $backgroundColors, $borderColors, 'Daily Visitors (30 Days)');
+    }
+
+    /**
+     * Get weekly data for the last 90 days.
+     */
+    private function getQuarterData(): array
+    {
+        $data = [];
+        $labels = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        for ($i = 12; $i >= 0; $i--) {
+            $weekStart = Carbon::today()->subWeeks($i)->startOfWeek();
+            $weekEnd = Carbon::today()->subWeeks($i)->endOfWeek();
+
+            $labels[] = $weekStart->format('d/m') . '-' . $weekEnd->format('d/m');
+
+            $weeklyTraffic = TrafficLog::whereBetween('created_at', [$weekStart, $weekEnd])->count();
+            $data[] = $weeklyTraffic;
+
+            $colors = $this->getColorsByVolume($weeklyTraffic, 'weekly');
+            $backgroundColors[] = $colors['background'];
+            $borderColors[] = $colors['border'];
+        }
+
+        return $this->formatChartData($data, $labels, $backgroundColors, $borderColors, 'Weekly Visitors (90 Days)');
+    }
+
+    /**
+     * Get dynamic colors based on traffic volume and period type.
+     */
+    private function getColorsByVolume(int $volume, string $period): array
+    {
+        $thresholds = [
+            'hourly' => ['high' => 20, 'medium' => 10],
+            'daily' => ['high' => 100, 'medium' => 50],
+            'weekly' => ['high' => 500, 'medium' => 200],
+        ];
+
+        $threshold = $thresholds[$period] ?? $thresholds['daily'];
+
+        if ($volume > $threshold['high']) {
+            return [
+                'background' => 'rgba(16, 185, 129, 0.2)', // Emerald green
+                'border' => 'rgb(16, 185, 129)'
+            ];
+        } elseif ($volume > $threshold['medium']) {
+            return [
+                'background' => 'rgba(59, 130, 246, 0.2)', // Blue
+                'border' => 'rgb(59, 130, 246)'
+            ];
+        } elseif ($volume > 0) {
+            return [
+                'background' => 'rgba(245, 158, 11, 0.2)', // Amber
+                'border' => 'rgb(245, 158, 11)'
+            ];
+        } else {
+            return [
+                'background' => 'rgba(156, 163, 175, 0.2)', // Gray
+                'border' => 'rgb(156, 163, 175)'
+            ];
+        }
+    }
+
+    /**
+     * Format chart data with enhanced styling and statistics.
+     */
+    private function formatChartData(array $data, array $labels, array $backgroundColors, array $borderColors, string $datasetLabel): array
+    {
+        // Calculate comprehensive statistics
+        $totalTraffic = array_sum($data);
+        $avgTraffic = $totalTraffic > 0 ? round($totalTraffic / count($data), 1) : 0;
+        $maxTraffic = count($data) > 0 ? max($data) : 0;
+        $minTraffic = count($data) > 0 ? min($data) : 0;
+        $trend = $this->calculateTrend($data);
+
+        return [
+            'datasets' => [
+                [
+                    'label' => $datasetLabel,
+                    'data' => $data,
+                    'borderColor' => $borderColors,
+                    'backgroundColor' => $backgroundColors,
+                    'pointBackgroundColor' => $borderColors,
+                    'pointBorderColor' => '#ffffff',
+                    'pointBorderWidth' => 3,
+                    'pointRadius' => 5,
+                    'pointHoverRadius' => 8,
+                    'pointHoverBorderWidth' => 4,
+                    'fill' => true,
+                    'tension' => 0.4,
+                    'borderWidth' => 3,
+                    'borderJoinStyle' => 'round',
+                    'borderCapStyle' => 'round',
+                ]
+            ],
+            'labels' => $labels,
+            // Store statistics for potential use in custom tooltips or other components
+            'statistics' => [
+                'total' => $totalTraffic,
+                'average' => $avgTraffic,
+                'maximum' => $maxTraffic,
+                'minimum' => $minTraffic,
+                'trend' => $trend
+            ]
+        ];
+    }
+
+    /**
+     * Calculate traffic trend (simplified).
+     */
+    private function calculateTrend(array $data): string
+    {
+        if (count($data) < 2) return 'stable';
+
+        $firstHalf = array_slice($data, 0, ceil(count($data) / 2));
+        $secondHalf = array_slice($data, floor(count($data) / 2));
+
+        $firstAvg = array_sum($firstHalf) / count($firstHalf);
+        $secondAvg = array_sum($secondHalf) / count($secondHalf);
+
+        if ($secondAvg > $firstAvg * 1.1) return 'increasing';
+        if ($secondAvg < $firstAvg * 0.9) return 'decreasing';
+        return 'stable';
+    }
+
+    /**
+     * Chart type specification.
+     */
+    protected function getType(): string
+    {
+        return 'line';
+    }
+
+    /**
+     * Enhanced chart options with improved UI/UX.
      */
     protected function getOptions(): array
     {
         return [
-            'responsive' => true,          // Chart will resize to fit its container.
-            'maintainAspectRatio' => false, // Allows the chart to fill the container without maintaining aspect ratio.
-            'interaction' => [             // Configuration for user interaction (hover, click).
-                'intersect' => false,      // Tooltips will show for points even if the mouse is not directly over them.
-                'mode' => 'index',         // Tooltips will show data for all datasets at the same x-coordinate.
+            'responsive' => true,
+            'maintainAspectRatio' => false,
+            'interaction' => [
+                'intersect' => false,
+                'mode' => 'index',
             ],
-            'plugins' => [                 // Configuration for Chart.js plugins.
-                'legend' => [              // Legend (dataset labels) configuration.
-                    'display' => true,     // Show the legend.
-                    'position' => 'top',   // Position the legend at the top of the chart.
+            'animation' => [
+                'duration' => 1000,
+                'easing' => 'easeInOutQuart',
+            ],
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                    'position' => 'top',
+                    'align' => 'center',
                     'labels' => [
-                        'usePointStyle' => true, // Use a small colored circle/square for each legend item.
+                        'usePointStyle' => true,
+                        'padding' => 20,
                         'font' => [
-                            'size' => 12,      // Font size for legend labels.
-                            'weight' => 'bold' // Bold font for legend labels.
-                        ]
+                            'size' => 13,
+                            'weight' => 'bold',
+                            'family' => "'Inter', sans-serif"
+                        ],
+                        'color' => '#374151'
                     ]
                 ],
-                'tooltip' => [             // Tooltip (popup on hover) configuration.
-                    'backgroundColor' => 'rgba(0, 0, 0, 0.8)', // Dark background for tooltips.
-                    'titleColor' => '#ffffff',                 // White color for tooltip title.
-                    'bodyColor' => '#ffffff',                  // White color for tooltip body text.
-                    'borderColor' => '#3b82f6',                // Border color for tooltips (Blue).
-                    'borderWidth' => 1,                        // Border width for tooltips.
-                    'cornerRadius' => 8,                       // Rounded corners for tooltips.
-                    'displayColors' => true,                   // Show color box next to tooltip label.
-                    'callbacks' => [                           // Custom formatting for tooltip labels.
+                'tooltip' => [
+                    'enabled' => true,
+                    'backgroundColor' => 'rgba(17, 24, 39, 0.95)',
+                    'titleColor' => '#ffffff',
+                    'bodyColor' => '#e5e7eb',
+                    'borderColor' => '#3b82f6',
+                    'borderWidth' => 2,
+                    'cornerRadius' => 12,
+                    'padding' => 12,
+                    'displayColors' => true,
+                    'titleFont' => [
+                        'size' => 14,
+                        'weight' => 'bold'
+                    ],
+                    'bodyFont' => [
+                        'size' => 13,
+                        'weight' => 'normal'
+                    ],
+                    'callbacks' => [
                         'title' => "function(context) {
-                            // The label context[0].label already contains the formatted 'Day\nDate'.
-                            return 'Traffic Data - ' + context[0].label;
+                            const label = context[0].label;
+                            const period = label.includes(':') ? 'Hour' : (label.includes('-') ? 'Week' : 'Day');
+                            return period + ': ' + label;
                         }",
                         'label' => "function(context) {
-                            return context.dataset.label + ': ' + context.parsed.y + ' visitors'; // Changed to 'visitors' for English consistency
+                            const value = context.parsed.y;
+                            const label = context.dataset.label;
+                            const emoji = value > 100 ? '🔥' : value > 50 ? '📈' : value > 0 ? '📊' : '📉';
+                            return emoji + ' ' + label + ': ' + value.toLocaleString() + ' visitors';
+                        }",
+                        'afterBody' => "function(context) {
+                            const value = context[0].parsed.y;
+                            if (value > 100) return '🎉 High traffic day!';
+                            if (value > 50) return '✨ Good traffic';
+                            if (value > 0) return '💡 Room for growth';
+                            return '🔍 No visitors';
                         }"
                     ]
                 ]
             ],
-            'scales' => [                  // Axis configuration.
-                'x' => [                   // X-axis (horizontal) configuration.
-                    'display' => true,     // Show the x-axis.
+            'scales' => [
+                'x' => [
+                    'display' => true,
                     'grid' => [
-                        'display' => false, // Do not display grid lines for the x-axis.
+                        'display' => false,
+                        'drawBorder' => false,
                     ],
-                    'ticks' => [           // X-axis tick (label) configuration.
+                    'ticks' => [
                         'font' => [
-                            'size' => 11,     // Font size for x-axis labels.
-                            'weight' => 'bold' // Bold font for x-axis labels.
-                        ]
+                            'size' => 11,
+                            'weight' => '600',
+                            'family' => "'Inter', sans-serif"
+                        ],
+                        'color' => '#6b7280',
+                        'maxRotation' => 0,
+                        'padding' => 10
                     ]
                 ],
-                'y' => [                   // Y-axis (vertical) configuration.
-                    'display' => true,     // Show the y-axis.
-                    'beginAtZero' => true, // Ensure the Y-axis starts at zero.
+                'y' => [
+                    'display' => true,
+                    'beginAtZero' => true,
                     'grid' => [
-                        'color' => 'rgba(0, 0, 0, 0.1)', // Light gray color for Y-axis grid lines.
-                        'borderDash' => [5, 5],          // Dashed grid lines for the Y-axis.
+                        'color' => 'rgba(156, 163, 175, 0.2)',
+                        'borderDash' => [3, 3],
+                        'drawBorder' => false,
                     ],
-                    'ticks' => [           // Y-axis tick (label) configuration.
+                    'ticks' => [
                         'font' => [
-                            'size' => 11      // Font size for y-axis labels.
+                            'size' => 11,
+                            'family' => "'Inter', sans-serif"
                         ],
+                        'color' => '#6b7280',
+                        'padding' => 10,
                         'callback' => "function(value) {
-                            return value + ' visits'; // Append 'visits' to Y-axis tick values.
+                            if (value >= 1000) {
+                                return (value / 1000).toFixed(1) + 'k';
+                            }
+                            return value;
                         }"
                     ]
                 ]
             ],
-            'elements' => [                // Configuration for individual chart elements.
-                'point' => [               // Data point specific configurations.
-                    'hoverBackgroundColor' => '#ffffff', // White background when hovering over a point.
+            'elements' => [
+                'point' => [
+                    'hoverBackgroundColor' => '#ffffff',
+                    'hoverBorderWidth' => 4,
+                ],
+                'line' => [
+                    'borderJoinStyle' => 'round',
+                    'borderCapStyle' => 'round',
+                ]
+            ],
+            'layout' => [
+                'padding' => [
+                    'top' => 20,
+                    'right' => 20,
+                    'bottom' => 20,
+                    'left' => 20
                 ]
             ]
+        ];
+    }
+
+    /**
+     * Get header actions for additional functionality.
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            // You can add custom actions here like export, refresh, etc.
+        ];
+    }
+
+    /**
+     * Customize the widget's appearance and behavior.
+     */
+    public function getColumnSpan(): int | string | array
+    {
+        return 'full'; // Make widget span full width for better visibility
+    }
+
+    /**
+     * Add custom CSS classes for enhanced styling.
+     */
+    protected function getExtraBodyAttributes(): array
+    {
+        return [
+            'class' => 'traffic-chart-widget',
+            'style' => 'background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 1rem;'
         ];
     }
 }
