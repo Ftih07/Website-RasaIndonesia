@@ -11,22 +11,38 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ParticipantRegisterProsperityExpoExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
 {
+    protected ?array $ids;
+
+    // ✅ Tambahkan constructor untuk menerima selected IDs
+    public function __construct(array $ids = null)
+    {
+        $this->ids = $ids;
+    }
+
     public function collection()
     {
-        return ParticipantRegisterProsperityExpo::all([
-            'id',
-            'name',
-            'email',
-            'company_name',
-            'position',
-            'contact',
-            'participant_type',
-            'company_type',
-            'product_description',
-            'status',
-            'created_at',
-            'qr_code',
-        ]);
+        $query = ParticipantRegisterProsperityExpo::query()
+            ->select([
+                'id',
+                'name',
+                'email',
+                'company_name',
+                'position',
+                'contact',
+                'participant_type',
+                'company_type',
+                'product_description',
+                'status',
+                'created_at',
+                'qr_code',
+            ]);
+
+        // ✅ Jika ada IDs yang dipilih, filter berdasarkan IDs
+        if (!empty($this->ids)) {
+            $query->whereIn('id', $this->ids);
+        }
+
+        return $query->get();
     }
 
     public function headings(): array
@@ -43,17 +59,13 @@ class ParticipantRegisterProsperityExpoExport implements FromCollection, WithHea
             'Product Description',
             'Status',
             'Registered At',
-            'qr_code',
+            'QR Code',
         ];
     }
 
-    /**
-     * Styling the first row as header (bold, white text, blue background)
-     */
     public function styles(Worksheet $sheet)
     {
         return [
-            // Heading row styling
             1 => [
                 'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
                 'fill' => [

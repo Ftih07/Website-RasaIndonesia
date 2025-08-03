@@ -436,6 +436,28 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                                 'selected-participants-' . now()->format('Y-m-d') . '.xlsx'
                             );
                         }),
+                    Tables\Actions\BulkAction::make('export_selected')
+                        ->label('Export Selected (CSV)')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('info')
+                        ->action(function ($records) {
+                            try {
+                                $ids = $records->pluck('id')->toArray();
+
+                                return \Maatwebsite\Excel\Facades\Excel::download(
+                                    new ParticipantRegisterProsperityExpoExport($ids),
+                                    'selected-participants-' . now()->format('Y-m-d') . '.csv',
+                                    \Maatwebsite\Excel\Excel::CSV // ✅ Export as CSV
+                                );
+                            } catch (\Exception $e) {
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Export Failed')
+                                    ->body('Error while generating the CSV file.')
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
+
                 ]),
             ])
             ->defaultSort('created_at', 'desc') // Sets default sorting for the table (newest first)
