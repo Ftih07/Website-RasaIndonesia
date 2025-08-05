@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Mail\ProsperityExpoMail;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Collection;
 
@@ -55,6 +56,18 @@ class ProsperityExpoSentEmailResource extends Resource
 
                         $record->update(['sent_at' => now()]);
                     }),
+            ])
+            ->filters([
+                TernaryFilter::make('sent_at')
+                    ->label('Email Status')
+                    ->trueLabel('Sent')
+                    ->falseLabel('Not Sent')
+                    ->nullable()
+                    ->queries(
+                        true: fn($query) => $query->whereNotNull('sent_at'),
+                        false: fn($query) => $query->whereNull('sent_at'),
+                        blank: fn($query) => $query,
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('sendSelectedEmails')

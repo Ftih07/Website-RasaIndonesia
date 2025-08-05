@@ -11,8 +11,11 @@ use Filament\Resources\Resource; // Base class for Filament Resources
 use Filament\Tables; // Import for Filament Table components
 use Filament\Tables\Table; // Import for the Table class
 use Filament\Notifications\Notification; // Import for Filament notifications
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder; // Import for Eloquent query builder
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel; // Import for Excel facade (for export functionality)
 
 // This class defines a Filament Resource for managing ParticipantRegisterProsperityExpo records.
@@ -284,6 +287,16 @@ class ParticipantRegisterProsperityExpoResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
+                TernaryFilter::make('email_sent')
+                    ->label('Email Sent')
+                    ->trueLabel('Sent')
+                    ->falseLabel('Not Sent')
+                    ->nullable()
+                    ->queries(
+                        true: fn($query) => $query->where('email_sent', true),
+                        false: fn($query) => $query->where('email_sent', false),
+                        blank: fn($query) => $query,
+                    ),
                 // Select filter for attendance status
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Attendance Status')
@@ -410,6 +423,17 @@ class ParticipantRegisterProsperityExpoResource extends Resource
             ->bulkActions([
                 // Group for bulk actions (actions that apply to multiple selected records)
                 Tables\Actions\BulkActionGroup::make([
+                    BulkAction::make('mark_as_sent')
+                        ->label('Mark as Email Sent')
+                        ->icon('heroicon-o-paper-airplane')
+                        ->color('success')
+                        ->action(
+                            fn(Collection $records) =>
+                            $records->each(fn($record) => $record->update(['email_sent' => true]))
+                        )
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion(),
+
                     // Delete Bulk Action: Allows deleting multiple selected records
                     Tables\Actions\DeleteBulkAction::make(),
 
