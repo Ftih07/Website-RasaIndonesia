@@ -7,6 +7,37 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    @php
+    $url = Request::fullUrl();
+    $title = $currentNews->title ?? 'Taste of Indonesia News';
+    $description = strip_tags(Str::limit($currentNews->desc ?? '', 160));
+    $image = asset('assets/images/logo/logo.png'); // default image/logo
+    if ($currentNews->image_news) {
+    $image = asset('storage/' . $currentNews->image_news);
+    }
+    @endphp
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ $title }}">
+    <meta name="description" content="{{ $description }}">
+    <meta name="keywords" content="{{ $currentNews->meta_keywords ?? 'Indonesian cuisine, Taste of Indonesia, Indonesian food news, culinary event, news article' }}">
+    <meta name="author" content="{{ $currentNews->writer ?? 'Taste of Indonesia' }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ $url }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:image" content="{{ $image }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ $url }}">
+    <meta property="twitter:title" content="{{ $title }}">
+    <meta property="twitter:description" content="{{ $description }}">
+    <meta property="twitter:image" content="{{ $image }}">
+
     <title>Taste of Indonesia</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,8 +60,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
-
-
 
 <body class="body-fixed">
     @include('partials.navbar')

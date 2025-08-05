@@ -108,6 +108,14 @@ class NewsResource extends Resource
                                             ->helperText('Automatically calculated based on content length') // Helpful tips for the user.
                                             ->disabled() // Makes the field read-only as it's auto-calculated.
                                             ->columnSpan(1), // Spans one column.
+
+                                        Forms\Components\Textarea::make('meta_keywords')
+                                            ->label('Meta Keywords')
+                                            ->placeholder('contoh: Indonesian food, culinary news, Taste of Indonesia, diaspora event')
+                                            ->helperText('Pisahkan dengan koma untuk optimasi SEO')
+                                            ->rows(2)
+                                            ->maxLength(1000)
+                                            ->columnSpan(2),
                                     ]),
 
                                 Forms\Components\RichEditor::make('desc')

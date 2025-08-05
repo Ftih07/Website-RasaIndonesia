@@ -39,6 +39,7 @@ class News extends Model
         'time_read',      // Estimated reading time of the article (optional display field).
         'date_published', // The date and time when the news article was published.
         'desc',           // The main content or description of the news article.
+        'meta_keywords',
         'status',         // The publication status of the news article (e.g., 'draft', 'published').
     ];
 
