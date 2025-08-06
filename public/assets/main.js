@@ -113,7 +113,6 @@ $(document).ready(function ($) {
     }
 
     var scene = $(".js-parallax-scene").get(0);
-    var parallaxInstance = new Parallax(scene);
 });
 
 jQuery(window).on("load", function () {

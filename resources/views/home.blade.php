@@ -85,7 +85,8 @@
     <script>
         Swal.fire({
             icon: 'success',
-            title: '{{ session('success') }}', // ✅ tidak ada spasi
+            title: '{{ session('
+            success ') }}', // ✅ tidak ada spasi
             showConfirmButton: false,
             timer: 2000
         });
@@ -684,7 +685,6 @@
                     </div>
                 </div>
             </section>
-
             <section class="collection">
                 <div class="swiper-container mySwiper">
                     <div class="swiper-wrapper">
@@ -695,13 +695,14 @@
                                 <h3>{{ Str::limit(strip_tags($item->title), 20) }}</h3>
                                 <p>{{ Str::limit(strip_tags($item->desc), 100) }}</p>
                                 <div class="button-container-news">
-                                    <a href="{{ route('news.show', $item->slug) }}" class="view-all-button-news">Read More</a>
+                                    <a href="{{ route('news.show', $item->slug) }}" class="view-all-button-news">
+                                        Read More <span class="visually-hidden">about {{ $item->title }}</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         @endforeach
                     </div>
-
 
                     <div class="swiper-button-wp-news">
                         <div class="swiper-button-prev swiper-button">
@@ -714,8 +715,11 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </section>
+
             <div class="button-container-news-view-all">
-                <a href="{{ route('news.index') }}" class="view-all-button-news-view-all">View All</a>
+                <a href="{{ route('news.index') }}" class="view-all-button-news-view-all">
+                    View All <span class="visually-hidden">news articles</span>
+                </a>
             </div>
 
             <!-- Contact Want to add your business  -->

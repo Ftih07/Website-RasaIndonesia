@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Indonesian Stores & Restaurants in Australia | Taste of Indonesia</title>
     <meta name="description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
     <meta name="keywords" content="Indonesian restaurants Australia, Indonesian stores, halal Indonesian food, Indonesian groceries, Taste of Indonesia">
@@ -67,9 +67,6 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <!-- bootstrap  -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <!-- for swiper slider  -->
-    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
-
     <!-- fancy box  -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- custom css  -->
@@ -200,7 +197,10 @@
                                         <div class="dish-box text-center">
                                             <!-- Business Logo -->
                                             <div class="dist-img">
-                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}">
+                                                <img
+                                                    src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
+                                                    alt="{{ $business->name_business }}"
+                                                    fetchpriority="high">
                                             </div>
                                             <!-- Business Rating -->
                                             <div class="dish-rating">
@@ -238,6 +238,7 @@
                                             <!-- Business Actions -->
                                             <div class="menu-tab text-center">
                                                 <ul>
+                                                    <div class="filter-active-data"></div>
                                                     <li class="filter-data active">
                                                         <a href="{{ route('business.show', $business->slug) }}">
                                                             <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
@@ -310,9 +311,6 @@
 
         <!-- fontawesome  -->
         <script src="assets/js/font-awesome.min.js"></script>
-
-        <!-- swiper slider  -->
-        <script src="assets/js/swiper-bundle.min.js"></script>
 
         <!-- mixitup -- filter  -->
         <script src="assets/js/jquery.mixitup.min.js"></script>

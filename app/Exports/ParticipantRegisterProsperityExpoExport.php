@@ -59,7 +59,7 @@ class ParticipantRegisterProsperityExpoExport implements FromCollection, WithHea
             'Product Description',
             'Status',
             'Registered At',
-            'QR Code',
+            'qr_code',
         ];
     }
 
