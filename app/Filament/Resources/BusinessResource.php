@@ -597,7 +597,7 @@ class BusinessResource extends Resource
                     ->columnSpanFull() // Makes the tabs span the full width of the form.
                     ->persistTabInQueryString(), // Retains the active tab across page loads via URL query string.
             ]);
-    }
+    } 
 
     /**
      * Defines the table structure for displaying business records.

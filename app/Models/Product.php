@@ -17,6 +17,7 @@ class Product extends Model
         'serving',
         'price',
         'max_distance',
+        'is_sell',
     ];
 
     /**
@@ -32,6 +33,7 @@ class Product extends Model
 
     protected $casts = [
         'variants' => 'array',
+        'is_sell' => 'boolean',
     ];
 
     public function categories()

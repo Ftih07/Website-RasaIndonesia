@@ -69,18 +69,38 @@ class BusinessController extends Controller
         ));
     }
 
-
     public function menu($slug)
     {
-        // Get business by slug, including product relationships
-        $business = Business::with('products')->where('slug', $slug)->firstOrFail();
+        $business = Business::with([
+            'products.optionGroups.options',
+            'products.categories',
+        ])->where('slug', $slug)->firstOrFail();
 
-        // Retrieve all menus from the products relation
-        $menus = $business->products()->latest()->get();
+        $menus = $business->products()
+            ->with(['optionGroups.options', 'categories'])
+            ->latest()
+            ->get()
+            ->map(function ($menu) {
+                $menu->option_data = $menu->optionGroups->map(function ($group) {
+                    return [
+                        'group_name' => $group->name,
+                        'max_selection' => $group->max_selection,
+                        'is_required'   => (bool) $group->is_required,
+                        'options' => $group->options->map(function ($option) {
+                            return [
+                                'id' => $option->id,
+                                'name' => $option->name,
+                                'price' => $option->price,
+                            ];
+                        }),
+                    ];
+                });
+
+                return $menu;
+            });
 
         return view('business.menu', compact('business', 'menus'));
     }
-
 
     public function create()
     {

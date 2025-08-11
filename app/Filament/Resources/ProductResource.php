@@ -54,9 +54,8 @@ class ProductResource extends Resource
                     ->image(),
 
                 // Input field for product type (required)
-                Forms\Components\TextInput::make('type')
-                    ->required(),
-
+                Forms\Components\TextInput::make('type'),
+                
                 // Optional input field for serving information (default null, max length 255 characters)
                 Forms\Components\TextInput::make('serving')
                     ->maxLength(255)
@@ -67,6 +66,11 @@ class ProductResource extends Resource
                     ->required()
                     ->numeric()
                     ->prefix('$'),
+                // ✅ Toggle untuk status jual
+                Forms\Components\Toggle::make('is_sell')
+                    ->label('Sell this product?')
+                    ->default(false) // defaultnya tidak dijual
+                    ->helperText('If unchecked, product will be hidden from cart.'),
             ]);
     }
 
@@ -103,6 +107,11 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
+
+                // ✅ Kolom status jual
+                Tables\Columns\IconColumn::make('is_sell')
+                    ->boolean()
+                    ->label('Selling?'),
 
                 // Column for created_at timestamp (sortable, toggleable visibility)
                 Tables\Columns\TextColumn::make('created_at')

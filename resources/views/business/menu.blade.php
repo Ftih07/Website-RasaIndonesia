@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/images/logo/logo.png'))">
 
@@ -18,6 +20,7 @@
     <!-- bootstrap  -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- for swiper slider  -->
     <link rel="stylesheet" href="{{ asset('assets/css/swiper-bundle.min.css') }}">
@@ -35,8 +38,7 @@
 
 
 <body class="body-fixed">
-    @include('partials.navbar')
-
+    @include('cart.partials.navbar')
 
     <!-- Catalogue Menu  -->
     <section style="background-image: url(assets/images/menu-bg.png);"
@@ -61,6 +63,7 @@
                 </div>
             </div>
         </div>
+
         <div class="sec-wp">
             <div class="container">
                 <div class="row">
@@ -80,6 +83,15 @@
                         <ion-icon name="document-outline"></ion-icon> Catalogue List
                     </a>
                 </div>
+
+                @php
+                $allCategories = collect();
+                foreach ($menus as $menu) {
+                $allCategories = $allCategories->merge($menu->categories);
+                }
+                $allCategories = $allCategories->unique('id');
+                @endphp
+
                 <div class="menu-tab-wp">
                     <div class="row">
                         <div class="col-lg-12 m-auto">
@@ -90,15 +102,12 @@
                                         <img src="{{ asset('assets/images/menu-1.png') }}" alt="" class="icon-filter">
                                         All
                                     </li>
-                                    <li class="filter" data-filter=".food">
+                                    @foreach($allCategories as $cat)
+                                    <li class="filter" data-filter=".category-{{ Str::slug($cat->name) }}">
                                         <img src="{{ asset('assets/images/icon/makanan.png') }}" alt="" class="icon-filter">
-                                        Foods
+                                        {{ $cat->name }}
                                     </li>
-                                    <li class="filter" data-filter=".drink">
-                                        <img src="{{ asset('assets/images/icon/minuman.png') }}" alt="" class="icon-filter">
-                                        Drinks
-                                    </li>
-                                    <!-- Search Field -->
+                                    @endforeach
                                     <li class="filter">
                                         <input type="text" id="search-keyword" class="form-control" placeholder="Search Here" value="{{ request('keyword') }}">
                                     </li>
@@ -108,11 +117,12 @@
                     </div>
                 </div>
 
-                <!-- Your existing menu list markup -->
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show-menu" id="menu-list">
                         @foreach($menus as $menu)
-                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}" data-cat="{{ $menu->type }}" data-name="{{ strtolower($menu->name) }}">
+                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}
+                    @foreach($menu->categories as $cat) category-{{ Str::slug($cat->name) }} @endforeach"
+                            data-cat="{{ $menu->type }}" data-name="{{ strtolower($menu->name) }}">
                             <div class="dish-box text-center" data-menu-id="{{ $menu->id }}">
                                 <div class="dist-img">
                                     <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
@@ -135,13 +145,32 @@
                                         </li>
                                     </ul>
                                 </div>
+
                                 <div class="dist-bottom-row">
                                     <ul>
                                         <li>
                                             <b>${{ $menu->price }}</b>
                                         </li>
                                         <li>
-                                            <button class="dish-add-btn">
+                                            @php
+                                            $categories = $menu->categories->pluck('name')->toArray(); // ambil nama kategori produk ini
+                                            @endphp
+
+                                            <button class="dish-add-btn"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#productModal"
+                                                data-id="{{ $menu->id }}"
+                                                data-business_id="{{ $business->id }}"
+                                                data-name="{{ $menu->name }}"
+                                                data-price="{{ $menu->price }}"
+                                                data-max_distance="{{ $menu->max_distance }}"
+                                                data-serving="{{ $menu->serving }}"
+                                                data-desc="{{ $menu->desc }}"
+                                                data-business="{{ $business->name }}"
+                                                data-image="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
+                                                data-options='@json($menu->option_data)'
+                                                data-categories='@json($categories)'
+                                                data-is-sell="{{ $menu->is_sell ? 1 : 0 }}">
                                                 <i class="fa fa-expand-alt"></i>
                                             </button>
                                         </li>
@@ -156,7 +185,6 @@
             </div>
         </div>
     </section>
-
 
     <!-- Product Detail Modal -->
     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
@@ -180,12 +208,24 @@
                             <div class="product-details-scroll">
                                 <div class="p-4 p-lg-5">
 
+                                    <!-- Hidden Inputs -->
+                                    <input type="hidden" id="modal-product-id">
+                                    <input type="hidden" id="modal-business-id">
+
                                     <!-- Price -->
                                     <div class="mb-4">
                                         <span class="badge bg-orange mb-2 featured-badge">Menu</span>
+                                        <span id="modal-product-categories" class="text-muted fst-italic ms-2"></span>
                                         <h2 id="modal-product-name" class="product-title mb-1"></h2>
                                         <p id="modal-product-business" class=""></p>
-                                        <h3 id="modal-product-price" class="text-orange fw-bold mb-0 price-tag"></h3>
+                                        <h3 id="modal-product-price" class="text-orange fw-bold mb-2 price-tag"></h3>
+
+                                        <!-- Quantity Selector -->
+                                        <div class="d-flex align-items-center">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="qty-minus">-</button>
+                                            <input type="number" id="qty-input" class="form-control form-control-sm text-center" value="1" min="1" style="width: 60px;">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm ms-2" id="qty-plus">+</button>
+                                        </div>
                                     </div>
 
                                     <!-- Product Highlights -->
@@ -197,7 +237,8 @@
                                                         <i class="fas fa-utensils"></i>
                                                     </div>
                                                     <div class="highlight-info">
-                                                        <span class="highlight-label">Type</span>
+                                                        <!-- Ganti bagian label “Type” -->
+                                                        <span class="highlight-label">Max Distance</span>
                                                         <p id="modal-product-type" class="highlight-value"></p>
                                                     </div>
                                                 </div>
@@ -222,12 +263,42 @@
                                         <p id="modal-product-desc" class="description-text"></p>
                                     </div>
 
-                                    <!-- Product Variants -->
-                                    <div id="variants-section" class="product-variants mb-4">
-                                        <h5 class="section-title">Variants & Complements</h5>
-                                        <div id="modal-product-variants" class="row g-3">
-                                            <!-- Variants will be added here -->
+                                    <!-- Option Groups -->
+                                    <div id="modal-option-groups" class="mb-4">
+                                        <h5 class="section-title">Your Selection</h5>
+                                        <div id="option-groups-container">
+                                            {{-- Diisi pakai JavaScript --}}
                                         </div>
+                                    </div>
+
+                                    <!-- Note Field -->
+                                    <div class="mb-3">
+                                        <label for="cart-note" class="form-label">Note (Optional)</label>
+                                        <textarea id="cart-note" class="form-control" placeholder="Add additional notes..."></textarea>
+                                    </div>
+
+                                    <!-- Preference If Unavailable -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Preference if unavailable</label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="preference_if_unavailable" id="merchant_recommendation" value="merchant_recommendation" checked>
+                                                <label class="form-check-label" for="merchant_recommendation">
+                                                    Go with Merchant Recommendation
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="preference_if_unavailable" id="contact_me" value="contact_me">
+                                                <label class="form-check-label" for="contact_me">
+                                                    Contact Me
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Add to Cart Button -->
+                                    <div class="text-end">
+                                        <button type="button" id="add-to-cart-btn" class="btn btn-primary">Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -238,7 +309,82 @@
         </div>
     </div>
 
-    <!-- Order and Reserve  -->
+    <!-- Edit Cart Item Modal -->
+    <div class="modal fade" id="editCartItemModal" tabindex="-1" aria-labelledby="editCartItemLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fw-bold" id="editCartItemLabel">Edit Cart Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+
+                    <!-- Product Info (readonly) -->
+                    <div class="d-flex align-items-start mb-3">
+                        <img id="edit-product-image" src="" alt="Product Image" class="me-3 rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h4 id="edit-product-name"></h4>
+                            <p>Price per unit: $<span id="edit-product-unit-price"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="mb-3 d-flex align-items-center">
+                        <label for="edit-qty-input" class="form-label me-2">Quantity:</label>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="edit-qty-minus">-</button>
+                        <input type="number" id="edit-qty-input" class="form-control form-control-sm text-center" value="1" min="1" style="width: 60px;">
+                        <button type="button" class="btn btn-outline-secondary btn-sm ms-2" id="edit-qty-plus">+</button>
+                    </div>
+
+                    <!-- Option Groups (checkboxes) -->
+                    <div id="edit-option-groups-container" class="mb-3"></div>
+
+                    <!-- Note -->
+                    <div class="mb-3">
+                        <label for="edit-cart-note" class="form-label">Note (Optional)</label>
+                        <textarea id="edit-cart-note" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <!-- Preference if unavailable -->
+                    <div class="mb-3">
+                        <label class="form-label">Preference if unavailable</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_merchant_recommendation" value="merchant_recommendation">
+                                <label class="form-check-label" for="edit_merchant_recommendation">Go with Merchant Recommendation</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_contact_me" value="contact_me">
+                                <label class="form-check-label" for="edit_contact_me">Contact Me</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save button -->
+                    <div class="text-end">
+                        <button type="button" id="save-cart-item-btn" class="btn btn-primary">Save Changes</button>
+                    </div>
+
+                    <input type="hidden" id="edit-cart-row-id">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="currentBusinessId" value="{{ $business->id ?? '' }}">
+
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h5>Your Cart</h5>
+            <button id="closeCartBtn" class="btn-close"></button>
+        </div>
+        <div id="cartItemsContainer" class="cart-items"></div>
+        <div class="cart-footer">
+            <button id="checkoutBtn" class="btn btn-primary w-100">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Order and Reserve -->
     <section class="body-order">
         <div class="container">
             <div class="row">
@@ -420,10 +566,8 @@
         nomodule
         src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <!-- jquery  -->
@@ -462,6 +606,308 @@
     <!-- custom js  -->
     <script src="{{ asset('assets/main.js') }}"></script>
 
+    <!-- JavaScript for Menu and Modal Functionality -->
+    <script src="{{ asset('js/cart.js') }}"></script>
+
+    {{-- Tambahkan script JS filter MixItUp kalau pakai --}}
+    <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const editCartItemModal = new bootstrap.Modal(document.getElementById("editCartItemModal"));
+            const editQtyInput = document.getElementById("edit-qty-input");
+            const editQtyMinus = document.getElementById("edit-qty-minus");
+            const editQtyPlus = document.getElementById("edit-qty-plus");
+            const editOptionGroupsContainer = document.getElementById("edit-option-groups-container");
+            const editCartNote = document.getElementById("edit-cart-note");
+            const saveCartItemBtn = document.getElementById("save-cart-item-btn");
+            const editCartRowIdInput = document.getElementById("edit-cart-row-id");
+            const editProductName = document.getElementById("edit-product-name");
+            const editProductUnitPrice = document.getElementById("edit-product-unit-price");
+
+            // Fungsi untuk load data cart item dari server dan tampilkan di modal edit
+            function loadCartItem(rowId) {
+                fetch(`/cart/item/${rowId}`, {
+                        headers: {
+                            Accept: "application/json"
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert("Failed to load cart item");
+                            return;
+                        }
+
+                        const item = data.cart_item;
+
+                        document.getElementById("edit-product-image").src = item.product.image_url;
+
+                        editCartRowIdInput.value = item.id;
+                        editProductName.textContent = item.product.name;
+                        editProductUnitPrice.textContent = parseFloat(item.unit_price).toFixed(2);
+                        editQtyInput.value = item.quantity;
+                        editCartNote.value = item.note || "";
+
+                        // Set radio preference
+                        const pref = item.preference_if_unavailable || "merchant_recommendation";
+                        document.querySelectorAll('input[name="edit_preference_if_unavailable"]').forEach(radio => {
+                            radio.checked = radio.value === pref;
+                        });
+
+                        // Dapatkan ID opsi yang sudah dipilih user di cart
+                        let selectedOptionIds = [];
+                        try {
+                            const selectedOptionGroups = JSON.parse(item.options) || [];
+                            selectedOptionGroups.forEach(group => {
+                                group.selected.forEach(opt => {
+                                    selectedOptionIds.push(opt.id);
+                                });
+                            });
+                        } catch {
+                            selectedOptionIds = [];
+                        }
+
+                        // Render semua option groups lengkap
+                        editOptionGroupsContainer.innerHTML = "";
+                        const allGroups = data.all_option_groups || [];
+
+                        allGroups.forEach(group => {
+                            const groupWrapper = document.createElement("div");
+                            groupWrapper.className = "mb-3";
+
+                            const label = document.createElement("label");
+                            label.className = "form-label fw-bold";
+                            label.textContent = `${group.group_name} ${group.max_selection ? `(Max ${group.max_selection})` : ""} ${group.is_required ? "*" : ""}`;
+                            groupWrapper.appendChild(label);
+
+                            (group.options || []).forEach(option => {
+                                const optionId = option.id;
+                                const optionName = option.name;
+                                const optionPrice = option.price || 0;
+
+                                const id = `edit-option-${group.group_id}-${optionId}`;
+                                const checked = selectedOptionIds.includes(optionId) ? "checked" : "";
+
+                                const optionWrapper = document.createElement("div");
+                                optionWrapper.className = "form-check";
+
+                                optionWrapper.innerHTML = `
+                                    <input class="form-check-input" type="checkbox" name="edit_option_group_${group.group_id}" id="${id}" value="${optionId}" data-price="${optionPrice}" ${checked}>
+                                    <label class="form-check-label" for="${id}">
+                                    ${optionName} ${optionPrice > 0 ? `(+ $${optionPrice})` : ""}
+                                    </label>
+                                `;
+
+                                groupWrapper.appendChild(optionWrapper);
+                            });
+
+                            editOptionGroupsContainer.appendChild(groupWrapper);
+                        });
+
+                        // Setelah render opsi selesai, panggil init modal (harga total & validasi max_selection)
+                        window.initEditCartModal();
+                    })
+                    .catch(() => alert("Failed to load cart item"));
+            }
+
+            // Fungsi hitung total harga (unitPrice * qty + total options price * qty)
+            function calculateTotalPrice() {
+                const basePrice = parseFloat(editProductUnitPrice.textContent) || 0;
+                const qty = parseInt(editQtyInput.value) || 1;
+
+                // Hitung total harga option yang dipilih
+                let totalOptionsPrice = 0;
+
+                // Untuk setiap group, jumlah harga option yg dicentang
+                editOptionGroupsContainer.querySelectorAll("div.mb-3").forEach(groupEl => {
+                    groupEl.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                        totalOptionsPrice += parseFloat(cb.dataset.price) || 0;
+                    });
+                });
+
+                // Total harga per unit = basePrice + totalOptionsPrice
+                const totalPerUnit = basePrice + totalOptionsPrice;
+
+                // Total keseluruhan
+                const total = totalPerUnit * qty;
+
+                // Tampilkan hasil di UI (misal di elemen khusus, atau update label)
+                // Kalau belum ada elemen khusus, buat dulu dan tambahkan di modal
+                let totalPriceEl = document.getElementById("edit-total-price");
+                if (!totalPriceEl) {
+                    totalPriceEl = document.createElement("div");
+                    totalPriceEl.id = "edit-total-price";
+                    totalPriceEl.className = "fw-bold fs-5 mb-3";
+                    // Tempatkan di atas tombol Save
+                    saveCartItemBtn.parentElement.insertBefore(totalPriceEl, saveCartItemBtn);
+                }
+                totalPriceEl.textContent = `Total Price: $${total.toFixed(2)}`;
+            }
+
+            // Fungsi validasi max_selection tiap group
+            function validateOptionGroups() {
+                let valid = true;
+
+                editOptionGroupsContainer.querySelectorAll("div.mb-3").forEach(groupEl => {
+                    const label = groupEl.querySelector("label.form-label").textContent;
+                    const maxMatch = label.match(/\(Max (\d+)\)/);
+                    const maxSelection = maxMatch ? parseInt(maxMatch[1]) : null;
+
+                    // Cek apakah grup ini required
+                    const isRequired = label.includes("*");
+
+                    // Hitung jumlah checkbox tercentang
+                    const checkedCount = groupEl.querySelectorAll('input[type="checkbox"]:checked').length;
+
+                    // Reset style dulu
+                    groupEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        cb.classList.remove("is-invalid");
+                    });
+
+                    // Validasi max_selection
+                    if (maxSelection !== null && checkedCount > maxSelection) {
+                        valid = false;
+                        groupEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                            cb.classList.add("is-invalid");
+                        });
+                    }
+
+                    // Validasi required (minimal 1 tercentang)
+                    if (isRequired && checkedCount === 0) {
+                        valid = false;
+                        groupEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                            cb.classList.add("is-invalid");
+                        });
+                    }
+                });
+
+                // Enable/disable tombol Save
+                saveCartItemBtn.disabled = !valid;
+            }
+
+            // Event listener untuk quantity plus/minus
+            editQtyMinus.addEventListener("click", () => {
+                let val = parseInt(editQtyInput.value);
+                if (val > 1) {
+                    editQtyInput.value = val - 1;
+                    calculateTotalPrice();
+                }
+            });
+
+            editQtyPlus.addEventListener("click", () => {
+                let val = parseInt(editQtyInput.value);
+                editQtyInput.value = val + 1;
+                calculateTotalPrice();
+            });
+
+            // Update harga saat quantity diubah manual
+            editQtyInput.addEventListener("input", () => {
+                let val = parseInt(editQtyInput.value);
+                if (!val || val < 1) {
+                    editQtyInput.value = 1;
+                }
+                calculateTotalPrice();
+            });
+
+            // Event listener saat checkbox option diubah
+            editOptionGroupsContainer.addEventListener("change", e => {
+                if (e.target.matches('input[type="checkbox"]')) {
+                    validateOptionGroups();
+                    calculateTotalPrice();
+                }
+            });
+
+            // Inisialisasi awal waktu load modal
+            // (panggil ini di akhir loadCartItem setelah render checkbox dan set value)
+            function initModal() {
+                calculateTotalPrice();
+                validateOptionGroups();
+            }
+
+            // expose initModal supaya bisa dipanggil setelah loadCartItem selesai render
+            window.initEditCartModal = initModal;
+
+            // Event untuk tombol edit cart item di sidebar
+            document.getElementById("cartItemsContainer").addEventListener("click", function(e) {
+                if (e.target.classList.contains("edit-cart-item")) {
+                    const rowId = e.target.dataset.row;
+                    loadCartItem(rowId);
+                    editCartItemModal.show();
+                }
+            });
+
+            // Save edited cart item
+            saveCartItemBtn.addEventListener("click", () => {
+                const rowId = editCartRowIdInput.value;
+                const quantity = parseInt(editQtyInput.value);
+                const note = editCartNote.value.trim();
+                const preference = document.querySelector('input[name="edit_preference_if_unavailable"]:checked')?.value;
+
+                // Ambil selected options
+                const optionGroups = [];
+                editOptionGroupsContainer.querySelectorAll("div.mb-3").forEach(groupEl => {
+                    const groupName = groupEl.querySelector("label.form-label").textContent.trim();
+                    const selected = [];
+
+                    groupEl.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                        selected.push({
+                            id: parseInt(cb.value),
+                            price: parseFloat(cb.dataset.price) || 0,
+                        });
+                    });
+
+                    if (selected.length > 0) {
+                        optionGroups.push({
+                            group_name: groupName,
+                            selected: selected,
+                        });
+                    }
+                });
+
+                fetch(`/cart/update/${rowId}`, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                        body: JSON.stringify({
+                            quantity: quantity,
+                            note: note,
+                            preference_if_unavailable: preference,
+                            options: JSON.stringify(optionGroups),
+                        }),
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("Update cart response:", data);
+                        if (data.success) {
+                            alert("Cart item updated!");
+                            editCartItemModal.hide();
+
+                            location.reload();
+                            try {
+                                fetchAndRenderCart(currentBusinessId);
+                            } catch (e) {
+                                console.error("fetchAndRenderCart error:", e);
+                            }
+
+                        } else {
+                            alert(data.message || "Failed to update cart item");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Fetch error:", err);
+                        alert("Failed to update cart item");
+                    });
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const searchInput = document.getElementById('search-keyword');
@@ -479,138 +925,6 @@
                     }
                 });
             });
-        });
-    </script>
-
-    <!-- JavaScript for Menu and Modal Functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Make sure we have the menu data available in JavaScript
-            const menuData = @json($menus);
-            const businessData = {
-                name: '{{ $business->name }}',
-                logo: '{{ $business->logo }}'
-            };
-
-            // Add Font Awesome if not already included
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const fontAwesome = document.createElement('link');
-                fontAwesome.rel = 'stylesheet';
-                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
-                document.head.appendChild(fontAwesome);
-            }
-
-            // Add click event listeners to all dish boxes
-            document.querySelectorAll('.dish-box-wp').forEach(item => {
-                const box = item.querySelector('.dish-box');
-                const addBtn = item.querySelector('.dish-add-btn');
-                const menuId = box.getAttribute('data-menu-id');
-
-                // Make the entire dish box clickable
-                box.addEventListener('click', function(e) {
-                    if (!e.target.closest('.dish-add-btn')) {
-                        openProductModal(menuId);
-                    }
-                });
-
-                // Also handle the add button clicks separately
-                if (addBtn) {
-                    addBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        openProductModal(menuId);
-                    });
-                }
-            });
-
-            // Function to open modal and populate data
-            function openProductModal(menuId) {
-                const menu = menuData.find(m => m.id == menuId);
-                if (!menu) {
-                    console.error('Menu not found:', menuId);
-                    return;
-                }
-
-                // Populate main product details
-                document.getElementById('modal-product-name').textContent = menu.name;
-                document.getElementById('modal-product-business').textContent = businessData.name;
-
-                // Price with currency formatting
-                document.getElementById('modal-product-price').textContent = '$' + menu.price;
-
-                // Format product type and details
-                document.getElementById('modal-product-type').textContent = menu.type.charAt(0).toUpperCase() + menu.type.slice(1);
-                document.getElementById('modal-product-serving').textContent = menu.serving || '-';
-
-                // Description with fallback
-                const description = menu.desc || 'A delicious offering from our kitchen. Prepared with the finest ingredients to satisfy your cravings.';
-                document.getElementById('modal-product-desc').textContent = description;
-
-                // Handle image with enhanced error handling
-                const imgSrc = menu.image ?
-                    `/storage/${menu.image}` :
-                    (businessData.logo ? `/storage/${businessData.logo}` : '/assets/images/logo/logo.png');
-
-                const productImage = document.getElementById('modal-product-image');
-                productImage.src = imgSrc;
-                productImage.onerror = function() {
-                    this.src = '/assets/images/logo/logo.png';
-                };
-
-                // Variants handling with enhanced UI
-                const variantsContainer = document.getElementById('modal-product-variants');
-                const variantsSection = document.getElementById('variants-section');
-                variantsContainer.innerHTML = '';
-
-                if (menu.variants && menu.variants.length > 0) {
-                    variantsSection.style.display = 'block';
-                    menu.variants.forEach(variant => {
-                        const variantElem = document.createElement('div');
-                        variantElem.className = 'col-md-6';
-                        variantElem.innerHTML = `
-                    <div class="variant-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="variant-name">${variant.name}</span>
-                            </div>
-                            <div>
-                                <span class="variant-price text-orange">$${variant.price}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                        variantsContainer.appendChild(variantElem);
-                    });
-                } else {
-                    variantsSection.style.display = 'none';
-                }
-
-                // Fix for Bootstrap modal z-index
-                document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-                    backdrop.style.zIndex = "1050";
-                });
-
-                document.getElementById('productModal').style.zIndex = "1055";
-
-                // Show modal
-                const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-                productModal.show();
-
-                // After modal is shown, adjust the height of scrollable content to match image height
-                productModal._element.addEventListener('shown.bs.modal', function() {
-                    setTimeout(() => {
-                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
-                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
-                    }, 100);
-                });
-
-                // Handle window resize
-                window.addEventListener('resize', function() {
-                    if (document.getElementById('productModal').classList.contains('show')) {
-                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
-                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
-                    }
-                });
-            }
         });
     </script>
 

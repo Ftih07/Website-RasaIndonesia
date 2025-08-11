@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Middleware\CheckRole;
 use App\Http\Controllers\DashboardBusinessController;
+use App\Http\Controllers\CartController;
 
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Dashboard\TestimonialController;
@@ -185,6 +186,17 @@ Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/events/{slug}', [EventsController::class, 'show'])->name('events.show');
 
 Route::get('/business/{slug}/menu', [BusinessController::class, 'menu'])->name('business.menu');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'getCart'])->name('cart.get'); // Ambil data cart
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Tambah item
+
+    // Gunakan {rowId} untuk update, remove, dan getCartItem
+    Route::post('/cart/update/{rowId}', [CartController::class, 'update'])->name('cart.update'); 
+    Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove'])->name('cart.remove'); 
+    Route::get('/cart/item/{rowId}', [CartController::class, 'getCartItem'])->name('cart.item');
+});
+
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');
 
