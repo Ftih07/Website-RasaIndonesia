@@ -597,7 +597,7 @@ class BusinessResource extends Resource
                     ->columnSpanFull() // Makes the tabs span the full width of the form.
                     ->persistTabInQueryString(), // Retains the active tab across page loads via URL query string.
             ]);
-    } 
+    }
 
     /**
      * Defines the table structure for displaying business records.
@@ -928,6 +928,47 @@ class BusinessResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('Cabut Kepemilikan')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (Business $record) {
+                        if ($record->user_id) {
+                            $userId = $record->user_id;
+                            $businessName = $record->name;
+
+                            // Cabut kepemilikan
+                            $record->user_id = null;
+                            $record->is_verified = false;
+                            $record->save();
+
+                            // Hapus role seller dari user
+                            $user = \App\Models\User::find($userId);
+                            if ($user) {
+                                $user->removeRole('seller');
+
+                                // Kirim notifikasi ke user
+                                \App\Helpers\NotificationHelper::send(
+                                    $userId,
+                                    'Kepemilikan Bisnis Dicabut',
+                                    'Kepemilikan Anda atas bisnis "' . $businessName . '" telah dicabut oleh admin.',
+                                    route('dashboard')
+                                );
+                            }
+
+                            // Notifikasi ke admin di Filament
+                            \Filament\Notifications\Notification::make()
+                                ->title('Kepemilikan bisnis berhasil dicabut.')
+                                ->success()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Tidak ada user yang memiliki bisnis ini.')
+                                ->danger()
+                                ->send();
+                        }
+                    })
+                    ->visible(fn(Business $record) => $record->user_id !== null),
+
                 // Action to display a quick view modal of the business.
                 Tables\Actions\ViewAction::make('quick_view')
                     ->label('Quick View') // Button label

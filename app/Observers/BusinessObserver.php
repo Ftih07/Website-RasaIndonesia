@@ -10,17 +10,29 @@ class BusinessObserver
 {
     public function updating(Business $business): void
     {
-        // Cek apakah sebelumnya belum terverifikasi dan sekarang di-set true
+        // Case: bisnis baru diverifikasi
         if (!$business->getOriginal('is_verified') && $business->is_verified) {
             $user = $business->user;
 
-            // Assign role 'seller' ke user (jika belum punya)
             if ($user && !$user->roles()->where('name', 'seller')->exists()) {
                 $role = Role::where('name', 'seller')->first();
                 if ($role) {
                     $user->roles()->attach($role->id);
                 }
             }
+        }
+
+        // Case: cabut kepemilikan
+        $originalUserId = $business->getOriginal('user_id');
+        if ($originalUserId && is_null($business->user_id)) {
+            $user = \App\Models\User::find($originalUserId);
+
+            if ($user && $user->hasRole('seller')) {
+                $user->removeRole('seller');
+            }
+
+            // Optional: ubah is_verified jadi false
+            $business->is_verified = false;
         }
     }
 

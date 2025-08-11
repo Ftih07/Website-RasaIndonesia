@@ -177,20 +177,13 @@ class Business extends Model
      */
     protected static function booted(): void
     {
-        // Register an event listener for when a Business model is being created (inserted for the first time).
         static::creating(function ($business) {
-            // Generates a unique slug for the business based on its name and a unique ID.
-            // A slug is a URL-friendly version of a string, typically used in permalinks.
-            // `uniqid()` is added to ensure uniqueness, even if business names are identical.
             $business->slug = Str::slug($business->name . '-' . uniqid());
         });
 
-        // Register an event listener for when a Business model is being updated.
         static::updating(function ($business) {
-            // Checks if the slug is empty. This can happen if the slug was not provided
-            // or was explicitly set to null/empty during an update.
-            if (empty($business->slug)) {
-                // If the slug is empty, regenerate it using the same logic as during creation.
+            // Cek kalau nama berubah
+            if ($business->isDirty('name')) {
                 $business->slug = Str::slug($business->name . '-' . uniqid());
             }
         });

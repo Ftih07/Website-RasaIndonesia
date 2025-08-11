@@ -80,25 +80,26 @@
                                     Select Your Business <span class="text-danger">*</span>
                                 </label>
 
-                                <select name="business_id"
-                                    id="business_id"
-                                    class="form-select form-select-lg border-0 shadow-sm"
-                                    style="background: #f8f9fa; border-radius: 12px; padding: 15px 20px; cursor: pointer;"
-                                    required>
-                                    <option value="" disabled selected>-- Select the business you want to claim --</option>
-                                    @foreach($businesses as $business)
-                                    <option value="{{ $business->id }}" data-address="{{ $business->address }}">
-                                        {{ $business->name }}
-                                        @if($business->address)
-                                        ({{ Str::limit($business->address, 50) }})
-                                        @endif
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <div class="position-relative">
+                                    <input type="text"
+                                        id="business_search"
+                                        class="form-control form-control-lg border-0 shadow-sm"
+                                        style="background: #f8f9fa; border-radius: 12px; padding: 15px 20px;"
+                                        placeholder="Type to search for your business..."
+                                        autocomplete="off">
+
+                                    <input type="hidden" name="business_id" id="business_id" required>
+
+                                    <div id="search-results"
+                                        class="dropdown-menu w-100 shadow-lg border-0 mt-1"
+                                        style="max-height: 300px; overflow-y: auto; border-radius: 12px; display: none;">
+                                    </div>
+                                </div>
 
                                 <div class="form-text text-muted mt-2">
-                                    <i class="fas fa-search me-1"></i>
-                                    Can't find your business? You may need to <a href="{{ route('business.register') }}" class="text-decoration-none fw-semibold" style="color: #ff6b35;">register it first</a>
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    Start typing to search by business name or address. Can't find your business?
+                                    <a href="{{ route('business.register') }}" class="text-decoration-none fw-semibold" style="color: #ff6b35;">Register it first</a>
                                 </div>
                             </div>
 
@@ -339,24 +340,131 @@
             font-size: 0.8rem;
         }
     }
+
+    /* Search dropdown styles */
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+        color: #ff6b35;
+    }
+
+    .business-option {
+        transition: all 0.2s ease;
+    }
+
+    .business-option:hover {
+        transform: translateX(5px);
+    }
+
+    /* Focus styles for search input */
+    .form-control:focus {
+        border-color: #ff6b35;
+        box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+        background: #ffffff;
+    }
 </style>
 
 <script>
-    // Business preview functionality
-    document.getElementById('business_id').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
+    // Business data for search
+    const businesses = @json($businesses-> map(function($business) {
+        return [
+            'id' => $business-> id,
+            'name' => $business-> name,
+            'address' => $business-> address
+        ];
+    }));
+
+    let selectedBusiness = null;
+
+    // Search functionality
+    document.getElementById('business_search').addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        const resultsDiv = document.getElementById('search-results');
+
+        if (query.length === 0) {
+            resultsDiv.style.display = 'none';
+            return;
+        }
+
+        const filteredBusinesses = businesses.filter(business =>
+            business.name.toLowerCase().includes(query) ||
+            (business.address && business.address.toLowerCase().includes(query))
+        );
+
+        if (filteredBusinesses.length > 0) {
+            resultsDiv.innerHTML = filteredBusinesses.map(business => `
+                <div class="dropdown-item business-option" 
+                     data-id="${business.id}" 
+                     data-name="${business.name}" 
+                     data-address="${business.address || ''}"
+                     style="cursor: pointer; padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+                    <div class="fw-semibold text-dark">${business.name}</div>
+                    ${business.address ? `<div class="text-muted small"><i class="fas fa-map-marker-alt me-1"></i>${business.address}</div>` : ''}
+                </div>
+            `).join('');
+            resultsDiv.style.display = 'block';
+
+            // Add click handlers to options
+            resultsDiv.querySelectorAll('.business-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectBusiness({
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        address: this.dataset.address
+                    });
+                });
+            });
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="dropdown-item text-muted" style="padding: 12px 16px;">
+                    <i class="fas fa-search me-2"></i>No businesses found matching "${query}"
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+        }
+    });
+
+    // Select business function
+    function selectBusiness(business) {
+        selectedBusiness = business;
+        document.getElementById('business_search').value = business.name;
+        document.getElementById('business_id').value = business.id;
+        document.getElementById('search-results').style.display = 'none';
+
+        // Show preview
+        showBusinessPreview(business);
+    }
+
+    // Show business preview
+    function showBusinessPreview(business) {
         const previewDiv = document.getElementById('business-preview');
 
-        if (selectedOption.value) {
-            const businessName = selectedOption.text.split(' (')[0];
-            const businessAddress = selectedOption.getAttribute('data-address') || 'Address not available';
+        document.getElementById('preview-name').textContent = business.name;
+        document.getElementById('preview-address').querySelector('span').textContent = business.address || 'Address not available';
 
-            document.getElementById('preview-name').textContent = businessName;
-            document.getElementById('preview-address').querySelector('span').textContent = businessAddress;
+        previewDiv.classList.remove('d-none');
+    }
 
-            previewDiv.classList.remove('d-none');
-        } else {
-            previewDiv.classList.add('d-none');
+    // Hide results when clicking outside
+    document.addEventListener('click', function(e) {
+        const searchInput = document.getElementById('business_search');
+        const resultsDiv = document.getElementById('search-results');
+
+        if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+            resultsDiv.style.display = 'none';
+        }
+    });
+
+    // Clear selection when input is cleared
+    document.getElementById('business_search').addEventListener('keyup', function() {
+        if (this.value === '') {
+            document.getElementById('business_id').value = '';
+            document.getElementById('business-preview').classList.add('d-none');
+            selectedBusiness = null;
         }
     });
 </script>
