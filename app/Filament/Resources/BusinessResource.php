@@ -629,6 +629,12 @@ class BusinessResource extends Resource
                         return $state === null ? 'warning' : 'success';
                     }),
 
+                Tables\Columns\TextColumn::make('owner.name')
+                    ->label('Pemilik')
+                    ->default('-')
+                    ->formatStateUsing(fn($state, $record) => $record->owner ? $record->owner->name : 'Belum diklaim')
+                    ->sortable(),
+
                 // Displays the business logo.
                 Tables\Columns\ImageColumn::make('logo')
                     ->label('Logo') // Column header label
@@ -931,6 +937,23 @@ class BusinessResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('assignOwner')
+                    ->label('Assign Kepemilikan')
+                    ->icon('heroicon-o-user-plus')
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\Select::make('user_id')
+                            ->label('Pilih Partner')
+                            ->options(\App\Models\User::whereHas('roles', fn($q) => $q->where('name', 'partner'))
+                                ->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update(['user_id' => $data['user_id']]);
+                    })
+                    ->hidden(fn($record) => $record->user_id !== null), // sembunyi kalau udah ada owner
+
                 Tables\Actions\Action::make('Cabut Kepemilikan')
                     ->color('danger')
                     ->requiresConfirmation()

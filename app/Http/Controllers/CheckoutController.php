@@ -100,17 +100,34 @@ class CheckoutController extends Controller
         // Prepare line items untuk Stripe Checkout Session
         $lineItems = [];
         foreach ($cart->items as $item) {
+            // hitung harga per unit termasuk option
+            $unitAmount = $item->total_price / $item->quantity;
+
+            // siapkan product_data
+            $productData = [
+                'name' => $item->product->name,
+            ];
+
+            // tambahkan description hanya kalau ada options
+            if (!empty($item->options)) {
+                $optionsArray = collect(json_decode($item->options, true))->pluck('name')->toArray();
+                $desc = implode(', ', $optionsArray);
+                if (!empty($desc)) {
+                    $productData['description'] = $desc;
+                }
+            }
+
+            // tambahkan ke lineItems
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'aud',
-                    'product_data' => [
-                        'name' => $item->product->name,
-                    ],
-                    'unit_amount' => intval($item->unit_price * 100),
+                    'product_data' => $productData,
+                    'unit_amount' => intval($unitAmount * 100),
                 ],
                 'quantity' => $item->quantity,
             ];
         }
+
 
         // Tambah ongkir & fees sebagai line item terpisah (boleh optional)
         $lineItems[] = [

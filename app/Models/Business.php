@@ -279,4 +279,9 @@ class Business extends Model
     {
         return $this->hasMany(\App\Models\ProductOptionGroup::class);
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
