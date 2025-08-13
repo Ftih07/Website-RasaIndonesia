@@ -49,7 +49,8 @@ class Business extends Model
         'order',            // Information related to ordering (e.g., ubereast, doordash).
         'reserve',          // Information related to reservations.
         'user_id',
-        'is_verified'
+        'is_verified',
+        'is_open'
     ];
 
     /**

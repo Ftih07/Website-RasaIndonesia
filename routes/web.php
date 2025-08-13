@@ -18,7 +18,9 @@ use App\Http\Controllers\DashboardController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Middleware\CheckRole;
 use App\Http\Controllers\DashboardBusinessController;
+
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Dashboard\TestimonialController;
@@ -75,11 +77,6 @@ Route::middleware(['auth', 'check.role:customer'])->group(function () {
     Route::post('/business/{slug}/testimonials', [TestimonialController::class, 'store'])->name('testimonial.store');
 });
 
-
-
-
-
-
 Route::middleware(['auth', 'check.role:customer'])->group(function () {
     Route::get('/register-business', [BusinessController::class, 'create'])->name('business.register');
     Route::post('/register-business', [BusinessController::class, 'store'])->name('business.register.store');
@@ -128,13 +125,6 @@ Route::get('/', function () {
  * Retrieves and displays business details based on the given ID.
  */
 Route::get('/business/{slug}', [BusinessController::class, 'show'])->name('business.show');
-
-
-
-
-
-
-
 
 /*******************************************************************************************************************/
 
@@ -192,10 +182,45 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Tambah item
 
     // Gunakan {rowId} untuk update, remove, dan getCartItem
-    Route::post('/cart/update/{rowId}', [CartController::class, 'update'])->name('cart.update'); 
-    Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove'])->name('cart.remove'); 
+    Route::post('/cart/update/{rowId}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove'])->name('cart.remove');
     Route::get('/cart/item/{rowId}', [CartController::class, 'getCartItem'])->name('cart.item');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart/validate/{business}', [CartController::class, 'validateCart'])->name('cart.validate');
+    Route::get('/checkout/{business}', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout/process', [CheckoutController::class, 'checkout'])->name('checkout.process');
+
+    Route::post('/shipping/calculate', [CheckoutController::class, 'calculateShipping'])->name('shipping.calculate');
+});
+Route::get('/order/success/{order}', [CheckoutController::class, 'success'])->name('order.success');
+
+Route::get('/stripe/success', [CheckoutController::class, 'stripeSuccess'])->name('stripe.success');
+Route::get('/stripe/cancel', [CheckoutController::class, 'stripeCancel'])->name('stripe.cancel');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');

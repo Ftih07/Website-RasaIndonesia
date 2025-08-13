@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
@@ -244,6 +245,47 @@ class CartController extends Controller
             'cart_count' => CartItem::whereHas('cart', function ($q) {
                 $q->where('user_id', Auth::id());
             })->count()
+        ]);
+    }
+
+    public function validateCart($businessId)
+    {
+        $business = Business::findOrFail($businessId);
+
+        // Cek apakah bisnis sedang buka
+        if (!$business->is_open) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This business is currently closed.'
+            ], 400);
+        }
+
+        // Ambil semua item cart user untuk bisnis ini
+        $cartItems = CartItem::whereHas('cart', function ($q) use ($businessId) {
+            $q->where('user_id', Auth::id())
+                ->where('business_id', $businessId);
+        })->with('product')->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your cart is empty.'
+            ], 400);
+        }
+
+        // Cek apakah semua produk masih dijual
+        foreach ($cartItems as $item) {
+            if (!$item->product->is_sell) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Product {$item->product->name} is no longer available."
+                ], 400);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cart is valid.'
         ]);
     }
 }

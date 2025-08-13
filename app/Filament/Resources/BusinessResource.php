@@ -134,6 +134,9 @@ class BusinessResource extends Resource
                                             ->label('Business Name')
                                             ->required() // This field is mandatory.
                                             ->placeholder('Enter business name'),
+                                        Forms\Components\Toggle::make('is_open')
+                                            ->label('Toko Buka?')
+                                            ->default(true),
 
                                         // Multi-select field for 'Food Categories', related to 'food_categories'.
                                         Forms\Components\Select::make('food_categories')

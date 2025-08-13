@@ -373,7 +373,7 @@
 
     <input type="hidden" id="currentBusinessId" value="{{ $business->id ?? '' }}">
 
-    <div id="cartSidebar" class="cart-sidebar">
+    <div id="cartSidebar" class="cart-sidebar" data-business-id="{{ $business->id }}">
         <div class="cart-header">
             <h5>Your Cart</h5>
             <button id="closeCartBtn" class="btn-close"></button>
@@ -905,6 +905,29 @@
                         alert("Failed to update cart item");
                     });
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            const businessId = document.getElementById('cartSidebar').dataset.businessId;
+
+            fetch(`/cart/validate/${businessId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `/checkout/${businessId}`;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Terjadi kesalahan.');
+                });
         });
     </script>
 
