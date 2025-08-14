@@ -246,6 +246,23 @@
                                 <i class="fas fa-lock me-2"></i>Only Taste of Indonesia admin can modify this unique code
                             </div>
                         </div>
+
+                        @if($business->orders_status === 'approved')
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Toko Buka?</label>
+                                <select name="is_open" class="form-select">
+                                    <option value="1" {{ $business->is_open ? 'selected' : '' }}>Ya</option>
+                                    <option value="0" {{ !$business->is_open ? 'selected' : '' }}>Tidak</option>
+                                </select>
+                            </div>
+                        @else
+                            <div class="col-md-6 mb-3">
+                                <div class="alert alert-warning mb-0">
+                                    <i class="fas fa-exclamation-circle me-1"></i>
+                                    Fitur buka/tutup toko akan tersedia setelah Orders Anda <strong>disetujui</strong> admin.
+                                </div>
+                            </div>
+                        @endif
                         
                         <div class="col-12 mb-3">
                             <label class="form-label">Business Name</label>

@@ -145,6 +145,19 @@ class BusinessResource extends Resource
                                             ->multiple() // Allows selection of multiple categories.
                                             ->preload() // Loads all options initially for a better user experience.
                                             ->placeholder('Select food categories'),
+
+                                        Forms\Components\Select::make('orders_status')
+                                            ->label('Orders Status')
+                                            ->options([
+                                                'not_requested' => 'Not Requested',
+                                                'pending' => 'Pending',
+                                                'approved' => 'Approved',
+                                                'rejected' => 'Rejected',
+                                            ])
+                                            ->default('not_requested')
+                                            ->reactive()
+                                            ->required()
+                                            ->helperText('Ubah status untuk mengelola akses fitur Orders seller.'),
                                     ])
                                     ->columns(2), // Arranges fields in two columns within this group.
 
@@ -613,6 +626,21 @@ class BusinessResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\BadgeColumn::make('orders_status')
+                    ->label('Orders Status')
+                    ->colors([
+                        'secondary' => 'not_requested',
+                        'warning' => 'pending',
+                        'success' => 'approved',
+                        'danger' => 'rejected',
+                    ])
+                    ->icons([
+                        'heroicon-o-question-mark-circle' => 'not_requested',
+                        'heroicon-o-clock' => 'pending',
+                        'heroicon-o-check-circle' => 'approved',
+                        'heroicon-o-x-circle' => 'rejected',
+                    ])
+                    ->formatStateUsing(fn(string $state): string => ucfirst(str_replace('_', ' ', $state))),
                 // Displays the business ID.
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
@@ -851,6 +879,14 @@ class BusinessResource extends Resource
                 return \App\Models\Business::query()->withCount('products');
             })
             ->filters([
+                SelectFilter::make('orders_status')
+                    ->label('Orders Status')
+                    ->options([
+                        'not_requested' => 'Not Requested',
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ]),
                 // Filter businesses by their type using a select dropdown.
                 SelectFilter::make('type_id')
                     ->label('Business Type') // Filter label

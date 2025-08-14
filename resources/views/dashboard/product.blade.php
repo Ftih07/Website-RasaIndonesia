@@ -5,6 +5,7 @@
 
 <!-- Tambahkan di <head> -->
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
@@ -142,6 +143,19 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    <!-- Toggle Sell Status -->
+                                    <label class="inline-flex items-center cursor-pointer"
+                                        title="{{ $product->business->orders_status !== 'approved' ? 'Your business must be approved before selling this product.' : '' }}">
+                                        <input
+                                            type="checkbox"
+                                            class="toggle-sell-status sr-only"
+                                            data-product-id="{{ $product->id }}"
+                                            {{ $product->is_sell ? 'checked' : '' }}
+                                            {{ $product->business->orders_status !== 'approved' ? 'disabled' : '' }}>
+                                        <div class="w-10 h-5 bg-gray-200 rounded-full p-1 flex items-center transition {{ $product->is_sell ? 'bg-green-500' : '' }}">
+                                            <div class="bg-white w-4 h-4 rounded-full shadow transform transition {{ $product->is_sell ? 'translate-x-5' : '' }}"></div>
+                                        </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -448,6 +462,42 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.toggle-sell-status').forEach((checkbox) => {
+        checkbox.addEventListener('change', function() {
+            const productId = this.dataset.productId;
+            const currentState = this.checked;
+
+            fetch('{{ route("dashboard.product.toggle-sell") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert(data.message || 'Gagal mengubah status');
+                        this.checked = !currentState; // Balikin ke posisi awal
+                    } else {
+                        // Optional: ubah warna switch langsung
+                        const wrapper = this.nextElementSibling;
+                        wrapper.classList.toggle('bg-green-500', data.is_sell);
+                        wrapper.querySelector('div').classList.toggle('translate-x-5', data.is_sell);
+                    }
+                })
+                .catch(() => {
+                    alert('Terjadi kesalahan koneksi');
+                    this.checked = !currentState;
+                });
+        });
+    });
+</script>
 
 <script>
     let optionIndex = 1;

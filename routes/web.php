@@ -51,6 +51,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
     Route::delete('/product/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'destroy'])->name('dashboard.product.destroy');
     Route::get('/dashboard/product/{id}/edit', [\App\Http\Controllers\ProductDashboardController::class, 'edit'])->name('dashboard.product.edit');
     Route::put('/dashboard/product/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'update'])->name('dashboard.product.update');
+    Route::post('/dashboard/product/toggle-sell', [\App\Http\Controllers\ProductDashboardController::class, 'toggleSell'])->name('dashboard.product.toggle-sell');
 
     // Option Groups
     Route::post('/product/option-group', [\App\Http\Controllers\ProductDashboardController::class, 'storeOptionGroup'])->name('dashboard.product.optionGroup.store');
@@ -61,6 +62,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
     Route::post('/product/category', [\App\Http\Controllers\ProductDashboardController::class, 'storeCategory'])->name('dashboard.product.category.store');
     Route::delete('/product/category/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'destroyCategory'])->name('dashboard.product.category.destroy');
     Route::put('/product/category/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'updateCategory'])->name('dashboard.product.category.update');
+
+    Route::get('/orders', [\App\Http\Controllers\OrderDashboardController::class, 'index'])->name('dashboard.orders');
+    Route::post('/orders/request', [\App\Http\Controllers\OrderDashboardController::class, 'requestActivation'])->name('dashboard.orders.request');
 });
 
 Route::middleware(['auth', 'check.role:seller'])->group(function () {

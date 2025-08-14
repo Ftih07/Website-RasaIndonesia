@@ -99,6 +99,7 @@ class DashboardBusinessController extends Controller
         $validated = $request->validate([
             'type_id' => 'required|exists:types,id',
             'name' => 'required|string|max:255',
+            'is_open' => 'nullable|boolean',
             'description' => 'nullable|string',
             'food_categories' => 'nullable|array',
             'food_categories.*' => 'exists:food_categories,id',
@@ -148,6 +149,7 @@ class DashboardBusinessController extends Controller
         $business->update([
             'type_id' => $validated['type_id'],
             'name' => $validated['name'],
+            'is_open' => $validated['is_open'] ?? $business->is_open,
             'description' => $validated['description'] ?? null,
             'country' => $validated['country'] ?? null,
             'city' => $validated['city'] ?? null,

@@ -26,6 +26,27 @@ class ProductDashboardController extends Controller
         return view('dashboard.product', compact('products', 'optionGroups', 'categories'));
     }
 
+    public function toggleSell(Request $request)
+    {
+        $product = Product::findOrFail($request->product_id);
+        $business = $product->business;
+
+        // Pastikan pemilik produk adalah user yang login
+        if ($business->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Cek apakah bisnis sudah approved
+        if ($business->orders_status !== 'approved') {
+            return response()->json(['success' => false, 'message' => 'Bisnis belum disetujui'], 403);
+        }
+
+        $product->is_sell = !$product->is_sell;
+        $product->save();
+
+        return response()->json(['success' => true, 'is_sell' => $product->is_sell]);
+    }
+
     public function store(Request $request)
     {
         $user = Auth::user();

@@ -31,14 +31,11 @@
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link disabled"
-                            href="#"
-                            role="tab"
-                            tabindex="-1"
-                            aria-disabled="true">
+                        <a class="nav-link {{ request()->is('dashboard/orders*') ? 'active' : '' }}"
+                            href="{{ route('dashboard.orders') }}"
+                            role="tab">
                             <i class="fas fa-shopping-cart me-2"></i>
                             <span>Orders</span>
-                            <span class="badge bg-secondary ms-1 small">Soon</span>
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">

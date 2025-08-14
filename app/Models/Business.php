@@ -50,7 +50,8 @@ class Business extends Model
         'reserve',          // Information related to reservations.
         'user_id',
         'is_verified',
-        'is_open'
+        'is_open',
+        'orders_status'
     ];
 
     /**
