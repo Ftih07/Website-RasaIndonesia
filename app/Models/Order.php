@@ -18,6 +18,7 @@ class Order extends Model
         'delivery_fee',
         'order_fee',
         'total_price',
+        'gross_price',
         'shipping_address',
         'delivery_note',
         'delivery_option',
@@ -40,5 +41,10 @@ class Order extends Model
     public function business()
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

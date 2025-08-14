@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
+use Stripe\PaymentIntent;
 
 class CheckoutController extends Controller
 {
@@ -94,83 +95,40 @@ class CheckoutController extends Controller
         $order_fee = 1;
         $total = $subtotal + $tax + $delivery_fee + $order_fee;
 
-        // Set API key
+        // ===== Tambahan: Hitung total yang sudah include Stripe fee =====
+        $targetNet = $total; // yang kamu mau bersih
+        $stripePercentFee = 0.036 * 1.1; // 3.6% plus 10% GST
+        $stripeFixedFee = 0.30;
+
+        $grossAmount = ($targetNet + $stripeFixedFee) / (1 - $stripePercentFee);
+        $grossAmount = round($grossAmount, 2); // bulatkan 2 decimal
+        // ===================================
+
+        // Set API key Stripe
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Prepare line items untuk Stripe Checkout Session
-        $lineItems = [];
-        foreach ($cart->items as $item) {
-            // hitung harga per unit termasuk option
-            $unitAmount = $item->total_price / $item->quantity;
-
-            // siapkan product_data
-            $productData = [
-                'name' => $item->product->name,
-            ];
-
-            // tambahkan description hanya kalau ada options
-            if (!empty($item->options)) {
-                $optionsArray = collect(json_decode($item->options, true))->pluck('name')->toArray();
-                $desc = implode(', ', $optionsArray);
-                if (!empty($desc)) {
-                    $productData['description'] = $desc;
-                }
-            }
-
-            // tambahkan ke lineItems
-            $lineItems[] = [
-                'price_data' => [
-                    'currency' => 'aud',
-                    'product_data' => $productData,
-                    'unit_amount' => intval($unitAmount * 100),
-                ],
-                'quantity' => $item->quantity,
-            ];
-        }
-
-
-        // Tambah ongkir & fees sebagai line item terpisah (boleh optional)
-        $lineItems[] = [
-            'price_data' => [
-                'currency' => 'aud',
-                'product_data' => [
-                    'name' => 'Delivery Fee',
-                ],
-                'unit_amount' => intval($delivery_fee * 100),
+        // Buat PaymentIntent dengan manual capture
+        $paymentIntent = PaymentIntent::create([
+            'amount' => intval($grossAmount * 100), // pakai grossAmount di sini
+            'currency' => 'aud',
+            'capture_method' => 'manual', // tahan dana
+            'automatic_payment_methods' => [
+                'enabled' => true,
             ],
-            'quantity' => 1,
-        ];
-        $lineItems[] = [
-            'price_data' => [
-                'currency' => 'aud',
-                'product_data' => [
-                    'name' => 'Order Fee',
-                ],
-                'unit_amount' => intval($order_fee * 100),
-            ],
-            'quantity' => 1,
-        ];
-
-        $session = StripeSession::create([
-            'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' => url('/stripe/success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url'  => url('/stripe/cancel'),
             'metadata' => [
                 'user_id' => Auth::id(),
                 'business_id' => $request->business_id,
                 'shipping_address' => $shipping_address,
                 'delivery_note' => $request->delivery_note,
                 'delivery_option' => $request->delivery_option,
-            ],
+            ]
         ]);
 
-        // Simpan Payment & Order dulu dengan status pending, dan simpan session ID sebagai transaction_id
+        // Simpan Payment dan Order dengan status pending
         $payment = Payment::create([
             'payment_method' => 'stripe',
             'status' => 'pending',
-            'transaction_id' => $session->id,
+            'transaction_id' => $paymentIntent->id,
         ]);
 
         $order = Order::create([
@@ -182,7 +140,8 @@ class CheckoutController extends Controller
             'tax' => $tax,
             'delivery_fee' => $delivery_fee,
             'order_fee' => $order_fee,
-            'total_price' => $total,
+            'total_price' => $total, // ini tetap net value
+            'gross_price' => $grossAmount, // kalau mau simpan harga yang dibayar customer
             'shipping_address' => $shipping_address,
             'delivery_note' => $request->delivery_note,
             'delivery_option' => $request->delivery_option,
@@ -202,40 +161,26 @@ class CheckoutController extends Controller
             ]);
         }
 
+        $order->load('items.product');
+
         // Hapus cart
         $cart->items()->delete();
         $cart->delete();
 
-        // Redirect ke Stripe checkout URL
-        return redirect($session->url);
+        // Kirim client_secret ke view untuk frontend Stripe.js
+        return view('checkout-payment', [
+            'clientSecret' => $paymentIntent->client_secret,
+            'order' => $order
+        ]);
     }
 
     public function stripeSuccess(Request $request)
     {
-        $sessionId = $request->get('session_id');
-
-        if (!$sessionId) {
-            abort(400, 'Session ID not found.');
-        }
-
-        $payment = Payment::where('transaction_id', $sessionId)->first();
-
-        if (!$payment) {
-            abort(404, 'Payment not found.');
-        }
-
-        $payment->update(['status' => 'paid']);
-
-        if ($payment->order) {
-            $payment->order->update(['delivery_status' => 'confirmed']);
-        }
-
-        return view('stripe-success', ['order' => $payment->order]);
+        return view('stripe-success');
     }
 
-    public function stripeCancel(Request $request)
+    public function stripeCancel()
     {
-        // Bisa tampilkan pesan pembatalan pembayaran
         return view('stripe-cancel');
     }
 
