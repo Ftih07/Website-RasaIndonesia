@@ -65,7 +65,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
 
     Route::get('/orders', [\App\Http\Controllers\OrderDashboardController::class, 'index'])->name('dashboard.orders');
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderDashboardController::class, 'show'])
-    ->name('dashboard.orders.show');
+        ->name('dashboard.orders.show');
 
     Route::post('/orders/request', [\App\Http\Controllers\OrderDashboardController::class, 'requestActivation'])->name('dashboard.orders.request');
     Route::patch('/orders/{order}/status', [\App\Http\Controllers\OrderDashboardController::class, 'updateStatus'])->name('dashboard.orders.updateStatus');
@@ -77,6 +77,19 @@ Route::middleware(['auth', 'check.role:seller'])->group(function () {
     Route::get('/dashboard/testimonial', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'index'])->name('dashboard.testimonial');
     Route::post('/dashboard/testimonial/{testimonial}/reply', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'reply'])->name('dashboard.testimonial.reply');
     Route::post('/dashboard/testimonial/{testimonial}/like', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'like'])->name('dashboard.testimonial.like');
+});
+
+// Untuk Partner
+Route::prefix('partner')->name('partner.')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [\App\Http\Controllers\Partner\AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [\App\Http\Controllers\Partner\AuthController::class, 'login'])->name('login.submit');
+    });
+
+    Route::middleware(['auth', 'check.role:partner'])->group(function () {
+        Route::post('/logout', [\App\Http\Controllers\Partner\AuthController::class, 'logout'])->name('logout');
+        Route::get('/orders', [\App\Http\Controllers\Partner\OrderController::class, 'index'])->name('orders.index');
+    });
 });
 
 // Untuk customer

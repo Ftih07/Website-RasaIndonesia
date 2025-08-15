@@ -23,7 +23,8 @@ class Order extends Model
         'delivery_note',
         'delivery_option',
         'delivery_status',
-        'order_date'
+        'order_date',
+        'partner_id'
     ];
 
     protected $casts = [
@@ -50,5 +51,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(User::class, 'partner_id');
     }
 }

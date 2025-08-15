@@ -34,6 +34,15 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('partner_id')
+                    ->label('Assign Partner')
+                    ->relationship('partner', 'name') // pastikan relasi di model Order: partner()
+                    ->searchable()
+                    ->preload()
+                    ->nullable()
+                    ->required()
+                    ->disabled(false),
+
                 Section::make('Order Details')->schema([
                     TextInput::make('order_number')
                         ->disabled()
@@ -185,6 +194,8 @@ class OrderResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('partner.name')->label('Partner'),
+
                 TextColumn::make('user.name')
                     ->label('Customer')
                     ->searchable(),
@@ -271,6 +282,39 @@ class OrderResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('assignPartner')
+                    ->label('Assign Partner')
+                    ->icon('heroicon-o-user')
+                    ->requiresConfirmation()
+                    ->form([
+                        Select::make('partner_id')
+                            ->relationship('partner', 'name', fn($query) => $query->whereHas('roles', fn($q) => $q->where('name', 'partner')))
+                            ->required(),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update(['partner_id' => $data['partner_id']]);
+                        Notification::make()
+                            ->title('Partner assigned successfully')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn($record) => !$record->partner),
+
+                // Action baru untuk remove partner
+                Tables\Actions\Action::make('removePartner')
+                    ->label('Remove Partner')
+                    ->icon('heroicon-o-user')
+                    ->color('danger') // ini bikin tombol merah
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        $record->update(['partner_id' => null]);
+                        Notification::make()
+                            ->title('Partner removed successfully')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn($record) => $record->partner), // hanya muncul jika ada partner
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
 
