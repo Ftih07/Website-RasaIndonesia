@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Message;
 use App\Models\OrderItem;
+use App\Models\ProductOption;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
@@ -189,6 +190,39 @@ class CheckoutController extends Controller
         // Pastikan hanya owner order yg bisa lihat
         if ($order->user_id !== Auth::id()) {
             abort(403);
+        }
+
+        // Decode options dan ambil nama dari ProductOption
+        foreach ($order->items as $item) {
+            if (is_string($item->options)) {
+                $options = json_decode($item->options, true);
+            } else {
+                $options = $item->options ?? [];
+            }
+
+            $processedOptions = [];
+
+            foreach ($options as $group) {
+                $groupItems = [];
+
+                if (!empty($group['selected']) && is_array($group['selected'])) {
+                    foreach ($group['selected'] as $selected) {
+                        $option = ProductOption::find($selected['id']);
+                        if ($option) {
+                            $groupItems[] = [
+                                'name'  => $option->name,
+                                'price' => $selected['price'] ?? $option->price,
+                            ];
+                        }
+                    }
+                }
+
+                $group['items'] = $groupItems;
+                $processedOptions[] = $group;
+            }
+
+            // Simpan ke property baru untuk view
+            $item->options_for_view = $processedOptions;
         }
 
         return view('order-success', compact('order'));

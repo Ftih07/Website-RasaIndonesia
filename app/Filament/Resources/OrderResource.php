@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
@@ -69,7 +70,7 @@ class OrderResource extends Resource
                         ->disabled()
                         ->prefix('AUD'),
 
-                    TextInput::make('total_price')
+                    TextInput::make('gross_price')
                         ->disabled()
                         ->prefix('AUD'),
                 ])->columns(2),
@@ -110,6 +111,69 @@ class OrderResource extends Resource
                         ->inline()
                         ->label('Delivery Status'),
                 ])->columns(2),
+
+                Section::make('Order Items')->schema([
+                    Repeater::make('items')
+                        ->relationship('items')
+                        ->schema([
+                            TextInput::make('product_name')
+                                ->label('Product')
+                                ->disabled()
+                                ->afterStateHydrated(function ($component, $state, $record) {
+                                    if ($record && $record->product) {
+                                        $component->state($record->product->name);
+                                    }
+                                }),
+
+                            Textarea::make('options')
+                                ->label('Options')
+                                ->disabled()
+                                ->formatStateUsing(function ($state, $record) {
+                                    $html = '';
+                                    $options = is_string($record->options) ? json_decode($record->options, true) : $record->options;
+                                    if (!empty($options)) {
+                                        foreach ($options as $group) {
+                                            if (!empty($group['selected'])) {
+                                                foreach ($group['selected'] as $selected) {
+                                                    $option = \App\Models\ProductOption::find($selected['id']);
+                                                    if ($option) {
+                                                        $price = $selected['price'] ?? $option->price;
+                                                        $html .= "{$group['group_name']} - {$option->name} (+A$" . number_format($price, 2) . ")\n";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return $html;
+                                })
+                                ->rows(3),
+
+                            TextInput::make('preference_if_unavailable')
+                                ->label('Preference if Unavailable')
+                                ->disabled(),
+
+                            TextInput::make('note')
+                                ->label('Note')
+                                ->disabled(),
+
+                            TextInput::make('quantity')
+                                ->label('Quantity')
+                                ->disabled(),
+
+                            TextInput::make('unit_price')
+                                ->label('Unit Price')
+                                ->prefix('A$')
+                                ->disabled(),
+
+                            TextInput::make('total_price')
+                                ->label('Total Price')
+                                ->prefix('A$')
+                                ->disabled(),
+                        ])
+                        ->columns(1)
+                        ->disableItemCreation()
+                        ->disableItemDeletion(),
+                ])->columns(1),
             ]);
     }
 
@@ -140,13 +204,45 @@ class OrderResource extends Resource
                     ])
                     ->sortable(),
 
-                TextColumn::make('total_price')
+                TextColumn::make('gross_price')
                     ->money('AUD')
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
+
+                TextColumn::make('items')
+                    ->label('Products & Options')
+                    ->formatStateUsing(function ($record) {
+                        $html = '';
+
+                        foreach ($record->items as $item) {
+                            $html .= "<strong>{$item->product->name}</strong> ({$item->quantity} × A$" . number_format($item->unit_price, 2) . ")<br>";
+
+                            // Jika ada options, tampilkan
+                            if (!empty($item->options)) {
+                                // Decode options
+                                $options = is_string($item->options) ? json_decode($item->options, true) : $item->options;
+                                foreach ($options as $group) {
+                                    if (!empty($group['selected'])) {
+                                        foreach ($group['selected'] as $selected) {
+                                            $option = \App\Models\ProductOption::find($selected['id']);
+                                            if ($option) {
+                                                $price = $selected['price'] ?? $option->price;
+                                                $html .= "- {$option->name} (+A$" . number_format($price, 2) . ")<br>";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $html .= "<hr style='margin:4px 0'>";
+                        }
+
+                        return $html;
+                    })
+                    ->html() // Penting, agar HTML tampil di table
+                    ->sortable(false),
             ])
             ->filters([
                 SelectFilter::make('delivery_status')

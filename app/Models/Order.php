@@ -26,6 +26,10 @@ class Order extends Model
         'order_date'
     ];
 
+    protected $casts = [
+        'order_date' => 'datetime',
+    ];
+
     public function cart()
     {
         return $this->belongsTo(Cart::class);

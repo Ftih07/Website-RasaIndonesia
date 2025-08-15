@@ -64,7 +64,13 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
     Route::put('/product/category/{id}', [\App\Http\Controllers\ProductDashboardController::class, 'updateCategory'])->name('dashboard.product.category.update');
 
     Route::get('/orders', [\App\Http\Controllers\OrderDashboardController::class, 'index'])->name('dashboard.orders');
+    Route::get('/orders/{id}', [\App\Http\Controllers\OrderDashboardController::class, 'show'])
+    ->name('dashboard.orders.show');
+
     Route::post('/orders/request', [\App\Http\Controllers\OrderDashboardController::class, 'requestActivation'])->name('dashboard.orders.request');
+    Route::patch('/orders/{order}/status', [\App\Http\Controllers\OrderDashboardController::class, 'updateStatus'])->name('dashboard.orders.updateStatus');
+    Route::patch('/orders/{order}/approve', [\App\Http\Controllers\OrderDashboardController::class, 'approve'])->name('dashboard.orders.approve');
+    Route::patch('/orders/{order}/reject', [\App\Http\Controllers\OrderDashboardController::class, 'reject'])->name('dashboard.orders.reject');
 });
 
 Route::middleware(['auth', 'check.role:seller'])->group(function () {

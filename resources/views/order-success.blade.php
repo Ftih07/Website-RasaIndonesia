@@ -11,13 +11,33 @@
         <li class="list-group-item d-flex justify-content-between">
             <div>
                 <strong>{{ $item->product->name }}</strong>
+
+                {{-- Qty dan harga unit --}}
                 <div style="font-size: 12px; color: #555;">
                     Qty {{ $item->quantity }} × A${{ number_format($item->unit_price, 2) }}
                 </div>
+
+                {{-- Options --}}
+                @if(!empty($item->options_for_view))
+                <ul style="font-size: 12px; color: #555; margin: 4px 0 0 0; padding-left: 16px;">
+                    @foreach($item->options_for_view as $group)
+                    @foreach($group['items'] as $opt)
+                    <li>
+                        {{ $opt['name'] }}
+                        @if(isset($opt['price']) && $opt['price'] > 0)
+                        (+A${{ number_format($opt['price'], 2) }})
+                        @endif
+                    </li>
+                    @endforeach
+                    @endforeach
+                </ul>
+                @endif
             </div>
+
             <span>A${{ number_format($item->total_price, 2) }}</span>
         </li>
         @endforeach
+
         <li class="list-group-item d-flex justify-content-between">
             <span>Subtotal</span>
             <span>A${{ number_format($order->items->sum('total_price'), 2) }}</span>
