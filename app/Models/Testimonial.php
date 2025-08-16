@@ -8,7 +8,21 @@ use Illuminate\Support\Facades\Storage; // <- ini harus ada
 class Testimonial extends Model
 {
     // Specifies the attributes that are mass assignable
-    protected $fillable = ['business_id', 'testimonial_user_id', 'user_id', 'name', 'description', 'rating', 'image_url', 'image_url_product', 'publishedAtDate', 'reply', 'replied_at', 'replied_by',];
+    protected $fillable = [
+        'order_id',
+        'business_id',
+        'testimonial_user_id',
+        'user_id',
+        'name',
+        'description',
+        'rating',
+        'image_url',
+        'image_url_product',
+        'publishedAtDate',
+        'reply',
+        'replied_at',
+        'replied_by',
+    ];
 
     /**
      * Define a relationship where a testimonial belongs to a business.
@@ -64,5 +78,15 @@ class Testimonial extends Model
         }
 
         return asset('assets/images/testimonials/profile.png');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(TestimonialImage::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

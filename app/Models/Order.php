@@ -57,4 +57,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'partner_id');
     }
+
+    public function testimonial()
+    {
+        return $this->hasOne(Testimonial::class);
+    }
 }

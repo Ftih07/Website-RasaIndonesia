@@ -124,6 +124,9 @@ Route::middleware(['auth', 'check.role:customer'])->group(function () {
     Route::post('/business/{slug}/testimonials', [TestimonialController::class, 'store'])->name('testimonial.store');
 });
 
+Route::post('/partner/orders/review', [OrderTrackingController::class, 'storeReview'])
+    ->name('partner.orders.review.store');
+
 Route::middleware(['auth', 'check.role:customer'])->group(function () {
     Route::get('/register-business', [BusinessController::class, 'create'])->name('business.register');
     Route::post('/register-business', [BusinessController::class, 'store'])->name('business.register.store');

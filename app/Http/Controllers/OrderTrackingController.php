@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\ProductOption;
+use App\Models\Testimonial;
+use App\Models\TestimonialImage;
 
 class OrderTrackingController extends Controller
 {
@@ -55,5 +57,45 @@ class OrderTrackingController extends Controller
         }
 
         return view('orders.tracking', compact('order'));
+    }
+
+    public function storeReview(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'business_id' => 'required|exists:businesses,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'description' => 'required|string',
+            'images.*' => 'nullable|image|max:2048',
+        ]);
+
+        $order = Order::with('testimonial')->findOrFail($request->order_id);
+
+        // Cegah review ganda
+        if ($order->testimonial) {
+            return back()->with('error', 'Order ini sudah pernah direview.');
+        }
+
+        $testimonial = Testimonial::create([
+            'order_id' => $request->order_id,
+            'business_id' => $request->business_id,
+            'user_id' => auth()->id(),
+            'name' => auth()->user()->name,
+            'description' => $request->description,
+            'rating' => $request->rating,
+            'publishedAtDate' => now(),
+        ]);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('testimonials', 'public');
+                TestimonialImage::create([
+                    'testimonial_id' => $testimonial->id,
+                    'image_path' => $path,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Terima kasih! Ulasan Anda berhasil dikirim.');
     }
 }
