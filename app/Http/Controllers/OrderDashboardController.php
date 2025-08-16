@@ -121,7 +121,9 @@ class OrderDashboardController extends Controller
             'delivery_status' => $validated['delivery_status']
         ]);
 
-        // Kirim pesan otomatis ke chat
+        $statusText = ucfirst(str_replace('_', ' ', $validated['delivery_status']));
+
+        // === Kirim pesan otomatis ke chat ===
         $chat = Chat::where(function ($q) use ($order) {
             $q->where('user_one_id', $order->user_id)
                 ->where('user_two_id', $order->business->user_id);
@@ -131,7 +133,6 @@ class OrderDashboardController extends Controller
         })->first();
 
         if ($chat) {
-            $statusText = ucfirst(str_replace('_', ' ', $validated['delivery_status']));
             ChatService::sendMessage(
                 $chat->id,
                 auth()->id(),
@@ -140,6 +141,14 @@ class OrderDashboardController extends Controller
             );
             $chat->touch();
         }
+
+        // === 🚀 Tambah notifikasi ke customer ===
+        \App\Helpers\NotificationHelper::send(
+            $order->user_id,
+            'Update Status Pesanan',
+            "Pesanan #{$order->id} sekarang: {$statusText}",
+            route('orders.index', $order->id)
+        );
 
         return redirect()->route('dashboard.orders')
             ->with('success', 'Status order berhasil diperbarui.');
@@ -157,7 +166,7 @@ class OrderDashboardController extends Controller
                 $order->update(['delivery_status' => 'confirmed']);
 
                 // === Trigger Chat & Pesan ===
-                $sellerId = $order->business->user_id; // pemilik bisnis (role seller)
+                $sellerId   = $order->business->user_id; // pemilik bisnis
                 $customerId = $order->user_id;
                 $businessId = $order->business_id;
 
@@ -167,6 +176,14 @@ class OrderDashboardController extends Controller
                     $sellerId,
                     "Halo! Terima kasih sudah memesan di bisnis kami. Pesanan kamu sudah dikonfirmasi.",
                     'system'
+                );
+
+                // === 🚀 Notifikasi ke customer ===
+                \App\Helpers\NotificationHelper::send(
+                    $customerId,
+                    'Pesanan Dikonfirmasi',
+                    "Pesanan #{$order->id} sudah dikonfirmasi dan sedang diproses.",
+                    route('orders.index', $order->id)
                 );
 
                 return back()->with('success', 'Pesanan berhasil diterima dan pembayaran dikonfirmasi.');
@@ -183,16 +200,19 @@ class OrderDashboardController extends Controller
         if ($order->payment->status === 'pending' && $order->delivery_status === 'waiting') {
             try {
                 Stripe::setApiKey(env('STRIPE_SECRET'));
-
-                // Ambil payment intent dari Stripe
                 $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);
-
-                // Cancel pembayaran
                 $paymentIntent->cancel();
 
-                // Update status di database
                 $order->payment->update(['status' => 'failed']);
                 $order->update(['delivery_status' => 'canceled']);
+
+                // === 🚀 Notifikasi ke customer ===
+                \App\Helpers\NotificationHelper::send(
+                    $order->user_id,
+                    'Pesanan Ditolak',
+                    "Pesanan #{$order->id} telah ditolak. Jika pembayaran sudah masuk, akan segera direfund.",
+                    route('orders.index', $order->id)
+                );
 
                 return back()->with('success', 'Pesanan berhasil ditolak dan pembayaran dibatalkan.');
             } catch (\Exception $e) {

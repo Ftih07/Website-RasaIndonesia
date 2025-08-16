@@ -94,6 +94,7 @@ Route::prefix('partner')->name('partner.')->group(function () {
 
 // routes/web.php
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OrderTrackingController;
 
 Route::middleware(['auth'])->group(function () {
     // pisah middleware per role sesuai maumu
@@ -246,6 +247,11 @@ Route::get('/order/success/{order}', [CheckoutController::class, 'success'])->na
 
 Route::get('/stripe/success', [CheckoutController::class, 'stripeSuccess'])->name('stripe.success');
 Route::get('/stripe/cancel', [CheckoutController::class, 'stripeCancel'])->name('stripe.cancel');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/orders', [OrderTrackingController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}/tracking', [OrderTrackingController::class, 'tracking'])->name('orders.tracking');
+});
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');
 

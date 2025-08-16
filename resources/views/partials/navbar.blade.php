@@ -281,7 +281,7 @@
         <!-- Mobile Toggle Button -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="uil uil-bars fs-3"></i> 
+            <i class="uil uil-bars fs-3"></i>
         </button>
 
         <!-- Navigation Menu -->
@@ -377,6 +377,19 @@
                         @if ($unread > 0)
                         <span class="notification-badge">{{ $unread }}</span>
                         @endif
+                    </a>
+                </li>
+
+                <!-- Chat -->
+                <li class="nav-item">
+                    <a href="{{ route('chat.customer') }}" class="chat-icon">
+                        <i class="fas fa-comments"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('orders.index') }}" class="chat-icon">
+                        <i class="fas fa-box"></i>
                     </a>
                 </li>
 

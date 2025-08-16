@@ -46,6 +46,14 @@
                             <span>Testimonials</span>
                         </a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {{ request()->is('chat/seller*') ? 'active' : '' }}"
+                            href="{{ route('chat.seller') }}"
+                            role="tab">
+                            <i class="fas fa-comments me-2"></i>
+                            <span>Chat</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

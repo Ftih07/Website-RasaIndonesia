@@ -114,4 +114,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(TestimonialLike::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(\App\Models\Order::class, 'user_id');
+    }
 }

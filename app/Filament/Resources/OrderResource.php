@@ -136,6 +136,14 @@ class OrderResource extends Resource
                                     'system'
                                 );
                                 $chatCustomer->touch();
+
+                                // 🚀 Tambah notifikasi ke customer
+                                \App\Helpers\NotificationHelper::send(
+                                    $record->user_id,
+                                    'Update Pesanan',
+                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    route('orders.index', $record->id) // kalau ada detail order
+                                );
                             }
 
                             // === 2. Kirim ke partner (jika ada) ===
@@ -149,6 +157,14 @@ class OrderResource extends Resource
                                     'system'
                                 );
                                 $chatPartner->touch();
+
+                                // 🚀 Tambah notifikasi ke partner
+                                \App\Helpers\NotificationHelper::send(
+                                    $record->partner_id,
+                                    'Update Pesanan',
+                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    route('orders.index', $record->id)
+                                );
                             }
                         }),
 
@@ -399,10 +415,10 @@ class OrderResource extends Resource
                             $record->payment->update(['status' => 'paid']);
                             $record->update(['delivery_status' => 'confirmed']);
 
-                            // === Trigger Chat & Pesan ===
+                            // === Trigger Chat ===
                             $businessId = $record->business_id;
-                            $customerId = $record->user_id; // asumsi ini ID customer
-                            $superadminId = 2; // ganti sesuai ID superadmin
+                            $customerId = $record->user_id;
+                            $superadminId = 2;
 
                             $chat = ChatService::getOrCreateChat($customerId, $superadminId, $businessId);
                             ChatService::sendMessage(
@@ -410,6 +426,14 @@ class OrderResource extends Resource
                                 $superadminId,
                                 "Pesanan kamu sudah dikonfirmasi dan sedang diproses.",
                                 'system'
+                            );
+
+                            // === 🚀 Notifikasi ke customer ===
+                            \App\Helpers\NotificationHelper::send(
+                                $customerId,
+                                'Pembayaran Dikonfirmasi',
+                                "Pesanan #{$record->id} sudah dikonfirmasi dan sedang diproses.",
+                                route('orders.index', $record->id)
                             );
 
                             Notification::make()
@@ -435,12 +459,19 @@ class OrderResource extends Resource
                     ->action(function (Order $record) {
                         try {
                             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
                             $paymentIntent = \Stripe\PaymentIntent::retrieve($record->payment->transaction_id);
                             $paymentIntent->cancel();
 
                             $record->payment->update(['status' => 'failed']);
                             $record->update(['delivery_status' => 'canceled']);
+
+                            // === 🚀 Notifikasi ke customer ===
+                            \App\Helpers\NotificationHelper::send(
+                                $record->user_id,
+                                'Pembayaran Dibatalkan',
+                                "Pesanan #{$record->id} telah dibatalkan. Jika sudah ada pembayaran masuk, akan segera direfund.",
+                                route('orders.index', $record->id)
+                            );
 
                             Notification::make()
                                 ->title('Payment canceled successfully!')
