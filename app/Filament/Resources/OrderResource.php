@@ -20,6 +20,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Notifications\Notification;
+use App\Models\Chat;
+use App\Models\User;
+use App\Services\ChatService;
 
 class OrderResource extends Resource
 {
@@ -40,8 +43,7 @@ class OrderResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->required()
-                    ->disabled(false),
+                    ->disabled(true),
 
                 Section::make('Order Details')->schema([
                     TextInput::make('order_number')
@@ -118,7 +120,38 @@ class OrderResource extends Resource
                             'canceled' => 'danger',
                         ])
                         ->inline()
-                        ->label('Delivery Status'),
+                        ->label('Delivery Status')
+                        ->afterStateUpdated(function ($state, $record) {
+                            $superadminId = 2; // sesuaikan ID superadmin
+                            $statusText = ucfirst(str_replace('_', ' ', $state));
+
+                            // === 1. Kirim ke customer ===
+                            if ($record->user_id) {
+                                $chatCustomer = ChatService::getOrCreateChat($superadminId, $record->user_id);
+
+                                ChatService::sendMessage(
+                                    $chatCustomer->id,
+                                    $superadminId,
+                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    'system'
+                                );
+                                $chatCustomer->touch();
+                            }
+
+                            // === 2. Kirim ke partner (jika ada) ===
+                            if ($record->partner_id) {
+                                $chatPartner = ChatService::getOrCreateChat($superadminId, $record->partner_id);
+
+                                ChatService::sendMessage(
+                                    $chatPartner->id,
+                                    $superadminId,
+                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    'system'
+                                );
+                                $chatPartner->touch();
+                            }
+                        }),
+
                 ])->columns(2),
 
                 Section::make('Order Items')->schema([
@@ -288,11 +321,30 @@ class OrderResource extends Resource
                     ->requiresConfirmation()
                     ->form([
                         Select::make('partner_id')
-                            ->relationship('partner', 'name', fn($query) => $query->whereHas('roles', fn($q) => $q->where('name', 'partner')))
+                            ->relationship(
+                                'partner',
+                                'name',
+                                fn($query) => $query->whereHas('roles', fn($q) => $q->where('name', 'partner'))
+                            )
                             ->required(),
                     ])
                     ->action(function ($record, array $data) {
                         $record->update(['partner_id' => $data['partner_id']]);
+
+                        $partner = User::find($data['partner_id']);
+                        $statusText = "Order #{$record->id} telah ditugaskan kepada Anda.";
+
+                        // === 1 chat superadmin ↔ partner ===
+                        $chat = ChatService::getOrCreateChat(2, $partner->id);
+
+                        ChatService::sendMessage(
+                            $chat->id,
+                            2, // superadmin sebagai pengirim
+                            $statusText,
+                            'system'
+                        );
+                        $chat->touch();
+
                         Notification::make()
                             ->title('Partner assigned successfully')
                             ->success()
@@ -300,20 +352,34 @@ class OrderResource extends Resource
                     })
                     ->visible(fn($record) => !$record->partner),
 
-                // Action baru untuk remove partner
                 Tables\Actions\Action::make('removePartner')
                     ->label('Remove Partner')
                     ->icon('heroicon-o-user')
-                    ->color('danger') // ini bikin tombol merah
+                    ->color('danger')
                     ->requiresConfirmation()
                     ->action(function ($record) {
+                        $partner = $record->partner;
                         $record->update(['partner_id' => null]);
+
+                        $statusText = "Anda telah dihapus dari Order #{$record->id}.";
+
+                        // === 1 chat superadmin ↔ partner ===
+                        $chat = ChatService::getOrCreateChat(2, $partner->id);
+
+                        ChatService::sendMessage(
+                            $chat->id,
+                            2, // superadmin sebagai pengirim
+                            $statusText,
+                            'system'
+                        );
+                        $chat->touch();
+
                         Notification::make()
                             ->title('Partner removed successfully')
                             ->success()
                             ->send();
                     })
-                    ->visible(fn($record) => $record->partner), // hanya muncul jika ada partner
+                    ->visible(fn($record) => $record->partner),
 
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -327,12 +393,24 @@ class OrderResource extends Resource
                     ->action(function (Order $record) {
                         try {
                             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
                             $paymentIntent = \Stripe\PaymentIntent::retrieve($record->payment->transaction_id);
                             $paymentIntent->capture();
 
                             $record->payment->update(['status' => 'paid']);
                             $record->update(['delivery_status' => 'confirmed']);
+
+                            // === Trigger Chat & Pesan ===
+                            $businessId = $record->business_id;
+                            $customerId = $record->user_id; // asumsi ini ID customer
+                            $superadminId = 2; // ganti sesuai ID superadmin
+
+                            $chat = ChatService::getOrCreateChat($customerId, $superadminId, $businessId);
+                            ChatService::sendMessage(
+                                $chat->id,
+                                $superadminId,
+                                "Pesanan kamu sudah dikonfirmasi dan sedang diproses.",
+                                'system'
+                            );
 
                             Notification::make()
                                 ->title('Payment confirmed successfully!')

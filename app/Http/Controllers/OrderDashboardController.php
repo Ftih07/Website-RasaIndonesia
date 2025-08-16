@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Illuminate\Validation\Rule;
+use App\Models\Chat;
+use App\Services\ChatService;
 
 class OrderDashboardController extends Controller
 {
@@ -85,7 +87,7 @@ class OrderDashboardController extends Controller
 
         return view('dashboard.orders.show', compact('business', 'order', 'allowedStatuses'));
     }
-    
+
 
 
 
@@ -119,6 +121,26 @@ class OrderDashboardController extends Controller
             'delivery_status' => $validated['delivery_status']
         ]);
 
+        // Kirim pesan otomatis ke chat
+        $chat = Chat::where(function ($q) use ($order) {
+            $q->where('user_one_id', $order->user_id)
+                ->where('user_two_id', $order->business->user_id);
+        })->orWhere(function ($q) use ($order) {
+            $q->where('user_two_id', $order->user_id)
+                ->where('user_one_id', $order->business->user_id);
+        })->first();
+
+        if ($chat) {
+            $statusText = ucfirst(str_replace('_', ' ', $validated['delivery_status']));
+            ChatService::sendMessage(
+                $chat->id,
+                auth()->id(),
+                "Status pesanan #{$order->id} berubah menjadi {$statusText}",
+                'system'
+            );
+            $chat->touch();
+        }
+
         return redirect()->route('dashboard.orders')
             ->with('success', 'Status order berhasil diperbarui.');
     }
@@ -128,16 +150,24 @@ class OrderDashboardController extends Controller
         if ($order->payment->status === 'pending' && $order->delivery_status === 'waiting') {
             try {
                 Stripe::setApiKey(env('STRIPE_SECRET'));
-
-                // Ambil payment intent dari Stripe
                 $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);
-
-                // Capture pembayaran
                 $paymentIntent->capture();
 
-                // Update status di database
                 $order->payment->update(['status' => 'paid']);
                 $order->update(['delivery_status' => 'confirmed']);
+
+                // === Trigger Chat & Pesan ===
+                $sellerId = $order->business->user_id; // pemilik bisnis (role seller)
+                $customerId = $order->user_id;
+                $businessId = $order->business_id;
+
+                $chat = ChatService::getOrCreateChat($customerId, $sellerId, $businessId);
+                ChatService::sendMessage(
+                    $chat->id,
+                    $sellerId,
+                    "Halo! Terima kasih sudah memesan di bisnis kami. Pesanan kamu sudah dikonfirmasi.",
+                    'system'
+                );
 
                 return back()->with('success', 'Pesanan berhasil diterima dan pembayaran dikonfirmasi.');
             } catch (\Exception $e) {

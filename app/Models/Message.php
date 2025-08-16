@@ -4,12 +4,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Message extends Model
 {
-    public $incrementing = false;
-    protected $keyType = 'string';
-    protected $fillable = ['id', 'from_user_id', 'to_user_id', 'order_id', 'message', 'is_read'];
+    protected $fillable = [
+        'chat_id',
+        'sender_id',
+        'message',
+        'image_path',
+        'type',
+    ];
 
-    public function images() { return $this->hasMany(MessageImage::class); }
+    public function chat(): BelongsTo
+    {
+        return $this->belongsTo(Chat::class);
+    }
+
+    public function sender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
 }

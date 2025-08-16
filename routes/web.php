@@ -92,6 +92,29 @@ Route::prefix('partner')->name('partner.')->group(function () {
     });
 });
 
+// routes/web.php
+use App\Http\Controllers\ChatController;
+
+Route::middleware(['auth'])->group(function () {
+    // pisah middleware per role sesuai maumu
+    Route::get('/chat/customer', [ChatController::class, 'customerIndex'])
+        ->middleware('check.role:customer')
+        ->name('chat.customer');
+
+    Route::get('/chat/seller', [ChatController::class, 'sellerIndex'])
+        ->middleware('check.role:seller')
+        ->name('chat.seller');
+
+    Route::post('/chat/{chat}/send', [ChatController::class, 'send'])
+        ->name('chat.send'); // <- ini yang bikin error kemarin
+});
+
+Route::middleware(['auth', 'check.role:partner'])->group(function () {
+    Route::get('/chat/partner', [ChatController::class, 'partnerIndex'])
+        ->name('chat.partner');
+});
+
+
 // Untuk customer
 Route::middleware(['auth', 'check.role:customer'])->group(function () {
     Route::post('/testimonial/{testimonial}/like', [TestimonialController::class, 'like'])->name('testimonial.like');
@@ -180,7 +203,9 @@ Route::post('/testimonial/logout', [TestimonialAuthController::class, 'logout'])
  * Allows testimonial users to edit and update their profiles.
  */
 Route::get('/profile/edit', [TestimonialAuthController::class, 'editProfile'])
+    ->middleware('check.role:customer,seller,superadmin')
     ->name('testimonial.profile.edit');
+
 Route::post('/profile/update', [TestimonialAuthController::class, 'updateProfile'])
     ->name('testimonial.profile.update');
 
@@ -210,7 +235,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart/item/{rowId}', [CartController::class, 'getCartItem'])->name('cart.item');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.role:customer,seller,superadmin'])->group(function () {
     Route::get('/cart/validate/{business}', [CartController::class, 'validateCart'])->name('cart.validate');
     Route::get('/checkout/{business}', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
     Route::post('/checkout/process', [CheckoutController::class, 'checkout'])->name('checkout.process');
@@ -221,30 +246,6 @@ Route::get('/order/success/{order}', [CheckoutController::class, 'success'])->na
 
 Route::get('/stripe/success', [CheckoutController::class, 'stripeSuccess'])->name('stripe.success');
 Route::get('/stripe/cancel', [CheckoutController::class, 'stripeCancel'])->name('stripe.cancel');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Route::get('/qr-download/{id}', [QrLinkDownloadController::class, 'download'])->name('qr.download');
 

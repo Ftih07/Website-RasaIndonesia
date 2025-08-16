@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
+use App\Services\ChatService;
 
 class UserResource extends Resource
 {
@@ -61,6 +62,17 @@ class UserResource extends Resource
                     ->action(function (User $record) {
                         $record->removeRole('customer');
                         $record->addRole('partner');
+
+                        $superadminId = 2; // ganti sesuai ID superadmin
+
+                        // Buat chat partner ↔ superadmin
+                        $chat = ChatService::getOrCreateChat($record->id, $superadminId);
+                        ChatService::sendMessage(
+                            $chat->id,
+                            $superadminId,
+                            "Selamat! Kamu sudah di-assign sebagai partner. Silakan cek dashboard kamu.",
+                            'system'
+                        );
                     }),
 
                 Action::make('removePartner')
