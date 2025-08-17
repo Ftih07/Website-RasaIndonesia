@@ -29,13 +29,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.fancybox.min.css') }}">
 
     <!-- custom css  -->
-    <link rel="stylesheet" href="{{ asset('assets/css/show.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/menu.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
-
-
 
 <body class="body-fixed">
     @include('cart.partials.navbar')
@@ -128,20 +126,28 @@
                                     <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                         alt="{{ $menu->name }}">
                                 </div>
-                                <div class="dish-title">
+                                <div class="dish-title flex items-center gap-2">
                                     <h3 class="h3-title">{{ $menu->name }}</h3>
-                                    <p>{{ $business->name }}</p>
+
+                                    @if(in_array($menu->id, $cartMenuIds ?? []))
+                                    <span class="inline-flex items-center gap-1 bg-warning text-white text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
+                                        <i class="fas fa-shopping-cart text-xs"></i> In Cart
+                                    </span>
+                                    @endif
+
+                                    <p class="w-full text-gray-500 text-sm">{{ $business->name }}</p>
                                 </div>
                                 <div class="dish-info">
                                     <ul>
                                         <li>
-                                            <p>Type</p>
-                                            <b>{{ ucfirst($menu->type) }}</b>
+                                            <p>Status</p>
+                                            <span class="badge {{ $menu->is_sell ? 'bg-success' : 'bg-danger' }}">
+                                                {{ $menu->is_sell ? 'Available' : 'Not for Sale' }}
+                                            </span>
                                         </li>
-
                                         <li>
-                                            <p>Serving</p>
-                                            <b>{{ $menu->serving ?? '-' }}</b>
+                                            <p>Max Distance</p>
+                                            <b>{{ $menu->max_distance ? $menu->max_distance . ' km' : '-' }}</b>
                                         </li>
                                     </ul>
                                 </div>
@@ -164,14 +170,14 @@
                                                 data-name="{{ $menu->name }}"
                                                 data-price="{{ $menu->price }}"
                                                 data-max_distance="{{ $menu->max_distance }}"
-                                                data-serving="{{ $menu->serving }}"
+                                                data-is-sell="{{ $menu->is_sell ? 1 : 0 }}"
                                                 data-desc="{{ $menu->desc }}"
                                                 data-business="{{ $business->name }}"
                                                 data-image="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                                 data-options='@json($menu->option_data)'
                                                 data-categories='@json($categories)'
                                                 data-is-sell="{{ $menu->is_sell ? 1 : 0 }}">
-                                                <i class="fa fa-expand-alt"></i>
+                                                <i class="fa fa-plus"></i>
                                             </button>
                                         </li>
                                     </ul>
@@ -214,8 +220,7 @@
 
                                     <!-- Price -->
                                     <div class="mb-4">
-                                        <span class="badge bg-orange mb-2 featured-badge">Menu</span>
-                                        <span id="modal-product-categories" class="text-muted fst-italic ms-2"></span>
+                                        <span class="badge bg-orange mb-2 featured-badge" id="modal-product-categories"></span>
                                         <h2 id="modal-product-name" class="product-title mb-1"></h2>
                                         <p id="modal-product-business" class=""></p>
                                         <h3 id="modal-product-price" class="text-orange fw-bold mb-2 price-tag"></h3>
@@ -246,11 +251,11 @@
                                             <div class="col-6 col-md-4">
                                                 <div class="highlight-card">
                                                     <div class="highlight-icon">
-                                                        <i class="fas fa-users"></i>
+                                                        <i class="fas fa-store"></i>
                                                     </div>
                                                     <div class="highlight-info">
-                                                        <span class="highlight-label">Serving</span>
-                                                        <p id="modal-product-serving" class="highlight-value"></p>
+                                                        <span class="highlight-label">Status</span>
+                                                        <p id="modal-product-status" class="highlight-value"></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,7 +303,7 @@
 
                                     <!-- Add to Cart Button -->
                                     <div class="text-end">
-                                        <button type="button" id="add-to-cart-btn" class="btn btn-primary">Add to Cart</button>
+                                        <button type="button" id="add-to-cart-btn" class="toi-btn toi-btn-warning">🛒 Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -313,59 +318,84 @@
     <div class="modal fade" id="editCartItemModal" tabindex="-1" aria-labelledby="editCartItemLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content border-0">
+                <!-- Header -->
                 <div class="modal-header border-0 bg-light">
                     <h5 class="modal-title fw-bold" id="editCartItemLabel">Edit Cart Item</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
 
-                    <!-- Product Info (readonly) -->
-                    <div class="d-flex align-items-start mb-3">
-                        <img id="edit-product-image" src="" alt="Product Image" class="me-3 rounded" style="width: 80px; height: 80px; object-fit: cover;">
-                        <div>
-                            <h4 id="edit-product-name"></h4>
-                            <p>Price per unit: $<span id="edit-product-unit-price"></span></p>
-                        </div>
-                    </div>
+                <!-- Body -->
+                <div class="modal-body p-0">
+                    <div class="row g-0">
 
-                    <!-- Quantity -->
-                    <div class="mb-3 d-flex align-items-center">
-                        <label for="edit-qty-input" class="form-label me-2">Quantity:</label>
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="edit-qty-minus">-</button>
-                        <input type="number" id="edit-qty-input" class="form-control form-control-sm text-center" value="1" min="1" style="width: 60px;">
-                        <button type="button" class="btn btn-outline-secondary btn-sm ms-2" id="edit-qty-plus">+</button>
-                    </div>
-
-                    <!-- Option Groups (checkboxes) -->
-                    <div id="edit-option-groups-container" class="mb-3"></div>
-
-                    <!-- Note -->
-                    <div class="mb-3">
-                        <label for="edit-cart-note" class="form-label">Note (Optional)</label>
-                        <textarea id="edit-cart-note" class="form-control" rows="3"></textarea>
-                    </div>
-
-                    <!-- Preference if unavailable -->
-                    <div class="mb-3">
-                        <label class="form-label">Preference if unavailable</label>
-                        <div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_merchant_recommendation" value="merchant_recommendation">
-                                <label class="form-check-label" for="edit_merchant_recommendation">Go with Merchant Recommendation</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_contact_me" value="contact_me">
-                                <label class="form-check-label" for="edit_contact_me">Contact Me</label>
+                        <!-- Image Section -->
+                        <div class="col-lg-5 position-relative product-image-container">
+                            <div class="product-image-wrapper">
+                                <img id="edit-product-image" src="" alt="Product Image" class="product-main-image">
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Save button -->
-                    <div class="text-end">
-                        <button type="button" id="save-cart-item-btn" class="btn btn-primary">Save Changes</button>
-                    </div>
+                        <!-- Details Section -->
+                        <div class="col-lg-7">
+                            <div class="product-details-scroll">
+                                <div class="p-4 p-lg-5">
 
-                    <input type="hidden" id="edit-cart-row-id">
+                                    <!-- Hidden ID -->
+                                    <input type="hidden" id="edit-cart-row-id">
+
+                                    <!-- Product Info -->
+                                    <div class="mb-4">
+                                        <h2 id="edit-product-name" class="product-title mb-1"></h2>
+                                        <p class="mb-1">Price per unit: <span id="edit-product-unit-price" class="fw-semibold text-orange"></span></p>
+                                    </div>
+
+                                    <!-- Quantity -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Quantity</label>
+                                        <div class="d-flex align-items-center">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="edit-qty-minus">-</button>
+                                            <input type="number" id="edit-qty-input" class="form-control form-control-sm text-center" value="1" min="1" style="width: 60px;">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm ms-2" id="edit-qty-plus">+</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Option Groups -->
+                                    <div id="edit-option-groups-container" class="mb-4">
+                                        <h5 class="section-title">Your Selection</h5>
+                                        <!-- diisi JS -->
+                                    </div>
+
+                                    <!-- Note -->
+                                    <div class="mb-3">
+                                        <label for="edit-cart-note" class="form-label">Note (Optional)</label>
+                                        <textarea id="edit-cart-note" class="form-control" placeholder="Add additional notes..."></textarea>
+                                    </div>
+
+                                    <!-- Preference if unavailable -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Preference if unavailable</label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_merchant_recommendation" value="merchant_recommendation">
+                                                <label class="form-check-label" for="edit_merchant_recommendation">Go with Merchant Recommendation</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_preference_if_unavailable" id="edit_contact_me" value="contact_me">
+                                                <label class="form-check-label" for="edit_contact_me">Contact Me</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Save Button -->
+                                    <div class="text-end">
+                                        <button type="button" id="save-cart-item-btn" class="toi-btn toi-btn-warning">💾 Save Changes</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -375,12 +405,20 @@
 
     <div id="cartSidebar" class="cart-sidebar" data-business-id="{{ $business->id }}">
         <div class="cart-header">
-            <h5>Your Cart</h5>
-            <button id="closeCartBtn" class="btn-close"></button>
+            <h5 class="mb-0 fw-bold fs-5 d-flex align-items-center">
+                <i class="fas fa-shopping-cart me-2"></i>
+                Your Cart
+            </h5>
+            <button id="closeCartBtn" class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center hover-rotate text-white border-0"
+                onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div id="cartItemsContainer" class="cart-items"></div>
+        <div id="cartItemsContainer" class="cart-items custom-scrollbar"></div>
         <div class="cart-footer">
-            <button id="checkoutBtn" class="btn btn-primary w-100">Checkout</button>
+            <button id="checkoutBtn" class="btn w-100 bg-gradient-orange text-white py-3 rounded-3 fw-semibold border-0">
+                <i class="fas fa-credit-card me-2"></i>Checkout
+            </button>
         </div>
     </div>
 
@@ -520,9 +558,6 @@
         </div>
     </section>
 
-    <br>
-    <br>
-
     <!-- Contact Want to add your business  -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
@@ -611,6 +646,21 @@
 
     {{-- Tambahkan script JS filter MixItUp kalau pakai --}}
     <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get("product");
+
+            if (productId) {
+                // cari button sesuai product-id
+                const btn = document.querySelector(`.dish-add-btn[data-id="${productId}"]`);
+                if (btn) {
+                    btn.click(); // trigger modal auto open
+                }
+            }
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

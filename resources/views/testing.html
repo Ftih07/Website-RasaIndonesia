@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Cart Sidebar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 1.5rem;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="60" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .cart-header h5 {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cart-header .btn-close {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cart-header .btn-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #fafafa;
+        }
+
+        .cart-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cart-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #dc2626;
+            border-radius: 3px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb:hover {
+            background: #b91c1c;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #dc2626;
+        }
+
+        .cart-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #dc2626 0%, #f97316 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cart-item:hover::before {
+            opacity: 1;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid #fff;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .quantity-controls {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            width: fit-content;
+        }
+
+        .qty-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .qty-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.1);
+        }
+
+        .qty-input {
+            background: transparent;
+            border: none;
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+
+        .qty-input:focus {
+            outline: none;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-remove {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            transform: scale(1.1);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            transform: scale(1.1);
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .cart-footer::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 100%);
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .checkout-btn:hover::before {
+            left: 100%;
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6b7280;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart h6 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-count-badge {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50%;
+            padding: 2px 6px;
+            min-width: 18px;
+            text-align: center;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            .cart-sidebar {
+                width: 100vw;
+                right: -100vw;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <!-- Demo Button to Open Cart -->
+    <button onclick="document.getElementById('cartSidebar').classList.add('open')" 
+            class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+        Open Cart Demo
+    </button>
+
+    <!-- Enhanced Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar" data-business-id="687daa0d730ca">
+        <div class="cart-header">
+            <h5>
+                <i class="fas fa-shopping-cart"></i>
+                Your Cart
+            </h5>
+            <button id="closeCartBtn" class="btn-close" onclick="document.getElementById('cartSidebar').classList.remove('open')">
+                <i class="fas fa-times text-white"></i>
+            </button>
+        </div>
+        
+        <div id="cartItemsContainer" class="cart-items">
+            <!-- Items will be populated by JavaScript -->
+        </div>
+        
+        <div class="cart-footer">
+            <button id="checkoutBtn" class="checkout-btn w-100">
+                <i class="fas fa-credit-card me-2"></i>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <script>
+        // Your existing fetchAndRenderCart function (enhanced for the new design)
+        function fetchAndRenderCart(businessId = "") {
+            let url = "/cart";
+            if (businessId) {
+                url += `?business_id=${businessId}`;
+            }
+
+            fetch(url, {
+                headers: { Accept: "application/json" },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    const cartCountEl = document.getElementById("cart-count");
+                    const container = document.getElementById("cartItemsContainer");
+
+                    if (!data.success || data.cart_count === 0) {
+                        container.innerHTML = `
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h6>Your cart is empty</h6>
+                                <p class="text-sm">Add some delicious items to get started!</p>
+                            </div>
+                        `;
+                        if (cartCountEl) cartCountEl.textContent = 0;
+                        return;
+                    }
+
+                    if (cartCountEl) cartCountEl.textContent = data.cart_count;
+                    container.innerHTML = "";
+
+                    data.cart.forEach((item) => {
+                        const div = document.createElement("div");
+                        div.classList.add("cart-item");
+
+                        div.innerHTML = `
+                            <div class="d-flex align-items-start gap-3">
+                                <img src="${item.product.image_url}" 
+                                     alt="${item.product.name}" 
+                                     class="product-image">
+                                <div class="flex-grow-1">
+                                    <div class="product-name">${item.product.name}</div>
+                                    <div class="product-price">$${parseFloat(item.total_price).toFixed(2)}</div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="quantity-controls">
+                                            <button class="qty-btn qty-minus" data-row="${item.id}">−</button>
+                                            <input type="number" value="${item.quantity}" min="1" 
+                                                   class="qty-input" data-row="${item.id}">
+                                            <button class="qty-btn qty-plus" data-row="${item.id}">+</button>
+                                        </div>
+                                        <div class="action-buttons">
+                                            <button class="btn-action btn-edit edit-cart-item" data-row="${item.id}" title="Edit item">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-action btn-remove remove-cart-item" data-row="${item.id}" title="Remove item">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        container.appendChild(div);
+                    });
+
+                    // Update qty - minus
+                    container.querySelectorAll(".qty-minus").forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            const rowId = btn.dataset.row;
+                            const input = container.querySelector(
+                                `.qty-input[data-row="${rowId}"]`
+                            );
+                            let qty = parseInt(input.value);
+                            if (qty > 1) {
+                                qty--;
+                                input.value = qty;
+                                updateCartQty(rowId, qty);
+                            }
+                        });
+                    });
+
+                    // Update qty - plus
+                    container.querySelectorAll(".qty-plus").forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            const rowId = btn.dataset.row;
+                            const input = container.querySelector(
+                                `.qty-input[data-row="${rowId}"]`
+                            );
+                            let qty = parseInt(input.value);
+                            qty++;
+                            input.value = qty;
+                            updateCartQty(rowId, qty);
+                        });
+                    });
+
+                    // Update qty - input change
+                    container.querySelectorAll(".qty-input").forEach((input) => {
+                        input.addEventListener("change", () => {
+                            const rowId = input.dataset.row;
+                            let qty = parseInt(input.value);
+                            if (qty < 1 || isNaN(qty)) qty = 1;
+                            input.value = qty;
+                            updateCartQty(rowId, qty);
+                        });
+                    });
+
+                    // Remove item
+                    container.querySelectorAll(".remove-cart-item").forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            removeCartItem(btn.dataset.row);
+                        });
+                    });
+                });
+        }
+
+        // Demo functions (replace with your actual functions)
+        function updateCartQty(rowId, qty) {
+            console.log(`Updating cart item ${rowId} to quantity ${qty}`);
+            // Your actual update logic here
+        }
+
+        function removeCartItem(rowId) {
+            console.log(`Removing cart item ${rowId}`);
+            // Your actual remove logic here
+        }
+
+        // Demo data for testing
+        const demoData = {
+            success: true,
+            cart_count: 3,
+            cart: [
+                {
+                    id: 1,
+                    quantity: 2,
+                    total_price: 25.99,
+                    product: {
+                        name: "Nasi Gudeg Yogya",
+                        image_url: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=150&h=150&fit=crop"
+                    }
+                },
+                {
+                    id: 2,
+                    quantity: 1,
+                    total_price: 18.50,
+                    product: {
+                        name: "Rendang Daging",
+                        image_url: "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=150&h=150&fit=crop"
+                    }
+                },
+                {
+                    id: 3,
+                    quantity: 3,
+                    total_price: 35.75,
+                    product: {
+                        name: "Gado-gado Jakarta",
+                        image_url: "https://images.unsplash.com/photo-1559847844-d721426d6edc?w=150&h=150&fit=crop"
+                    }
+                }
+            ]
+        };
+
+        // Initialize demo cart
+        setTimeout(() => {
+            const cartCountEl = document.getElementById("cart-count");
+            const container = document.getElementById("cartItemsContainer");
+
+            if (cartCountEl) cartCountEl.textContent = demoData.cart_count;
+            container.innerHTML = "";
+
+            demoData.cart.forEach((item) => {
+                const div = document.createElement("div");
+                div.classList.add("cart-item");
+
+                div.innerHTML = `
+                    <div class="d-flex align-items-start gap-3">
+                        <img src="${item.product.image_url}" 
+                             alt="${item.product.name}" 
+                             class="product-image">
+                        <div class="flex-grow-1">
+                            <div class="product-name">${item.product.name}</div>
+                            <div class="product-price">$${parseFloat(item.total_price).toFixed(2)}</div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="quantity-controls">
+                                    <button class="qty-btn qty-minus" data-row="${item.id}">−</button>
+                                    <input type="number" value="${item.quantity}" min="1" 
+                                           class="qty-input" data-row="${item.id}">
+                                    <button class="qty-btn qty-plus" data-row="${item.id}">+</button>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit edit-cart-item" data-row="${item.id}" title="Edit item">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-remove remove-cart-item" data-row="${item.id}" title="Remove item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            // Add event listeners for demo
+            container.querySelectorAll(".qty-minus, .qty-plus, .qty-input, .remove-cart-item").forEach(el => {
+                if (el.classList.contains('qty-minus') || el.classList.contains('qty-plus')) {
+                    el.addEventListener("click", (e) => {
+                        const input = el.classList.contains('qty-minus') 
+                            ? el.nextElementSibling 
+                            : el.previousElementSibling;
+                        let qty = parseInt(input.value);
+                        
+                        if (el.classList.contains('qty-minus') && qty > 1) {
+                            qty--;
+                        } else if (el.classList.contains('qty-plus')) {
+                            qty++;
+                        }
+                        
+                        input.value = qty;
+                        updateCartQty(el.dataset.row, qty);
+                    });
+                } else if (el.classList.contains('qty-input')) {
+                    el.addEventListener("change", () => {
+                        let qty = parseInt(el.value);
+                        if (qty < 1 || isNaN(qty)) qty = 1;
+                        el.value = qty;
+                        updateCartQty(el.dataset.row, qty);
+                    });
+                } else if (el.classList.contains('remove-cart-item')) {
+                    el.addEventListener("click", () => {
+                        removeCartItem(el.dataset.row);
+                        el.closest('.cart-item').remove();
+                    });
+                }
+            });
+        }, 100);
+    </script>
+</body>
+</html>

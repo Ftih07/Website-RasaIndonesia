@@ -17,9 +17,13 @@ class BusinessController extends Controller
     public function show($slug, Request $request)
     {
         // Ambil business berdasarkan slug + relasi
-        $business = Business::with(['type', 'testimonials.testimonial_user', 'food_categories', 'products'])
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $business = Business::with([
+            'type',
+            'testimonials.testimonial_user',
+            'food_categories',
+            'products.optionGroups.options',
+            'products.categories',
+        ])->where('slug', $slug)->firstOrFail();
 
         $types = Type::all();
         $typeFilter = $request->get('type', 'all');
@@ -55,6 +59,30 @@ class BusinessController extends Controller
             ->orderBy('created_at', $sortOrder === 'newest' ? 'desc' : 'asc')
             ->get();
 
+        // Ambil semua menu + option data (sama seperti di function menu)
+        $menus = $business->products()
+            ->with(['optionGroups.options', 'categories'])
+            ->latest()
+            ->get()
+            ->map(function ($menu) {
+                $menu->option_data = $menu->optionGroups->map(function ($group) {
+                    return [
+                        'group_name'    => $group->name,
+                        'max_selection' => $group->max_selection,
+                        'is_required'   => (bool) $group->is_required,
+                        'options'       => $group->options->map(function ($option) {
+                            return [
+                                'id'    => $option->id,
+                                'name'  => $option->name,
+                                'price' => $option->price,
+                            ];
+                        }),
+                    ];
+                });
+
+                return $menu;
+            });
+
         $latestMenus = $business->products()->latest()->take(6)->get();
 
         return view('business.show', compact(
@@ -65,9 +93,11 @@ class BusinessController extends Controller
             'testimonials',
             'ratingFilter',
             'sortOrder',
-            'latestMenus'
+            'latestMenus',
+            'menus' // <-- jangan lupa dimasukin ke compact
         ));
     }
+
 
     public function menu($slug)
     {
@@ -99,7 +129,13 @@ class BusinessController extends Controller
                 return $menu;
             });
 
-        return view('business.menu', compact('business', 'menus'));
+        // ✅ ambil semua id menu yang udah ada di cart user
+        $cartMenuIds = auth()->user()
+            ->cart
+            ? auth()->user()->cart->items()->pluck('product_id')->toArray()
+            : [];
+
+        return view('business.menu', compact('business', 'menus', 'cartMenuIds'));
     }
 
     public function create()

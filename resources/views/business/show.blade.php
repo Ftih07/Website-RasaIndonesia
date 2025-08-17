@@ -30,11 +30,8 @@
 
 </head>
 
-
-
 <body class="body-fixed">
     @include('partials.navbar')
-
 
     <!-- header ends  -->
     <section class="two-col-sec section">
@@ -116,7 +113,9 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                            <h2 class="h2-title">Business Overview</h2>
+                            <h2 class="h2-title">
+                                {{ $business->type?->title ?? 'Business' }} Overview
+                            </h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>
@@ -226,7 +225,20 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                            <h2 class="h2-title">Catalogue Menu</h2>
+                            <h2 class="h2-title">
+                                @switch($business->type->title)
+                                @case('Restaurant')
+                                Menus
+                                @break
+
+                                @case('Shop')
+                                Products
+                                @break
+
+                                @default
+                                Menus
+                                @endswitch
+                            </h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>
@@ -239,6 +251,15 @@
                         <ion-icon name="document-outline"></ion-icon> Catalogue List
                     </a>
                 </div>
+
+                @php
+                $allCategories = collect();
+                foreach ($menus as $menu) {
+                $allCategories = $allCategories->merge($menu->categories);
+                }
+                $allCategories = $allCategories->unique('id');
+                @endphp
+
                 <div class="menu-tab-wp">
                     <div class="row">
                         <div class="col-lg-12 m-auto">
@@ -249,14 +270,12 @@
                                         <img src="{{ asset('assets/images/menu-1.png') }}" alt="" class="icon-filter">
                                         All
                                     </li>
-                                    <li class="filter" data-filter=".food">
+                                    @foreach($allCategories as $cat)
+                                    <li class="filter" data-filter=".category-{{ Str::slug($cat->name) }}">
                                         <img src="{{ asset('assets/images/icon/makanan.png') }}" alt="" class="icon-filter">
-                                        Foods
+                                        {{ $cat->name }}
                                     </li>
-                                    <li class="filter" data-filter=".drink">
-                                        <img src="{{ asset('assets/images/icon/minuman.png') }}" alt="" class="icon-filter">
-                                        Drinks
-                                    </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -265,14 +284,17 @@
 
                 <!-- Update your existing menu cards to include data-menu-id attribute -->
                 <div class="menu-list-row">
-                    <div class="row g-xxl-5 bydefault_show-menu" id="menu">
-                        @foreach($latestMenus as $menu)
-                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type ?? 'no-type' }}" data-cat="{{ $menu->type ?? 'no-type' }}">
+                    <div class="row g-xxl-5 bydefault_show-menu" id="menu-list">
+                        @foreach($menus as $menu)
+                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}
+                    @foreach($menu->categories as $cat) category-{{ Str::slug($cat->name) }} @endforeach"
+                            data-cat="{{ $menu->type }}" data-name="{{ strtolower($menu->name) }}">
                             <div class="dish-box text-center" data-menu-id="{{ $menu->id }}">
                                 <div class="dist-img">
                                     <img src="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                         alt="{{ $menu->name }}">
                                 </div>
+
                                 <div class="dish-title">
                                     <h3 class="h3-title">{{ $menu->name }}</h3>
                                     <p>{{ $business->name }}</p>
@@ -280,25 +302,30 @@
                                 <div class="dish-info">
                                     <ul>
                                         <li>
-                                            <p>Type</p>
-                                            <b>{{ ucfirst($menu->type ?? 'no type') }}</b>
+                                            <p>Status</p>
+                                            <span class="badge {{ $menu->is_sell ? 'bg-success' : 'bg-danger' }}">
+                                                {{ $menu->is_sell ? 'Available' : 'Not for Sale' }}
+                                            </span>
                                         </li>
-
                                         <li>
-                                            <p>Serving</p>
-                                            <b>{{ $menu->serving ?? '-' }}</b>
+                                            <p>Max Distance</p>
+                                            <b>{{ $menu->max_distance ? $menu->max_distance . ' km' : '-' }}</b>
                                         </li>
                                     </ul>
                                 </div>
+
                                 <div class="dist-bottom-row">
                                     <ul>
                                         <li>
                                             <b>${{ $menu->price }}</b>
                                         </li>
                                         <li>
-                                            <button class="dish-add-btn" data-menu-id="{{ $menu->id }}">
-                                                <i class="fa fa-expand-alt"></i>
-                                            </button>
+                                            <form action="{{ route('business.menu', ['slug' => $business->slug]) }}" method="GET">
+                                                <input type="hidden" name="product" value="{{ $menu->id }}">
+                                                <button type="submit" class="dish-add-btn">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
                                         </li>
                                     </ul>
                                 </div>
@@ -315,86 +342,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Product Detail Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content border-0">
-                <div class="modal-header border-0 bg-light">
-                    <h5 class="modal-title fw-bold" id="productModalLabel">Product Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="row g-0">
-                        <!-- Product Image Section with Overlay -->
-                        <div class="col-lg-5 position-relative product-image-container">
-                            <div class="product-image-wrapper">
-                                <img id="modal-product-image" src="" alt="Product Image" class="product-main-image">
-                            </div>
-                        </div>
-
-                        <!-- Product Details Section -->
-                        <div class="col-lg-7">
-                            <div class="product-details-scroll">
-                                <div class="p-4 p-lg-5">
-
-                                    <!-- Price -->
-                                    <div class="mb-4">
-                                        <span class="badge bg-orange mb-2 featured-badge">Menu</span>
-                                        <h2 id="modal-product-name" class="product-title mb-1"></h2>
-                                        <p id="modal-product-business" class=""></p>
-                                        <h3 id="modal-product-price" class="text-orange fw-bold mb-0 price-tag"></h3>
-                                    </div>
-
-                                    <!-- Product Highlights -->
-                                    <div class="product-highlights mb-4">
-                                        <div class="row g-3">
-                                            <div class="col-6 col-md-4">
-                                                <div class="highlight-card">
-                                                    <div class="highlight-icon">
-                                                        <i class="fas fa-utensils"></i>
-                                                    </div>
-                                                    <div class="highlight-info">
-                                                        <span class="highlight-label">Type</span>
-                                                        <p id="modal-product-type" class="highlight-value"></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 col-md-4">
-                                                <div class="highlight-card">
-                                                    <div class="highlight-icon">
-                                                        <i class="fas fa-users"></i>
-                                                    </div>
-                                                    <div class="highlight-info">
-                                                        <span class="highlight-label">Serving</span>
-                                                        <p id="modal-product-serving" class="highlight-value"></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description mb-4">
-                                        <h5 class="section-title">Description</h5>
-                                        <p id="modal-product-desc" class="description-text"></p>
-                                    </div>
-
-                                    <!-- Product Variants -->
-                                    <div id="variants-section" class="product-variants mb-4">
-                                        <h5 class="section-title">Variants & Complements</h5>
-                                        <div id="modal-product-variants" class="row g-3">
-                                            <!-- Variants will be added here -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Order and Reserve  -->
     <section class="body-order">
@@ -586,7 +533,7 @@
         </div>
     </section>
 
-    <!-- Gallery  -->
+    <!-- Gallery - -->
     <section class="book-table section bg-light" id="gallery">
         <div class="book-table-shape">
             <img src="assets/images/table-leaves-shape.png" alt="">
@@ -791,23 +738,47 @@
 
                                 <div class="testimonials-box-text">
                                     <h3 class="h3-title">
-                                        {{ isset($testimonial->testimonial_user) ? $testimonial->testimonial_user->username : $testimonial->name }}
+                                        {{ $testimonial->user->name ?? 'Anonim' }}
                                     </h3>
+
+                                    {{-- Produk yang direview --}}
+                                    @if($testimonial->order && $testimonial->order->items->isNotEmpty())
+                                    <div class="mb-3">
+                                        <small class="text-muted">Produk yang dibeli:</small>
+                                        <div class="d-flex flex-wrap gap-2 mt-1">
+                                            @foreach($testimonial->order->items as $item)
+                                            <div class="d-flex align-items-center border rounded p-2" style="max-width:200px;">
+                                                @if($item->product && $item->product->image)
+                                                <img src="{{ asset('storage/' . $item->product->image) }}"
+                                                    alt="{{ $item->product->name }}"
+                                                    class="me-2 rounded"
+                                                    style="width:40px; height:40px; object-fit:cover;">
+                                                @endif
+                                                <span class="small">{{ $item->product->name ?? 'Produk tidak ditemukan' }}</span>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    @endif
 
                                     <div class="testimonial-date mb-2">
                                         <span class="date-icon"><i class="uil uil-calendar-alt"></i></span>
-                                        <span class="date-text">{{ \Carbon\Carbon::parse($testimonial->publishedAtDate)->format('M d, Y') }}</span>
-                                        <span class="time-text">{{ \Carbon\Carbon::parse($testimonial->publishedAtDate)->format('g:i A') }}</span>
+                                        <span class="date-text">{{ \Carbon\Carbon::parse($testimonial->publishedAtDate)->format('M d, Y g:i A') }}</span>
                                     </div>
 
                                     <p class="testimonial-description" data-description="{{ $testimonial->description }}">
                                         {{ $testimonial->description }}
                                     </p>
 
-                                    {{-- Optional testimonial image --}}
-                                    @if($testimonial->image_url)
-                                    <div class="mt-2">
-                                        <img src="{{ $testimonial->image_url }}" alt="Testimonial Image" class="img-fluid rounded" style="max-height: 200px;">
+                                    {{-- Gambar testimonial (bisa banyak) --}}
+                                    @if($testimonial->images->isNotEmpty())
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        @foreach($testimonial->images as $img)
+                                        <img src="{{ asset('storage/' . $img->image_path) }}"
+                                            alt="Testimonial Image"
+                                            class="img-fluid rounded"
+                                            style="width:100px; height:100px; object-fit:cover;">
+                                        @endforeach
                                     </div>
                                     @endif
 
@@ -819,16 +790,15 @@
                                         @else
                                         <form method="POST" action="{{ route('testimonial.like', $testimonial) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-primary">👍 Apakah komentar ini membantu?</button>
+                                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-primary">
+                                                👍 Apakah komentar ini membantu?
+                                            </button>
                                         </form>
                                         @endif
                                         @else
                                         <a href="{{ route('testimonial.login') }}" class="text-primary">👍 Login untuk memberi Like</a>
                                         @endauth
-
-                                        <p class="text-muted small mt-1">
-                                            {{ $testimonial->likes->count() }} orang merasa terbantu
-                                        </p>
+                                        <p class="text-muted small mt-1">{{ $testimonial->likes->count() }} orang merasa terbantu</p>
                                     </div>
 
                                     {{-- Balasan seller (kalau ada) --}}
@@ -840,6 +810,7 @@
                                     </div>
                                     @endif
                                 </div>
+
                             </div>
                         </div>
 
@@ -1146,6 +1117,9 @@
     <!-- custom js  -->
     <script src="{{ asset('assets/main.js') }}"></script>
 
+    <!-- JavaScript for Modal Functionality -->
+    <script src="{{ asset('js/cart.js') }}"></script>
+
     <script>
         /**
          * Swiper Initialization
@@ -1355,139 +1329,6 @@
         });
     </script>
 
-    <!-- JavaScript for Modal Functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuData = @json($latestMenus);
-            const businessData = {
-                name: '{{ $business->name }}',
-                logo: '{{ $business->logo }}'
-            };
-
-            // Add Font Awesome if not already included
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const fontAwesome = document.createElement('link');
-                fontAwesome.rel = 'stylesheet';
-                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
-                document.head.appendChild(fontAwesome);
-            }
-
-            document.querySelectorAll('.dish-box-wp').forEach(item => {
-                const box = item.querySelector('.dish-box');
-                const addBtn = item.querySelector('.dish-add-btn');
-                const menuId = box.getAttribute('data-menu-id');
-
-                box.addEventListener('click', function(e) {
-                    if (!e.target.closest('.dish-add-btn')) {
-                        openProductModal(menuId);
-                    }
-                });
-
-                if (addBtn) {
-                    addBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        openProductModal(menuId);
-                    });
-                }
-            });
-
-            function openProductModal(menuId) {
-                const menu = menuData.find(m => m.id == menuId);
-                if (!menu) {
-                    console.error('Menu not found:', menuId);
-                    return;
-                }
-
-                // Populate main product details
-                document.getElementById('modal-product-name').textContent = menu.name;
-                document.getElementById('modal-product-business').textContent = businessData.name;
-
-                // Price with currency formatting
-                document.getElementById('modal-product-price').textContent = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(menu.price);
-
-                // Format product type and details
-                document.getElementById('modal-product-type').textContent = menu.type.charAt(0).toUpperCase() + menu.type.slice(1);
-                document.getElementById('modal-product-serving').textContent = menu.serving || '-';
-
-                // Description with fallback
-                const description = menu.desc || 'A delicious offering from our kitchen. Prepared with the finest ingredients to satisfy your cravings.';
-                document.getElementById('modal-product-desc').textContent = description;
-
-                // Handle image with enhanced error handling
-                const imgSrc = menu.image ?
-                    `/storage/${menu.image}` :
-                    (businessData.logo ? `/storage/${businessData.logo}` : '/assets/images/logo/logo.png');
-
-                const productImage = document.getElementById('modal-product-image');
-                productImage.src = imgSrc;
-                productImage.onerror = function() {
-                    this.src = '/assets/images/logo/logo.png';
-                };
-
-                // Variants handling with enhanced UI
-                const variantsContainer = document.getElementById('modal-product-variants');
-                const variantsSection = document.getElementById('variants-section');
-                variantsContainer.innerHTML = '';
-
-                if (menu.variants && menu.variants.length > 0) {
-                    variantsSection.style.display = 'block';
-                    menu.variants.forEach(variant => {
-                        const variantElem = document.createElement('div');
-                        variantElem.className = 'col-md-6';
-
-                        const priceDisplay = variant.price ? `$${variant.price}` : ''; // Cek dulu
-
-                        variantElem.innerHTML = `
-            <div class="variant-item">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="variant-name">${variant.name}</span>
-                    </div>
-                    <div>
-                        <span class="variant-price text-orange">${priceDisplay}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-                        variantsContainer.appendChild(variantElem);
-                    });
-                } else {
-                    variantsSection.style.display = 'none';
-                }
-
-                // Fix for Bootstrap modal z-index
-                document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-                    backdrop.style.zIndex = "1050";
-                });
-
-                document.getElementById('productModal').style.zIndex = "1055";
-
-                // Show modal
-                const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-                productModal.show();
-
-                // After modal is shown, adjust the height of scrollable content to match image height
-                productModal._element.addEventListener('shown.bs.modal', function() {
-                    setTimeout(() => {
-                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
-                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
-                    }, 100);
-                });
-
-                // Handle window resize
-                window.addEventListener('resize', function() {
-                    if (document.getElementById('productModal').classList.contains('show')) {
-                        const imageHeight = document.querySelector('.product-main-image').offsetHeight;
-                        document.querySelector('.product-details-scroll').style.maxHeight = `${imageHeight}px`;
-                    }
-                });
-            }
-        });
-    </script>
-
     <script>
         function showEditTestimonialModal(id, description, rating) {
             const form = document.getElementById('editTestimonialForm');
@@ -1499,7 +1340,6 @@
             modal.show();
         }
     </script>
-
 
 </body>
 

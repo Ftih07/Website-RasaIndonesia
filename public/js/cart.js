@@ -115,7 +115,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const container = document.getElementById("cartItemsContainer");
 
                 if (!data.success || data.cart_count === 0) {
-                    container.innerHTML = "<p>Your cart is empty.</p>";
+                    // Enhanced empty cart display
+                    container.innerHTML = `
+                    <div class="cart-empty text-center py-5" style="color: #a0aec0;">
+                        <i class="fas fa-shopping-cart display-4 mb-3" style="opacity: 0.5;"></i>
+                        <p class="mb-0 fs-5">Your cart is empty</p>
+                        <p class="small">Add some delicious items to get started!</p>
+                    </div>
+                `;
                     cartCountEl.textContent = 0;
                     return;
                 }
@@ -125,54 +132,101 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 data.cart.forEach((item) => {
                     const div = document.createElement("div");
+                    // Enhanced classes with modern styling
                     div.classList.add(
                         "cart-item",
-                        "d-flex",
-                        "justify-content-between",
-                        "align-items-center",
-                        "mb-2"
+                        "bg-white",
+                        "rounded-4",
+                        "p-3",
+                        "mb-3",
+                        "item-shadow",
+                        "hover-lift",
+                        "border"
                     );
+                    div.style.cssText =
+                        "transition: all 0.3s ease; border-color: rgba(255, 107, 53, 0.1) !important;";
 
+                    // Modern card layout with better visual hierarchy
                     div.innerHTML = `
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="${item.product.image_url}" alt="${
+                    <!-- Product Image & Info -->
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="${item.product.image_url}" alt="${
                         item.product.name
                     }" 
-                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
-                        <div>
-                            <strong>${item.product.name}</strong>
-                            <p class="mb-1">Final Price: $${parseFloat(
+                                 class="rounded-3 shadow-sm" 
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                        </div>
+                        <div class="flex-grow-1 min-width-0">
+                            <h6 class="mb-1 fw-semibold text-dark">${
+                                item.product.name
+                            }</h6>
+                            <p class="mb-0 text-muted small">Final Price: <span class="fw-bold" style="color: #ff6b35;">$${parseFloat(
                                 item.total_price
-                            ).toFixed(2)}</p>
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-secondary qty-minus" data-row="${
-                                    item.id
-                                }">-</button>
-                                <input type="number" value="${
-                                    item.quantity
-                                }" min="1" 
-                                    class="form-control form-control-sm mx-1 qty-input" 
-                                    style="width: 50px;" data-row="${item.id}">
-                                <button class="btn btn-sm btn-outline-secondary qty-plus" data-row="${
-                                    item.id
-                                }">+</button>
-                            </div>
+                            ).toFixed(2)}</span></p>
                         </div>
                     </div>
-                    <div>
-                        <button class="btn btn-sm btn-danger remove-cart-item" data-row="${
-                            item.id
-                        }">×</button>
-                        <button class="btn btn-sm btn-secondary edit-cart-item ms-2" data-row="${
-                            item.id
-                        }">✎</button>
-                    </div>
-                `;
+                    
+                    <!-- Quantity Controls & Actions -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Modern Quantity Controls -->
+                        <div class="d-flex align-items-center bg-light rounded-pill p-1 border">
+                            <button class="btn btn-sm rounded-circle qty-minus hover-scale" 
+                                    style="width: 32px; height: 32px;" data-row="${
+                                        item.id
+                                    }">
+                                <i class="fas fa-minus small"></i>
+                            </button>
+                            <input type="number" value="${
+                                item.quantity
+                            }" min="1" 
+                                  class="form-control form-control-sm text-center fw-semibold qty-input border-0 bg-transparent" 
+                                  style="width: 50px; color: #2d3748;" data-row="${
+                                      item.id
+                                  }">
+                           <button class="btn btn-sm rounded-circle qty-plus hover-scale" 
+                                   style="width: 32px; height: 32px;" data-row="${
+                                       item.id
+                                   }">
+                               <i class="fas fa-plus small"></i>
+                           </button>
+                       </div>
+                       
+                       <!-- Action Buttons -->
+                       <div class="d-flex gap-2">
+                           <button class="btn btn-sm rounded-circle edit-cart-item hover-scale" 
+                                   style="width: 32px; height: 32px; background: #e3f2fd; color: #1976d2; border: none;" 
+                                   data-row="${item.id}">
+                               ✎
+                           </button>
+                           
+                           <button class="btn btn-sm rounded-circle remove-cart-item hover-scale" 
+                                   style="width: 32px; height: 32px; background: #fed7d7; color: #e53e3e; border: none;" 
+                                   data-row="${item.id}">
+                               <i class="fas fa-trash small"></i>
+                           </button>
+                       </div>
+                   </div>
+               `;
 
                     container.appendChild(div);
                 });
 
-                // Update qty
+                // Enhanced hover effects for quantity buttons
+                container
+                    .querySelectorAll(".qty-minus, .qty-plus")
+                    .forEach((btn) => {
+                        btn.addEventListener("mouseenter", function () {
+                            this.style.background = "#ff6b35";
+                            this.style.color = "white";
+                        });
+                        btn.addEventListener("mouseleave", function () {
+                            this.style.background = "transparent";
+                            this.style.color = "#6c757d";
+                        });
+                    });
+
+                // Your original functionality - EXACTLY PRESERVED
                 container.querySelectorAll(".qty-minus").forEach((btn) => {
                     btn.addEventListener("click", () => {
                         const rowId = btn.dataset.row;
@@ -211,7 +265,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 });
 
-                // Remove item
                 container
                     .querySelectorAll(".remove-cart-item")
                     .forEach((btn) => {
@@ -219,6 +272,24 @@ document.addEventListener("DOMContentLoaded", function () {
                             removeCartItem(btn.dataset.row);
                         });
                     });
+
+                // Edit functionality (if you have it)
+                container.querySelectorAll(".edit-cart-item").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        // Your existing edit functionality here
+                        console.log("Edit item:", btn.dataset.row);
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching cart:", error);
+                const container = document.getElementById("cartItemsContainer");
+                container.innerHTML = `
+               <div class="text-center py-5 text-danger">
+                   <i class="fas fa-exclamation-triangle display-4 mb-3"></i>
+                   <p>Error loading cart. Please try again.</p>
+               </div>
+           `;
             });
     }
 
@@ -389,22 +460,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const isSell = button.getAttribute("data-is-sell") === "1";
         if (isSell) {
             addToCartBtn.disabled = false;
-            addToCartBtn.textContent = "Add to Cart";
+            addToCartBtn.textContent = "🛒 Add to Cart";
             addToCartBtn.classList.remove("btn-secondary");
-            addToCartBtn.classList.add("btn-primary");
+            addToCartBtn.classList.add("toi-btn-warning");
         } else {
             addToCartBtn.disabled = true;
-            addToCartBtn.textContent = "Not Available";
-            addToCartBtn.classList.remove("btn-primary");
+            addToCartBtn.textContent = "🚫 Not Available";
+            addToCartBtn.classList.remove("toi-btn-warning");
             addToCartBtn.classList.add("btn-secondary");
         }
+
         // === akhir cek is_sell ===
 
         currentBusinessId = button.getAttribute("data-business_id");
 
         const name = button.getAttribute("data-name");
         basePrice = parseFloat(button.getAttribute("data-price"));
-        const serving = button.getAttribute("data-serving");
+        const productisSell = button.getAttribute("data-is-sell");
         const maxDistance = button.getAttribute("data-max_distance");
         const description = button.getAttribute("data-desc");
         const business = button.getAttribute("data-business");
@@ -415,8 +487,8 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.querySelector(
             "#modal-product-price"
         ).textContent = `$${basePrice.toFixed(2)}`;
-        modal.querySelector("#modal-product-serving").textContent =
-            serving || "-";
+        modal.querySelector("#modal-product-status").textContent =
+            productisSell == 1 ? "Available" : "Not Available";
         modal.querySelector("#modal-product-type").textContent = maxDistance
             ? `${maxDistance} km`
             : "-";
