@@ -14,7 +14,12 @@ class OrderTrackingController extends Controller
     // semua order user
     public function index()
     {
-        $orders = Auth::user()->orders()->latest()->get();
+        $orders = Auth::user()->orders()
+            ->whereHas('payment', function ($q) {
+                $q->where('status', '!=', 'incomplete');
+            })
+            ->latest()
+            ->get();
 
         return view('orders.index', compact('orders'));
     }

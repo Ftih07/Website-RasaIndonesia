@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\PaymentIntent;
+use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
@@ -21,13 +22,48 @@ class CheckoutController extends Controller
     {
         $cart = Cart::where('user_id', Auth::id())
             ->where('business_id', $businessId)
-            ->with('items.product', 'business') // tambahkan relasi business
+            ->with('items.product', 'business')
             ->firstOrFail();
+
+        // mapping product_id => { name, max_distance }
+        $maxDistances = $cart->items->mapWithKeys(function ($item) {
+            return [
+                $item->product_id => [
+                    'name' => $item->product->name,
+                    'max_distance' => $item->product->max_distance
+                ]
+            ];
+        });
 
         return view('checkout', [
             'cart' => $cart,
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'maxDistances' => $maxDistances, // ✅ sekarang ada nama + max_distance
         ]);
+    }
+
+    private function calculateBusinessShippingFee($business, $deliveryOption, $distanceKm)
+    {
+        // Pickup (bebas diatur per bisnis, bisa flat_rate = 0 atau custom)
+        if ($deliveryOption === 'pickup') {
+            return 0;
+        }
+
+        switch ($business->shipping_type) {
+            case 'flat':
+                return $business->flat_rate;
+
+            case 'per_km':
+                $unitCount = ceil($distanceKm / $business->per_km_unit);
+                return $unitCount * $business->per_km_rate;
+
+            case 'flat_plus_per_km':
+                $unitCount = ceil($distanceKm / $business->per_km_unit);
+                return $business->flat_rate + ($unitCount * $business->per_km_rate);
+
+            default:
+                return 0;
+        }
     }
 
     public function calculateShipping(Request $request)
@@ -58,7 +94,7 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Tidak dapat menghitung jarak'], 422);
         }
 
-        $delivery_fee = 2 + (ceil($distance_km / 3) * 4);
+        $delivery_fee = $this->calculateBusinessShippingFee($business, $request->delivery_option, $distance_km);
 
         return response()->json([
             'distance_km' => round($distance_km, 2),
@@ -84,11 +120,35 @@ class CheckoutController extends Controller
 
         // Hitung ongkir
         if ($request->delivery_option === 'pickup') {
-            $delivery_fee = 2;
+            $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'pickup', 0);
             $shipping_address = $cart->business->address;
+            $distance_km = 0;
         } else {
-            $delivery_fee = 4; // sementara
+            $apiKey = env('GOOGLE_MAPS_API_KEY');
+            $distance_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$cart->business->latitude},{$cart->business->longitude}&destinations={$request->shipping_lat},{$request->shipping_lng}&units=metric&key={$apiKey}";
+            $distance_data = json_decode(file_get_contents($distance_url), true);
+
+            if (isset($distance_data['rows'][0]['elements'][0]['distance']['value'])) {
+                $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
+                $delivery_fee = 2 + (round($distance_km / 3) * 4);
+            } else {
+                throw new \Exception('Tidak dapat menghitung jarak');
+            }
+            // hitung jarak Google API...
+            $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
+
+            $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'delivery', $distance_km);
+
             $shipping_address = $request->shipping_address;
+        }
+
+        // ✅ Validasi max_distance tiap produk
+        foreach ($cart->items as $item) {
+            if ($item->product->max_distance && $distance_km > $item->product->max_distance) {
+                throw ValidationException::withMessages([
+                    'shipping_address' => "Produk {$item->product->name} tidak bisa dikirim (maksimal {$item->product->max_distance} km)"
+                ]);
+            }
         }
 
         $subtotal = $cart->items->sum('total_price');
@@ -128,7 +188,7 @@ class CheckoutController extends Controller
         // Simpan Payment dan Order dengan status pending
         $payment = Payment::create([
             'payment_method' => 'stripe',
-            'status' => 'pending',
+            'status' => 'incomplete',
             'transaction_id' => $paymentIntent->id,
         ]);
 
@@ -171,7 +231,8 @@ class CheckoutController extends Controller
         // Kirim client_secret ke view untuk frontend Stripe.js
         return view('checkout-payment', [
             'clientSecret' => $paymentIntent->client_secret,
-            'order' => $order
+            'order' => $order,
+            'maxDistances' => [], // kalau memang viewnya “menuntut” variabel ini
         ]);
     }
 
@@ -190,6 +251,11 @@ class CheckoutController extends Controller
         // Pastikan hanya owner order yg bisa lihat
         if ($order->user_id !== Auth::id()) {
             abort(403);
+        }
+
+        // --- Update status payment ke pending ---
+        if ($order->payment) {
+            $order->payment->update(['status' => 'pending']);
         }
 
         // Decode options dan ambil nama dari ProductOption

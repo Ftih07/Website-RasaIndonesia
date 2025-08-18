@@ -129,9 +129,7 @@ class BusinessController extends Controller
                 return $menu;
             });
 
-        // ✅ ambil semua id menu yang udah ada di cart user
-        $cartMenuIds = auth()->user()
-            ->cart
+        $cartMenuIds = auth()->check() && auth()->user()->cart
             ? auth()->user()->cart->items()->pluck('product_id')->toArray()
             : [];
 

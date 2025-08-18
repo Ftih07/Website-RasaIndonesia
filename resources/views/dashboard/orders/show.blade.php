@@ -34,6 +34,13 @@
                 <tr>
                     <th>Shipping Address</th>
                     <td>{{ $order->shipping_address ?? '-' }}</td>
+                    @if($order->shipping_address)
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->shipping_address) }}"
+                        target="_blank"
+                        class="btn btn-sm btn-primary">
+                        📍 Lihat di Maps
+                    </a>
+                    @endif
                 </tr>
                 <tr>
                     <th>Delivery Note</th>
@@ -112,25 +119,12 @@
     <div class="mb-4">
         <h5 class="fw-bold mb-2">Actions</h5>
 
-        <td class="border px-4 py-2">
-            {{-- Tampilkan status saat ini --}}
-            <span class="inline-block mr-2">{{ ucfirst(str_replace('_', ' ', $order->delivery_status)) }}</span>
+        {{-- Status saat ini --}}
+        <span class="inline-block mr-2">
+            {{ ucfirst(str_replace('_', ' ', $order->delivery_status)) }}
+        </span>
 
-            {{-- Dropdown update status --}}
-            <form method="POST" action="{{ route('dashboard.orders.updateStatus', $order->id) }}" class="inline-block">
-                @csrf
-                @method('PATCH')
-                <select name="delivery_status" class="border rounded px-2 py-1" onchange="this.form.submit()">
-                    <option value="" disabled selected>Select Status</option>
-                    @foreach($allowedStatuses as $status)
-                    <option value="{{ $status }}">{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
-                    @endforeach
-                </select>
-            </form>
-        </td>
-
-
-        {{-- Terima pesanan --}}
+        {{-- Kalau masih waiting + payment pending → tampilkan tombol Terima/Tolak --}}
         @if($order->delivery_status === 'waiting' && $order->payment->status === 'pending')
         <form method="POST" action="{{ route('dashboard.orders.approve', $order->id) }}" class="inline-block ml-2">
             @csrf
@@ -140,7 +134,6 @@
             </button>
         </form>
 
-        {{-- Tolak pesanan --}}
         <form method="POST" action="{{ route('dashboard.orders.reject', $order->id) }}" class="inline-block ml-2">
             @csrf
             @method('PATCH')
@@ -148,6 +141,25 @@
                 Tolak
             </button>
         </form>
+
+        {{-- Kalau order sudah diterima (confirmed, assigned, on_delivery) → tampilkan dropdown --}}
+        @elseif(in_array($order->delivery_status, ['confirmed', 'assigned', 'on_delivery']))
+        <form method="POST" action="{{ route('dashboard.orders.updateStatus', $order->id) }}" class="inline-block">
+            @csrf
+            @method('PATCH')
+            <select name="delivery_status" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                <option value="" disabled selected>Update Status</option>
+                @foreach($allowedStatuses as $status)
+                <option value="{{ $status }}" {{ $order->delivery_status === $status ? 'selected' : '' }}>
+                    {{ ucfirst(str_replace('_', ' ', $status)) }}
+                </option>
+                @endforeach
+            </select>
+        </form>
+
+        {{-- Kalau order ditolak / sudah selesai → hanya tampilkan status --}}
+        @elseif(in_array($order->delivery_status, ['rejected', 'delivered', 'canceled']))
+        <span class="ml-2 text-gray-500">(No further actions)</span>
         @endif
     </div>
 

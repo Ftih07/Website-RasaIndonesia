@@ -51,7 +51,11 @@ class Business extends Model
         'user_id',
         'is_verified',
         'is_open',
-        'orders_status'
+        'orders_status',
+        'shipping_type',
+        'flat_rate',
+        'per_km_rate',
+        'per_km_unit'
     ];
 
     /**

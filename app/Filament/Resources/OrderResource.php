@@ -33,6 +33,15 @@ class OrderResource extends Resource
     protected static ?string $modelLabel = 'Order';
     protected static ?int $navigationSort = 1;
 
+    // 🔹 Method filter query
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('payment', function ($q) {
+                $q->where('status', '!=', 'incomplete');
+            });
+    }
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -303,6 +312,12 @@ class OrderResource extends Resource
                     })
                     ->html() // Penting, agar HTML tampil di table
                     ->sortable(false),
+                Tables\Columns\TextColumn::make('shipping_address')
+                    ->label('Alamat')
+                    ->url(fn($record) => "https://www.google.com/maps/search/?api=1&query=" . urlencode($record->shipping_address))
+                    ->openUrlInNewTab()
+                    ->formatStateUsing(fn($state) => $state ?: '-'),
+
             ])
             ->filters([
                 SelectFilter::make('delivery_status')

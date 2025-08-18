@@ -10,6 +10,8 @@
 </div>
 @endif
 
+<a href="{{ route('dashboard.orders.shipping') }}" class="block mt-2 text-blue-600">Shipping Settings</a>
+
 @if($orders->count() > 0)
 <table class="table-auto w-full border mt-4">
     <thead>
@@ -32,25 +34,15 @@
             <td class="border px-4 py-2">{{ $order->order_date }}</td>
 
             <td class="border px-4 py-2">
+                {{-- Lihat detail --}}
                 <a href="{{ route('dashboard.orders.show', $order->id) }}"
                     class="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
                     Lihat Detail
                 </a>
 
-                {{-- Update delivery status manual --}}
-                <form method="POST" action="{{ route('dashboard.orders.updateStatus', $order->id) }}" class="inline-block">
-                    @csrf
-                    @method('PATCH')
-                    <select name="delivery_status" class="border rounded px-2 py-1" onchange="this.form.submit()">
-                        <option value="" disabled selected>Select Status</option>
-                        <option value="assigned">Assigned</option>
-                        <option value="on_delivery">On Delivery</option>
-                        <option value="delivered">Delivered</option>
-                    </select>
-                </form>
-
-                {{-- Terima pesanan --}}
+                {{-- Kondisi: Waiting + payment pending --}}
                 @if($order->delivery_status === 'waiting' && $order->payment->status === 'pending')
+                {{-- Terima pesanan --}}
                 <form method="POST" action="{{ route('dashboard.orders.approve', $order->id) }}" class="inline-block ml-2">
                     @csrf
                     @method('PATCH')
@@ -67,6 +59,23 @@
                         Tolak
                     </button>
                 </form>
+
+                {{-- Kondisi: order sedang jalan (confirmed/assigned/on_delivery) --}}
+                @elseif(in_array($order->delivery_status, ['confirmed','assigned','on_delivery']))
+                <form method="POST" action="{{ route('dashboard.orders.updateStatus', $order->id) }}" class="inline-block ml-2">
+                    @csrf
+                    @method('PATCH')
+                    <select name="delivery_status" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                        <option value="" disabled selected>Update Status</option>
+                        <option value="assigned" {{ $order->delivery_status === 'assigned' ? 'selected' : '' }}>Assigned</option>
+                        <option value="on_delivery" {{ $order->delivery_status === 'on_delivery' ? 'selected' : '' }}>On Delivery</option>
+                        <option value="delivered" {{ $order->delivery_status === 'delivered' ? 'selected' : '' }}>Delivered</option>
+                    </select>
+                </form>
+
+                {{-- Kondisi: sudah rejected / delivered / canceled --}}
+                @elseif(in_array($order->delivery_status, ['rejected','delivered','canceled']))
+                <span class="ml-2 text-gray-500">(No further actions)</span>
                 @endif
             </td>
         </tr>

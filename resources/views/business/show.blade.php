@@ -649,75 +649,103 @@
 
                 @if($userTestimonials->isNotEmpty())
                 <div class="mt-5">
-                    <h4 class="text-center mb-4">📝 Review Anda tentang bisnis ini</h4>
-                    <div class="row">
-                        @foreach($userTestimonials as $userTestimonial)
-                        <div class="col-md-6 mb-4">
-                            <div class="card shadow-sm">
-                                {{-- Optional: Product image --}}
-                                @if($userTestimonial->image_url_product)
-                                <img src="{{ $userTestimonial->image_url_product }}" class="card-img-top" alt="Product Image">
-                                @endif
+                    <h4 class="text-center mb-4">📝 Your Review for this Business</h4>
 
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $userTestimonial->name }}</h5>
-                                    <div class="mb-2 text-muted small">
-                                        {{ \Carbon\Carbon::parse($userTestimonial->publishedAtDate)->format('d M Y, g:i A') }}
+                    <div class="swiper-container user-review-slider">
+                        <div class="swiper-wrapper">
+                            @foreach($userTestimonials as $userTestimonial)
+                            <div class="swiper-slide">
+                                <div class="testimonials-box">
+                                    <div class="testimonial-box-top">
+                                        {{-- Foto produk yang direview (opsional) --}}
+                                        <div class="testimonials-box-img back-img"
+                                            style="background-image: url({{ $userTestimonial->image_url_product ?? $userTestimonial->photo_url ?? asset('default.png') }});">
+                                        </div>
+
+                                        {{-- Bintang rating --}}
+                                        <div class="star-rating-wp">
+                                            <div class="star-rating">
+                                                <span class="star-rating__fill" style="width:{{ $userTestimonial->rating * 20 }}%"></span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mb-2">⭐ {{ $userTestimonial->rating }}/5</div>
-                                    <p class="card-text">{{ $userTestimonial->description }}</p>
 
-                                    {{-- Optional: testimonial image --}}
-                                    @if($userTestimonial->image_url)
-                                    <div class="mt-2">
-                                        <img src="{{ $userTestimonial->image_url }}" alt="Image" class="img-fluid rounded" style="max-height: 150px;">
+                                    <div class="testimonials-box-text">
+                                        <h3 class="h3-title">
+                                            {{ $userTestimonial->name ?? auth()->user()->name }}
+                                        </h3>
+
+                                        <div class="testimonial-date mb-2">
+                                            <span class="date-icon"><i class="uil uil-calendar-alt"></i></span>
+                                            <span class="date-text">{{ \Carbon\Carbon::parse($userTestimonial->publishedAtDate)->format('M d, Y g:i A') }}</span>
+                                        </div>
+
+                                        <p class="testimonial-description">
+                                            {{ $userTestimonial->description }}
+                                        </p>
+
+                                        {{-- Gambar testimonial (opsional) --}}
+                                        @if($userTestimonial->image_url)
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            <img src="{{ $userTestimonial->image_url }}"
+                                                alt="Testimonial Image"
+                                                class="img-fluid rounded"
+                                                style="width:100px; height:100px; object-fit:cover;">
+                                        </div>
+                                        @endif
+
+                                        {{-- Like count --}}
+                                        <div class="mt-3">
+                                            <p class="text-muted small">{{ $userTestimonial->likes->count() }} people found this helpful</p>
+                                        </div>
+
+                                        {{-- Balasan seller (opsional) --}}
+                                        @if($userTestimonial->reply)
+                                        <div class="bg-light p-2 mt-3 rounded border">
+                                            <strong>{{ $userTestimonial->replier->name ?? 'Penjual' }} <span class="badge bg-success">Penjual</span></strong>
+                                            <small class="text-muted"> - {{ \Carbon\Carbon::parse($userTestimonial->replied_at)->diffForHumans() }}</small>
+                                            <p class="mb-0 mt-1">{{ $userTestimonial->reply }}</p>
+                                        </div>
+                                        @endif
+
+                                        {{-- Tombol edit & hapus --}}
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <button
+                                                class="btn btn-sm btn-outline-primary"
+                                                onclick="showEditTestimonialModal({{ $userTestimonial->id }}, '{{ addslashes($userTestimonial->description) }}', {{ $userTestimonial->rating }})">
+                                                ✏️ Edit
+                                            </button>
+
+                                            <form action="{{ route('testimonial.destroy', $userTestimonial->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this testimonial?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    🗑️ Delete
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                    @endif
                                 </div>
-
-                                {{-- Jumlah like --}}
-                                <div class="px-3 pb-3">
-                                    <small class="text-muted">{{ $userTestimonial->likes->count() }} orang merasa terbantu</small>
-                                </div>
-
-                                {{-- Balasan --}}
-                                @if($userTestimonial->reply)
-                                <div class="bg-light p-3 mx-3 mb-3 rounded border">
-                                    <strong>{{ $userTestimonial->replier->name ?? 'Penjual' }} <span class="badge bg-success">Penjual</span></strong>
-                                    <small class="text-muted"> - {{ \Carbon\Carbon::parse($userTestimonial->replied_at)->diffForHumans() }}</small>
-                                    <p class="mb-0 mt-1">{{ $userTestimonial->reply }}</p>
-                                </div>
-                                @endif
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <!-- Tombol Edit -->
-                            <button
-                                class="btn btn-sm btn-outline-primary"
-                                onclick="showEditTestimonialModal({{ $userTestimonial->id }}, '{{ addslashes($userTestimonial->description) }}', {{ $userTestimonial->rating }})">
-                                ✏️ Edit
-                            </button>
-
-                            <!-- Tombol Hapus -->
-                            <form action="{{ route('testimonial.destroy', $userTestimonial->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus testimonial ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    🗑️ Hapus
-                                </button>
-                            </form>
+                            @endforeach
                         </div>
 
-                        @endforeach
+                        <!-- Navigasi swiper -->
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-wp">
+                            <div class="swiper-button-prev swiper-button"><i class="uil uil-angle-left"></i></div>
+                            <div class="swiper-button-next swiper-button"><i class="uil uil-angle-right"></i></div>
+                        </div>
                     </div>
                 </div>
                 @endif
                 @endif
 
+
                 <div class="swiper-container team-slider">
                     @if($testimonials->isEmpty())
                     <div class="alert alert-warning text-center">
-                        Data not found
+                        No testimonials found
                     </div>
                     @else
                     <div class="swiper-wrapper">
@@ -744,7 +772,7 @@
                                     {{-- Produk yang direview --}}
                                     @if($testimonial->order && $testimonial->order->items->isNotEmpty())
                                     <div class="mb-3">
-                                        <small class="text-muted">Produk yang dibeli:</small>
+                                        <small class="text-muted">Purchased products:</small>
                                         <div class="d-flex flex-wrap gap-2 mt-1">
                                             @foreach($testimonial->order->items as $item)
                                             <div class="d-flex align-items-center border rounded p-2" style="max-width:200px;">
@@ -786,12 +814,12 @@
                                     <div class="mt-3">
                                         @auth
                                         @if($testimonial->likes->contains('user_id', auth()->id()))
-                                        <span class="text-success">👍 Terima kasih!</span>
+                                        <span class="text-success">👍 Thanks for your feedback!</span>
                                         @else
                                         <form method="POST" action="{{ route('testimonial.like', $testimonial) }}">
                                             @csrf
                                             <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-primary">
-                                                👍 Apakah komentar ini membantu?
+                                                👍 Was this review helpful?
                                             </button>
                                         </form>
                                         @endif
@@ -804,7 +832,7 @@
                                     {{-- Balasan seller (kalau ada) --}}
                                     @if($testimonial->reply)
                                     <div class="bg-light p-2 mt-3 rounded border">
-                                        <strong>{{ $testimonial->replier->name ?? 'Admin' }} <span class="badge bg-success">Penjual</span></strong>
+                                        <strong>{{ $testimonial->replier->name ?? 'Admin' }} <span class="badge bg-success">Seller</span></strong>
                                         <small class="text-muted"> - {{ \Carbon\Carbon::parse($testimonial->replied_at)->diffForHumans() }}</small>
                                         <p class="mb-0 mt-1">{{ $testimonial->reply }}</p>
                                     </div>
@@ -853,21 +881,21 @@
                 <input type="hidden" id="editTestimonialId" name="testimonial_id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Testimonial</h5>
+                        <h5 class="modal-title">Fix Up Your Review</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="editTestimonialDescription" class="form-label">Deskripsi</label>
+                            <label for="editTestimonialDescription" class="form-label">What’d ya think?</label>
                             <textarea id="editTestimonialDescription" name="description" class="form-control"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="editTestimonialRating" class="form-label">Rating</label>
+                            <label for="editTestimonialRating" class="form-label">Rate it, mate!</label>
                             <input type="number" id="editTestimonialRating" name="rating" min="1" max="5" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Save it, mate!</button>
                     </div>
                 </div>
             </form>

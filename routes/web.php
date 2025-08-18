@@ -67,6 +67,12 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderDashboardController::class, 'show'])
         ->name('dashboard.orders.show');
 
+    // Tambahan untuk shipping
+    Route::get('/dashboard/orders/shipping', [\App\Http\Controllers\OrderDashboardController::class, 'shipping'])
+        ->name('dashboard.orders.shipping');
+    Route::patch('/dashboard/orders/shipping', [\App\Http\Controllers\OrderDashboardController::class, 'updateShipping'])
+        ->name('dashboard.orders.shipping.update');
+        
     Route::post('/orders/request', [\App\Http\Controllers\OrderDashboardController::class, 'requestActivation'])->name('dashboard.orders.request');
     Route::patch('/orders/{order}/status', [\App\Http\Controllers\OrderDashboardController::class, 'updateStatus'])->name('dashboard.orders.updateStatus');
     Route::patch('/orders/{order}/approve', [\App\Http\Controllers\OrderDashboardController::class, 'approve'])->name('dashboard.orders.approve');

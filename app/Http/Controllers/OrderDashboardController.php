@@ -27,8 +27,11 @@ class OrderDashboardController extends Controller
         }
 
         if ($business->orders_status === 'approved') {
-            $orders = Order::with(['user', 'items'])
+            $orders = Order::with(['user', 'items', 'payment']) // tambahin payment
                 ->where('business_id', $business->id)
+                ->whereHas('payment', function ($q) {
+                    $q->whereNotIn('status', ['incomplete']);
+                })
                 ->latest()
                 ->get();
 
@@ -221,5 +224,26 @@ class OrderDashboardController extends Controller
         }
 
         return back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
+    }
+
+    public function shipping()
+    {
+        $business = auth()->user()->business;
+        return view('dashboard.orders.shipping', compact('business'));
+    }
+
+    public function updateShipping(Request $request)
+    {
+        $request->validate([
+            'shipping_type' => 'required|in:flat,per_km,flat_plus_per_km',
+            'flat_rate'     => 'nullable|numeric|min:0',
+            'per_km_rate'   => 'nullable|numeric|min:0',
+            'per_km_unit'   => 'nullable|numeric|min:1',
+        ]);
+
+        $business = auth()->user()->business;
+        $business->update($request->only('shipping_type', 'flat_rate', 'per_km_rate', 'per_km_unit'));
+
+        return redirect()->route('dashboard.orders.shipping')->with('success', 'Shipping settings updated successfully!');
     }
 }

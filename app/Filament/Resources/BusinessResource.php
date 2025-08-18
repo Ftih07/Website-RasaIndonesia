@@ -607,6 +607,45 @@ class BusinessResource extends Resource
                                             ])
                                     ]),
                             ]),
+                        Forms\Components\Tabs\Tab::make('Shipping Settings')
+                            ->schema([
+                                Forms\Components\Section::make('Shipping Configuration')
+                                    ->schema([
+
+                                        Forms\Components\Select::make('shipping_type')
+                                            ->label('Shipping Type')
+                                            ->options([
+                                                'flat' => 'Flat Rate',
+                                                'per_km' => 'Per Km',
+                                                'flat_plus_per_km' => 'Flat + Per Km',
+                                            ])
+                                            ->required()
+                                            ->reactive(),
+
+                                        Forms\Components\TextInput::make('flat_rate')
+                                            ->label('Flat Rate (AUD)')
+                                            ->numeric()
+                                            ->prefix('$')
+                                            ->visible(fn($get) => in_array($get('shipping_type'), ['flat', 'flat_plus_per_km']))
+                                            ->default(0),
+
+                                        Forms\Components\TextInput::make('per_km_rate')
+                                            ->label('Rate per Unit Distance (AUD)')
+                                            ->numeric()
+                                            ->prefix('$')
+                                            ->visible(fn($get) => in_array($get('shipping_type'), ['per_km', 'flat_plus_per_km']))
+                                            ->default(0),
+
+                                        Forms\Components\TextInput::make('per_km_unit')
+                                            ->label('Distance Unit (km)')
+                                            ->numeric()
+                                            ->minValue(1)
+                                            ->visible(fn($get) => in_array($get('shipping_type'), ['per_km', 'flat_plus_per_km']))
+                                            ->default(1)
+                                            ->helperText('Contoh: isi 2 berarti tiap 2 km akan dihitung 1 unit ongkir'),
+                                    ])
+                                    ->columns(2)
+                            ]),
 
 
                     ])
