@@ -47,6 +47,13 @@
 
                 <td class="border px-4 py-2">${{ number_format($order->gross_price,2) }}</td>
                 <td class="border px-4 py-2">{{ ucfirst($order->delivery_status) }}</td>
+
+                <td class="border px-4 py-2">
+                    <a href="{{ route('partner.orders.show', $order->id) }}"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                        View Detail
+                    </a>
+                </td>
             </tr>
             @endforeach
         </tbody>

@@ -312,9 +312,12 @@ class OrderResource extends Resource
                     })
                     ->html() // Penting, agar HTML tampil di table
                     ->sortable(false),
+                    
                 Tables\Columns\TextColumn::make('shipping_address')
                     ->label('Alamat')
-                    ->url(fn($record) => "https://www.google.com/maps/search/?api=1&query=" . urlencode($record->shipping_address))
+                    ->url(fn($record) => $record->shipping_lat && $record->shipping_lng
+                        ? "https://www.google.com/maps/search/?api=1&query={$record->shipping_lat},{$record->shipping_lng}"
+                        : "https://www.google.com/maps/search/?api=1&query=" . urlencode($record->shipping_address))
                     ->openUrlInNewTab()
                     ->formatStateUsing(fn($state) => $state ?: '-'),
 

@@ -72,7 +72,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'token.expired', 'check.role:se
         ->name('dashboard.orders.shipping');
     Route::patch('/dashboard/orders/shipping', [\App\Http\Controllers\OrderDashboardController::class, 'updateShipping'])
         ->name('dashboard.orders.shipping.update');
-        
+
     Route::post('/orders/request', [\App\Http\Controllers\OrderDashboardController::class, 'requestActivation'])->name('dashboard.orders.request');
     Route::patch('/orders/{order}/status', [\App\Http\Controllers\OrderDashboardController::class, 'updateStatus'])->name('dashboard.orders.updateStatus');
     Route::patch('/orders/{order}/approve', [\App\Http\Controllers\OrderDashboardController::class, 'approve'])->name('dashboard.orders.approve');
@@ -95,6 +95,7 @@ Route::prefix('partner')->name('partner.')->group(function () {
     Route::middleware(['auth', 'check.role:partner'])->group(function () {
         Route::post('/logout', [\App\Http\Controllers\Partner\AuthController::class, 'logout'])->name('logout');
         Route::get('/orders', [\App\Http\Controllers\Partner\OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Partner\OrderController::class, 'show'])->name('orders.show');
     });
 });
 

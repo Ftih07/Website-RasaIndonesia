@@ -201,9 +201,11 @@ class CheckoutController extends Controller
             'tax' => $tax,
             'delivery_fee' => $delivery_fee,
             'order_fee' => $order_fee,
-            'total_price' => $total, // ini tetap net value
-            'gross_price' => $grossAmount, // kalau mau simpan harga yang dibayar customer
+            'total_price' => $total, 
+            'gross_price' => $grossAmount,
             'shipping_address' => $shipping_address,
+            'shipping_lat' => $request->shipping_lat, // ✅ simpan koordinat
+            'shipping_lng' => $request->shipping_lng, // ✅ simpan koordinat
             'delivery_note' => $request->delivery_note,
             'delivery_option' => $request->delivery_option,
             'delivery_status' => 'waiting',

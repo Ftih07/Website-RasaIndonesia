@@ -20,6 +20,8 @@ class Order extends Model
         'total_price',
         'gross_price',
         'shipping_address',
+        'shipping_lat', // ✅
+        'shipping_lng', // ✅
         'delivery_note',
         'delivery_option',
         'delivery_status',

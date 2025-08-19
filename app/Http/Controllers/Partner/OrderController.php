@@ -55,4 +55,48 @@ class OrderController extends Controller
 
         return view('partner.orders.index', compact('orders'));
     }
+
+    public function show($id)
+    {
+        $partner = Auth::user();
+
+        $order = Order::with([
+            'user',
+            'items.product',
+        ])->where('partner_id', $partner->id)
+            ->findOrFail($id);
+
+        foreach ($order->items as $item) {
+            if (is_string($item->options)) {
+                $options = json_decode($item->options, true);
+            } else {
+                $options = $item->options ?? [];
+            }
+
+            $processedOptions = [];
+
+            foreach ($options as $group) {
+                $groupItems = [];
+
+                if (!empty($group['selected']) && is_array($group['selected'])) {
+                    foreach ($group['selected'] as $selected) {
+                        $option = ProductOption::find($selected['id']);
+                        if ($option) {
+                            $groupItems[] = [
+                                'name'  => $option->name,
+                                'price' => $selected['price'] ?? $option->price,
+                            ];
+                        }
+                    }
+                }
+
+                $group['items'] = $groupItems;
+                $processedOptions[] = $group;
+            }
+
+            $item->options_for_view = $processedOptions;
+        }
+
+        return view('partner.orders.show', compact('order'));
+    }
 }
