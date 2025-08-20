@@ -12,14 +12,57 @@ use App\Models\TestimonialImage;
 class OrderTrackingController extends Controller
 {
     // semua order user
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Auth::user()->orders()
+        $user = Auth::user();
+
+        $query = $user->orders()
             ->whereHas('payment', function ($q) {
                 $q->where('status', '!=', 'incomplete');
             })
-            ->latest()
-            ->get();
+            ->with(['items.product', 'payment']); // tambahin payment biar gampang filter
+
+        // 🔎 Filter Delivery Status
+        if ($request->filled('status')) {
+            $query->where('delivery_status', $request->status);
+        }
+
+        // 🔎 Filter Date From
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        // 🔎 Filter Date To
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // 🔎 Filter Product (nama product)
+        if ($request->filled('product')) {
+            $query->whereHas('items.product', function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->product}%");
+            });
+        }
+
+        // 🔎 Filter Delivery Option (pickup / delivery)
+        if ($request->filled('delivery_option')) {
+            $query->where('delivery_option', $request->delivery_option);
+        }
+
+        // 🔎 Filter Payment Status (paid / unpaid / refund)
+        if ($request->filled('payment_status')) {
+            $query->whereHas('payment', function ($q) use ($request) {
+                $q->where('status', $request->payment_status);
+            });
+        }
+
+        // 🔎 Filter Order Number (search)
+        if ($request->filled('order_number')) {
+            $query->where('order_number', 'like', "%{$request->order_number}%");
+        }
+
+        // 🔥 Ambil hasil dengan pagination
+        $orders = $query->latest()->paginate(10)->withQueryString();
 
         return view('orders.index', compact('orders'));
     }
