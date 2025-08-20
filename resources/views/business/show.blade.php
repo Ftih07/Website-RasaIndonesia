@@ -308,8 +308,8 @@
                                             </span>
                                         </li>
                                         <li>
-                                            <p>Max Distance</p>
-                                            <b>{{ $menu->max_distance ? $menu->max_distance . ' km' : '-' }}</b>
+                                            <p>Stock</p>
+                                            <b>{{ $menu->stock > 0 ? $menu->stock : 'Out of stock' }}</b>
                                         </li>
                                     </ul>
                                 </div>

@@ -72,6 +72,14 @@ class CartController extends Controller
             ], 400);
         }
 
+        // 🔹 Tambahin cek stok
+        if ($product->stock !== null && $product->stock < $request->quantity) {
+            return response()->json([
+                'success' => false,
+                'message' => "Only {$product->stock} stock left for {$product->name}."
+            ], 400);
+        }
+
         $cart = Cart::firstOrCreate([
             'user_id' => Auth::id(),
             'business_id' => $request->business_id,
@@ -172,6 +180,18 @@ class CartController extends Controller
         }
         if (isset($validated['options'])) {
             $item->options = $validated['options'];
+        }
+
+        if (isset($validated['quantity'])) {
+            $product = $item->product;
+            if ($product->stock !== null && $product->stock < $validated['quantity']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Only {$product->stock} stock left for {$product->name}."
+                ], 400);
+            }
+
+            $item->quantity = $validated['quantity'];
         }
 
         // Hitung ulang total_price

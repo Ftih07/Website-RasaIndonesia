@@ -18,6 +18,7 @@ class Product extends Model
         'price',
         'max_distance',
         'is_sell',
+        'stock',
     ];
 
     /**
@@ -44,5 +45,16 @@ class Product extends Model
     public function optionGroups()
     {
         return $this->belongsToMany(ProductOptionGroup::class, 'product_option_group_product', 'product_id', 'product_option_groups_id');
+    }
+
+    public function reduceStock()
+    {
+        foreach ($this->items as $item) {
+            $product = $item->product;
+            if ($product->stock !== null) {
+                $product->stock = max(0, $product->stock - $item->quantity);
+                $product->save();
+            }
+        }
     }
 }

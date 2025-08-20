@@ -142,6 +142,17 @@ class CheckoutController extends Controller
             $shipping_address = $request->shipping_address;
         }
 
+        // ✅ Validasi stok produk sebelum checkout
+        foreach ($cart->items as $item) {
+            $product = $item->product;
+
+            if ($product->stock < $item->quantity) {
+                throw ValidationException::withMessages([
+                    'cart' => "Produk {$product->name} stoknya tinggal {$product->stock}, tidak cukup untuk pesanan {$item->quantity}."
+                ]);
+            }
+        }
+
         // ✅ Validasi max_distance tiap produk
         foreach ($cart->items as $item) {
             if ($item->product->max_distance && $distance_km > $item->product->max_distance) {
@@ -201,11 +212,11 @@ class CheckoutController extends Controller
             'tax' => $tax,
             'delivery_fee' => $delivery_fee,
             'order_fee' => $order_fee,
-            'total_price' => $total, 
+            'total_price' => $total,
             'gross_price' => $grossAmount,
             'shipping_address' => $shipping_address,
-            'shipping_lat' => $request->shipping_lat, // ✅ simpan koordinat
-            'shipping_lng' => $request->shipping_lng, // ✅ simpan koordinat
+            'shipping_lat' => $request->shipping_lat, 
+            'shipping_lng' => $request->shipping_lng, 
             'delivery_note' => $request->delivery_note,
             'delivery_option' => $request->delivery_option,
             'delivery_status' => 'waiting',
@@ -222,6 +233,9 @@ class CheckoutController extends Controller
                 'preference_if_unavailable' => $item->preference_if_unavailable,
                 'options' => $item->options,
             ]);
+
+            // ✅ Kurangi stok produk
+            $item->product->decrement('stock', $item->quantity);
         }
 
         $order->load('items.product');

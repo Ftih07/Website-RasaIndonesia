@@ -108,6 +108,22 @@
                             </div>
                         </div>
 
+                        <!-- Stock -->
+                        <div class="form-group mb-4">
+                            <label for="stock" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <span class="flex items-center">
+                                    <svg class="h-4 w-4 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v4H3V3zm0 6h18v12H3V9z"></path>
+                                    </svg>
+                                    Stock
+                                </span>
+                            </label>
+                            <input type="number" name="stock" id="stock" min="0"
+                                class="form-control block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200"
+                                value="{{ old('stock', $product->stock) }}"
+                                placeholder="Enter stock quantity">
+                        </div>
+
                         <!-- Description -->
                         <div class="form-group">
                             <label for="desc" class="block text-sm font-semibold text-gray-700 mb-2">

@@ -22,6 +22,9 @@
                             <h2 class="text-2xl font-bold text-gray-800 mb-0 d-none d-sm-block">Chat Messages</h2>
                             <h5 class="font-bold text-gray-800 mb-0 d-sm-none">Chat</h5>
                             <p class="text-muted mb-0 d-none d-sm-block">Connect with our culinary community</p>
+                            <small class="text-muted">
+                                🔔 Please tap the left sidebar button <strong>twice</strong> to open it properly
+                            </small>
                         </div>
                     </div>
                     <div class="badge bg-gradient-to-r from-orange-400 to-amber-400 text-white px-3 py-2 rounded-pill shadow-sm d-none d-sm-inline-flex">

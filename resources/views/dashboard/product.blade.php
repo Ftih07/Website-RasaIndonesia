@@ -93,6 +93,14 @@
                                             {{ $product->max_distance }} km
                                         </div>
                                         @endif
+                                        {{-- ✅ Stok Produk --}}
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 3h18v18H3V3z"></path>
+                                            </svg>
+                                            Stok: <span class="ml-1 font-medium text-gray-800">{{ $product->stock }}</span>
+                                        </div>
                                     </div>
 
                                     @if($product->desc)
@@ -195,6 +203,13 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Price ($)</label>
                                     <input type="number" name="price" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                                 </div>
+                            </div>
+
+                            <!-- ✅ New field for Stock -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Stock</label>
+                                <input type="number" name="stock" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500" required>
+                                <p class="text-xs text-gray-500 mt-1">Available quantity of this product.</p>
                             </div>
 
                             <div>

@@ -146,8 +146,8 @@
                                             </span>
                                         </li>
                                         <li>
-                                            <p>Max Distance</p>
-                                            <b>{{ $menu->max_distance ? $menu->max_distance . ' km' : '-' }}</b>
+                                            <p>Stock</p>
+                                            <b>{{ $menu->stock > 0 ? $menu->stock : 'Out of stock' }}</b>
                                         </li>
                                     </ul>
                                 </div>
@@ -169,6 +169,7 @@
                                                 data-business_id="{{ $business->id }}"
                                                 data-name="{{ $menu->name }}"
                                                 data-price="{{ $menu->price }}"
+                                                data-stock="{{ $menu->stock }}"
                                                 data-max_distance="{{ $menu->max_distance }}"
                                                 data-is-sell="{{ $menu->is_sell ? 1 : 0 }}"
                                                 data-desc="{{ $menu->desc }}"
@@ -256,6 +257,17 @@
                                                     <div class="highlight-info">
                                                         <span class="highlight-label">Status</span>
                                                         <p id="modal-product-status" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-boxes"></i>
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Stock</span>
+                                                        <p id="modal-product-stock" class="highlight-value"></p>
                                                     </div>
                                                 </div>
                                             </div>

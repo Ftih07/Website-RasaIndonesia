@@ -55,7 +55,7 @@ class ProductResource extends Resource
 
                 // Input field for product type (required)
                 Forms\Components\TextInput::make('type'),
-                
+
                 // Optional input field for serving information (default null, max length 255 characters)
                 Forms\Components\TextInput::make('serving')
                     ->maxLength(255)
@@ -66,6 +66,14 @@ class ProductResource extends Resource
                     ->required()
                     ->numeric()
                     ->prefix('$'),
+
+                Forms\Components\TextInput::make('stock')
+                    ->required()
+                    ->numeric()
+                    ->minValue(0)
+                    ->label('Stock')
+                    ->helperText('Available quantity of this product.'),
+
                 // ✅ Toggle untuk status jual
                 Forms\Components\Toggle::make('is_sell')
                     ->label('Sell this product?')
@@ -107,6 +115,10 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('stock')
+                    ->sortable()
+                    ->label('Stock'),
 
                 // ✅ Kolom status jual
                 Tables\Columns\IconColumn::make('is_sell')

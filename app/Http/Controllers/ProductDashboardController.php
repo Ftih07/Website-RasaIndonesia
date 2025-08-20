@@ -59,6 +59,7 @@ class ProductDashboardController extends Controller
             'serving' => 'nullable|string',
             'desc' => 'nullable|string',
             'max_distance' => 'nullable|numeric|min:1',
+            'stock' => 'required|numeric|min:0', // ✅ tambahin ini
             'option_groups' => 'array',
             'categories' => 'array',
         ]);
@@ -117,6 +118,7 @@ class ProductDashboardController extends Controller
             'serving' => 'nullable|string',
             'desc' => 'nullable|string',
             'max_distance' => 'nullable|numeric|min:1',
+            'stock' => 'required|integer|min:0', // ✅ Tambah validasi stok
             'option_groups' => 'array',
             'categories' => 'array',
         ]);

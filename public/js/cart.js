@@ -482,6 +482,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const business = button.getAttribute("data-business");
         const image = button.getAttribute("data-image");
         const optionsRaw = button.getAttribute("data-options");
+        const stock = button.getAttribute("data-stock");
+
+        // Update modal content
+        modal.querySelector("#modal-product-stock").textContent =
+            stock > 0 ? stock + " left" : "Out of stock";
 
         modal.querySelector("#modal-product-name").textContent = name;
         modal.querySelector(
