@@ -1,11 +1,11 @@
 <?php
 
-// app/Models/Chat.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Chat extends Model
 {
@@ -33,5 +33,20 @@ class Chat extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    // Ambil pesan terakhir (buat sidebar)
+    public function latestMessage(): HasOne
+    {
+        return $this->hasOne(Message::class)->latestOfMany();
+    }
+
+    // Unread count untuk user tertentu
+    public function unreadCountFor($userId): int
+    {
+        return $this->messages()
+            ->where('sender_id', '!=', $userId)
+            ->whereNull('read_at')
+            ->count();
     }
 }
