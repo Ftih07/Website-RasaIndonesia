@@ -139,7 +139,7 @@ class OrderDashboardController extends Controller
             ChatService::sendMessage(
                 $chat->id,
                 auth()->id(),
-                "Hey mate, order #{$order->order_number} just changed — it’s now {$statusText}.",
+                "Hey mate, order #{$order->order_number} just changed - it's now {$statusText}.",
                 'system'
             );
             $chat->touch();
@@ -176,7 +176,7 @@ class OrderDashboardController extends Controller
                 ChatService::sendMessage(
                     $chat->id,
                     $sellerId,
-                    "G’day! Cheers for your order. It’s all confirmed and we’re on to it now.",
+                    "Hi there! Thanks for your order. It's confirmed and we're working on it now.",
                     'system'
                 );
 
@@ -210,7 +210,7 @@ class OrderDashboardController extends Controller
                 \App\Helpers\NotificationHelper::send(
                     $order->user_id,
                     'Order Cancelled',
-                    "Heads up — order #{$order->order_number} didn’t go through. No worries, if you’ve paid we’ll shoot the refund back soon.",
+                    "Heads up — order #{$order->order_number} didn't go through. No worries, if you've paid we'll shoot the refund back soon.",
                     route('orders.index', $order->id)
                 );
 

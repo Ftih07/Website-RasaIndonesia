@@ -141,7 +141,7 @@ class OrderResource extends Resource
                                 ChatService::sendMessage(
                                     $chatCustomer->id,
                                     $superadminId,
-                                    "Hey there! Order #{$record->order_number} just got updated — it’s now: {$statusText}",
+                                    "Hey there! Order #{$record->order_number} just got updated — it's now: {$statusText}",
                                     'system'
                                 );
                                 $chatCustomer->touch();
@@ -149,7 +149,7 @@ class OrderResource extends Resource
                                 \App\Helpers\NotificationHelper::send(
                                     $record->user_id,
                                     'Order Update',
-                                    "Hey there, order #{$record->order_number} has just been updated — it’s now: {$statusText}",
+                                    "Hey there, order #{$record->order_number} has just been updated — it's now: {$statusText}",
                                     route('orders.index', $record->id)
                                 );
                             }
@@ -161,7 +161,7 @@ class OrderResource extends Resource
                                 ChatService::sendMessage(
                                     $chatPartner->id,
                                     $superadminId,
-                                    "G’day! Order #{$record->order_number} is now: {$statusText}",
+                                    "G'day! Order #{$record->order_number} is now: {$statusText}",
                                     'system'
                                 );
                                 $chatPartner->touch();
@@ -169,7 +169,7 @@ class OrderResource extends Resource
                                 \App\Helpers\NotificationHelper::send(
                                     $record->partner_id,
                                     'Order Update',
-                                    "G’day! Order #{$record->order_number} is now: {$statusText}",
+                                    "G'day! Order #{$record->order_number} is now: {$statusText}",
                                     route('orders.index', $record->id)
                                 );
                             }
@@ -393,7 +393,7 @@ class OrderResource extends Resource
                         $partner = $record->partner;
                         $record->update(['partner_id' => null]);
 
-                        $statusText = "You’ve been unassigned from Order #{$record->order_number}.";
+                        $statusText = "You've been unassigned from Order #{$record->order_number}.";
 
                         // === 1 chat superadmin ↔ partner ===
                         $chat = ChatService::getOrCreateChat(2, $partner->id);
@@ -440,14 +440,14 @@ class OrderResource extends Resource
                             ChatService::sendMessage(
                                 $chat->id,
                                 $superadminId,
-                                "All good! Your order’s locked in and we’re getting it sorted now.",
+                                "All good! Your order's locked in and we're getting it sorted now.",
                                 'system'
                             );
 
                             \App\Helpers\NotificationHelper::send(
                                 $customerId,
                                 'Payment Sorted',
-                                "All good! Payment for order #{$record->order_number} is locked in and we’re getting it processed now.",
+                                "All good! Payment for order #{$record->order_number} is locked in and we're getting it processed now.",
                                 route('orders.index', $record->id)
                             );
 
@@ -483,7 +483,7 @@ class OrderResource extends Resource
                             \App\Helpers\NotificationHelper::send(
                                 $record->user_id,
                                 'Payment Cancelled',
-                                "Heads up — order #{$record->id} has been cancelled. No stress, if you’ve paid we’ll shoot the refund back soon.",
+                                "Heads up — order #{$record->id} has been cancelled. No stress, if you've paid we'll shoot the refund back soon.",
                                 route('orders.index', $record->id)
                             );
 
