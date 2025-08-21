@@ -141,17 +141,16 @@ class OrderResource extends Resource
                                 ChatService::sendMessage(
                                     $chatCustomer->id,
                                     $superadminId,
-                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    "Hey there! Order #{$record->order_number} just got updated — it’s now: {$statusText}",
                                     'system'
                                 );
                                 $chatCustomer->touch();
 
-                                // 🚀 Tambah notifikasi ke customer
                                 \App\Helpers\NotificationHelper::send(
                                     $record->user_id,
-                                    'Update Pesanan',
-                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
-                                    route('orders.index', $record->id) // kalau ada detail order
+                                    'Order Update',
+                                    "Hey there, order #{$record->order_number} has just been updated — it’s now: {$statusText}",
+                                    route('orders.index', $record->id)
                                 );
                             }
 
@@ -162,16 +161,15 @@ class OrderResource extends Resource
                                 ChatService::sendMessage(
                                     $chatPartner->id,
                                     $superadminId,
-                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    "G’day! Order #{$record->order_number} is now: {$statusText}",
                                     'system'
                                 );
                                 $chatPartner->touch();
 
-                                // 🚀 Tambah notifikasi ke partner
                                 \App\Helpers\NotificationHelper::send(
                                     $record->partner_id,
-                                    'Update Pesanan',
-                                    "Order #{$record->id} status diperbarui menjadi: {$statusText}",
+                                    'Order Update',
+                                    "G’day! Order #{$record->order_number} is now: {$statusText}",
                                     route('orders.index', $record->id)
                                 );
                             }
@@ -312,7 +310,7 @@ class OrderResource extends Resource
                     })
                     ->html() // Penting, agar HTML tampil di table
                     ->sortable(false),
-                    
+
                 Tables\Columns\TextColumn::make('shipping_address')
                     ->label('Alamat')
                     ->url(fn($record) => $record->shipping_lat && $record->shipping_lng
@@ -366,7 +364,7 @@ class OrderResource extends Resource
                         $record->update(['partner_id' => $data['partner_id']]);
 
                         $partner = User::find($data['partner_id']);
-                        $statusText = "Order #{$record->id} telah ditugaskan kepada Anda.";
+                        $statusText = "Good on ya! Order #{$record->order_number} is now yours to handle.";
 
                         // === 1 chat superadmin ↔ partner ===
                         $chat = ChatService::getOrCreateChat(2, $partner->id);
@@ -395,7 +393,7 @@ class OrderResource extends Resource
                         $partner = $record->partner;
                         $record->update(['partner_id' => null]);
 
-                        $statusText = "Anda telah dihapus dari Order #{$record->id}.";
+                        $statusText = "You’ve been unassigned from Order #{$record->order_number}.";
 
                         // === 1 chat superadmin ↔ partner ===
                         $chat = ChatService::getOrCreateChat(2, $partner->id);
@@ -442,15 +440,14 @@ class OrderResource extends Resource
                             ChatService::sendMessage(
                                 $chat->id,
                                 $superadminId,
-                                "Pesanan kamu sudah dikonfirmasi dan sedang diproses.",
+                                "All good! Your order’s locked in and we’re getting it sorted now.",
                                 'system'
                             );
 
-                            // === 🚀 Notifikasi ke customer ===
                             \App\Helpers\NotificationHelper::send(
                                 $customerId,
-                                'Pembayaran Dikonfirmasi',
-                                "Pesanan #{$record->id} sudah dikonfirmasi dan sedang diproses.",
+                                'Payment Sorted',
+                                "All good! Payment for order #{$record->order_number} is locked in and we’re getting it processed now.",
                                 route('orders.index', $record->id)
                             );
 
@@ -483,11 +480,10 @@ class OrderResource extends Resource
                             $record->payment->update(['status' => 'failed']);
                             $record->update(['delivery_status' => 'canceled']);
 
-                            // === 🚀 Notifikasi ke customer ===
                             \App\Helpers\NotificationHelper::send(
                                 $record->user_id,
-                                'Pembayaran Dibatalkan',
-                                "Pesanan #{$record->id} telah dibatalkan. Jika sudah ada pembayaran masuk, akan segera direfund.",
+                                'Payment Cancelled',
+                                "Heads up — order #{$record->id} has been cancelled. No stress, if you’ve paid we’ll shoot the refund back soon.",
                                 route('orders.index', $record->id)
                             );
 

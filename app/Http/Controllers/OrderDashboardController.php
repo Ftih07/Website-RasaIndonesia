@@ -139,17 +139,16 @@ class OrderDashboardController extends Controller
             ChatService::sendMessage(
                 $chat->id,
                 auth()->id(),
-                "Status pesanan #{$order->id} berubah menjadi {$statusText}",
+                "Hey mate, order #{$order->order_number} just changed — it’s now {$statusText}.",
                 'system'
             );
             $chat->touch();
         }
 
-        // === 🚀 Tambah notifikasi ke customer ===
         \App\Helpers\NotificationHelper::send(
             $order->user_id,
-            'Update Status Pesanan',
-            "Pesanan #{$order->id} sekarang: {$statusText}",
+            'Order Status',
+            "Good news! Order #{$order->order_number} is now: {$statusText}",
             route('orders.index', $order->id)
         );
 
@@ -177,15 +176,14 @@ class OrderDashboardController extends Controller
                 ChatService::sendMessage(
                     $chat->id,
                     $sellerId,
-                    "Halo! Terima kasih sudah memesan di bisnis kami. Pesanan kamu sudah dikonfirmasi.",
+                    "G’day! Cheers for your order. It’s all confirmed and we’re on to it now.",
                     'system'
                 );
 
-                // === 🚀 Notifikasi ke customer ===
                 \App\Helpers\NotificationHelper::send(
                     $customerId,
-                    'Pesanan Dikonfirmasi',
-                    "Pesanan #{$order->id} sudah dikonfirmasi dan sedang diproses.",
+                    'All Good!',
+                    "Your order #{$order->order_number} is locked in and we're getting it sorted now.",
                     route('orders.index', $order->id)
                 );
 
@@ -209,11 +207,10 @@ class OrderDashboardController extends Controller
                 $order->payment->update(['status' => 'failed']);
                 $order->update(['delivery_status' => 'canceled']);
 
-                // === 🚀 Notifikasi ke customer ===
                 \App\Helpers\NotificationHelper::send(
                     $order->user_id,
-                    'Pesanan Ditolak',
-                    "Pesanan #{$order->id} telah ditolak. Jika pembayaran sudah masuk, akan segera direfund.",
+                    'Order Cancelled',
+                    "Heads up — order #{$order->order_number} didn’t go through. No worries, if you’ve paid we’ll shoot the refund back soon.",
                     route('orders.index', $order->id)
                 );
 

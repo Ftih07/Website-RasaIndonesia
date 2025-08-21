@@ -81,523 +81,437 @@
 
 <body class="body-fixed">
     @if(session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: '{{ session('success') }}', // ✅ hapus spasi
-                showConfirmButton: false,
-                timer: 2000
-            });
-        </script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{ session('
+            success ') }}', // ✅ hapus spasi
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
     @endif
 
     @include('partials.navbar')
 
-    <div id="viewport">
-        <div id="js-scroll-content">
-
-            <!-- Hero - Main Banner -->
-            <section class="main-banner" id="home">
-                <div class="js-parallax-scene">
-                    <!-- Parallax effect elements -->
-                    <div class="banner-shape-1 w-100" data-depth="0.30">
-                        <img src="assets/images/berry.png" alt="Berry Shape">
+    <!-- Hero - Main Banner -->
+    <section class="main-banner" id="home">
+        <div class="js-parallax-scene">
+            <!-- Parallax effect elements -->
+            <div class="banner-shape-1 w-100" data-depth="0.30">
+                <img src="assets/images/berry.png" alt="Berry Shape">
+            </div>
+            <div class="banner-shape-2 w-100" data-depth="0.25">
+                <img src="assets/images/leaf.png" alt="Leaf Shape">
+            </div>
+        </div>
+        <div class="sec-wp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 mb-4 logo">
+                        <!-- Logos Section -->
+                        <img src="assets/images/logo/Logo-ICAV.png" alt="ICAV Logo" class="logo mx-3" style="width: 160px; height: auto;">
+                        <img src="assets/images/logo/Logo-Atdag-Canberra.png" alt="Atdag Canberra Logo" class="logo mx-3" style="width: 240px; height: auto;">
                     </div>
-                    <div class="banner-shape-2 w-100" data-depth="0.25">
-                        <img src="assets/images/leaf.png" alt="Leaf Shape">
+                    <div class="col-lg-6">
+                        <div class="banner-text">
+                            <!-- Main Banner Text -->
+                            <h1 class="h1-title">
+                                Welcome to Website
+                                <span>Taste</span>
+                                <br> of Indonesia.
+                            </h1>
+                            <p>Find a shop or restaurant that serves Indonesian foods in Australia.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12 mb-4 logo">
-                                <!-- Logos Section -->
-                                <img src="assets/images/logo/Logo-ICAV.png" alt="ICAV Logo" class="logo mx-3" style="width: 160px; height: auto;">
-                                <img src="assets/images/logo/Logo-Atdag-Canberra.png" alt="Atdag Canberra Logo" class="logo mx-3" style="width: 240px; height: auto;">
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="banner-text">
-                                    <!-- Main Banner Text -->
-                                    <h1 class="h1-title">
-                                        Welcome to Website
-                                        <span>Taste</span>
-                                        <br> of Indonesia.
-                                    </h1>
-                                    <p>Find a shop or restaurant that serves Indonesian foods in Australia.</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="banner-img-wp">
-                                    <!-- Background Image Section -->
-                                    <div class="banner-img" style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
-                                    </div>
-                                </div>
+                    <div class="col-lg-6">
+                        <div class="banner-img-wp">
+                            <!-- Background Image Section -->
+                            <div class="banner-img" style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <!-- Section: Food Category -->
-            <section class="book-table section bg-light">
-                <!-- Decorative Shapes for Aesthetic Design -->
-                <div class="book-table-shape">
-                    <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
-                </div>
-                <div class="book-table-shape book-table-shape2">
-                    <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
-                </div>
+    <!-- Section: Food Category -->
+    <section class="book-table section bg-light">
+        <!-- Decorative Shapes for Aesthetic Design -->
+        <div class="book-table-shape">
+            <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
+        </div>
+        <div class="book-table-shape book-table-shape2">
+            <img src="assets/images/table-leaves-shape.png" alt="Decorative Shape">
+        </div>
 
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <!-- Section Title -->
-                                <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">category</p>
-                                    <h2 class="h2-title">Find Food<br>Category Easily</h2>
-                                    <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="Title Shape">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Food Category Information -->
-                        <div class="book-table-info">
-                            <div class="row align-items-center">
-                                <!-- Authentic Category -->
-                                <div class="col-lg-4">
-                                    <div class="call-now-side table-title text-center">
-                                        <i class="uil uil-coffee icon"></i>
-                                        <h3>Authentic</h3>
-                                    </div>
-                                </div>
-                                <!-- Halal Category -->
-                                <div class="col-lg-4">
-                                    <div class="call-now text-center">
-                                        <i class="uil uil-moon icon"></i>
-                                        <h3>Halal</h3>
-                                    </div>
-                                </div>
-                                <!-- Traditional Category -->
-                                <div class="col-lg-4">
-                                    <div class="call-now-side table-title text-center">
-                                        <i class="uil uil-utensils icon"></i>
-                                        <h3>Traditional</h3>
-                                    </div>
-                                </div>
+        <div class="sec-wp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Section Title -->
+                        <div class="sec-title text-center mb-5">
+                            <p class="sec-sub-title mb-3">category</p>
+                            <h2 class="h2-title">Find Food<br>Category Easily</h2>
+                            <div class="sec-title-shape mb-4">
+                                <img src="assets/images/title-shape.svg" alt="Title Shape">
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Section: About Us -->
-            <section class="about-sec section" id="about">
-                <div class="container">
+                <!-- Food Category Information -->
+                <div class="book-table-info">
+                    <div class="row align-items-center">
+                        <!-- Authentic Category -->
+                        <div class="col-lg-4">
+                            <div class="call-now-side table-title text-center">
+                                <i class="uil uil-coffee icon"></i>
+                                <h3>Authentic</h3>
+                            </div>
+                        </div>
+                        <!-- Halal Category -->
+                        <div class="col-lg-4">
+                            <div class="call-now text-center">
+                                <i class="uil uil-moon icon"></i>
+                                <h3>Halal</h3>
+                            </div>
+                        </div>
+                        <!-- Traditional Category -->
+                        <div class="col-lg-4">
+                            <div class="call-now-side table-title text-center">
+                                <i class="uil uil-utensils icon"></i>
+                                <h3>Traditional</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: About Us -->
+    <section class="about-sec section" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Section Title -->
+                    <div class="sec-title text-center mb-5">
+                        <p class="sec-sub-title mb-3">About Us</p>
+                        <div class="about_us">
+                            <h2>What is</h2>
+                            <h2>
+                                <span class="rasa-text">Taste </span>of Indonesia?
+                            </h2>
+                        </div>
+                        <div class="sec-title-shape mb-4">
+                            <img src="assets/images/title-shape.svg" alt="Title Shape">
+                        </div>
+                        <!-- Description of Taste of Indonesia -->
+                        <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.</p>
+                        <p>We've gathered information on restaurants, cafes, and shops that serve Indonesian specialties, from rendang to satay to market snacks. Not only that, we also provide reviews, recommendations, and guides to help you find the best places that serve authentic Indonesian delights.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 m-auto">
+                    <!-- About Us Video Section -->
+                    <div class="about-video">
+                        <div class="about-video-img" style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Shop & Restaurant List -->
+    <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
+        <div class="sec-wp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Section Title -->
+                        <div class="sec-title text-center mb-5">
+                            <p class="sec-sub-title mb-3">Shop & Restaurant</p>
+                            <h2 class="h2-title">Find List of <span>Shop & Restaurant Here!</span></h2>
+                            <div class="sec-title-shape mb-4">
+                                <img src="assets/images/title-shape.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <section class="about-sec section">
+                    <div class="scrapping-map-wrapper">
+
+                        <div class="how-to-use">
+                            <div class="tutorial-header">
+                                <h4 class="tutorial-title">How to Use</h4>
+                                <p class="tutorial-subtitle">
+                                    Discover amazing Indonesian cuisine near you with our
+                                    interactive map. Follow these simple steps to get started!
+                                </p>
+                            </div>
+
+                            <div class="tutorial-grid">
+                                <div class="tutorial-item">
+                                    <span class="tutorial-icon">📍</span>
+                                    <h4>Find Your Location</h4>
+                                    <p>
+                                        Click <b>My Location</b> to detect your current
+                                        position. Allow location permission when prompted for
+                                        the best experience.
+                                    </p>
+                                </div>
+
+                                <div class="tutorial-item">
+                                    <span class="tutorial-icon">📏</span>
+                                    <h4>Set Your Radius</h4>
+                                    <p>
+                                        Choose a <b>Radius</b> (5km, 10km, or 20km) to filter
+                                        and discover Indonesian restaurants within your
+                                        preferred distance.
+                                    </p>
+                                </div>
+
+                                <div class="tutorial-item">
+                                    <span class="tutorial-icon">🗺️</span>
+                                    <h4>Explore Details</h4>
+                                    <p>
+                                        Click any marker to view restaurant details, customer
+                                        ratings, photo galleries, and authentic Indonesian
+                                        cuisine offerings.
+                                    </p>
+                                </div>
+
+                                <div class="tutorial-item">
+                                    <span class="tutorial-icon">🚗</span>
+                                    <h4>Get Directions</h4>
+                                    <p>
+                                        Use the <b>Directions</b> button to open navigation in
+                                        your preferred maps app and find the quickest route to
+                                        your chosen restaurant.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="permission-section">
+                                <h3 class="permission-title">🔐 Enable Location Permission</h3>
+                                <p class="permission-subtitle">
+                                    Follow these steps to allow location access for the best map
+                                    experience:
+                                </p>
+
+                                <div class="permission-grid">
+                                    <div class="permission-device">
+                                        <div class="device-header">
+                                            <span class="device-icon">📱</span>
+                                            <h4 class="device-title">Mobile Device</h4>
+                                        </div>
+                                        <ol class="permission-steps">
+                                            <li>
+                                                Tap the <b>lock icon</b> or
+                                                <b>site info icon</b> in your browser's address
+                                                bar
+                                            </li>
+                                            <li>
+                                                Select <b>Permissions</b>, <b>Site settings</b>,
+                                                or <b>Page info</b>
+                                            </li>
+                                            <li>
+                                                Find <b>Location</b> and change it to
+                                                <b>Allow</b> or <b>Enable</b>
+                                            </li>
+                                            <li>
+                                                Refresh the page and click
+                                                <b>My Location</b> again
+                                            </li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="permission-device">
+                                        <div class="device-header">
+                                            <span class="device-icon">💻</span>
+                                            <h4 class="device-title">Desktop Browser</h4>
+                                        </div>
+                                        <ol class="permission-steps">
+                                            <li>
+                                                Click the <b>lock icon</b> or
+                                                <b>shield icon</b> in the browser address bar
+                                            </li>
+                                            <li>
+                                                Look for <b>Location permissions</b> in the
+                                                dropdown menu
+                                            </li>
+                                            <li>
+                                                Select <b>Allow</b> or <b>Always allow</b> for
+                                                this site
+                                            </li>
+                                            <li>
+                                                Reload the page and try the location feature
+                                                again
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <div class="quick-tips">
+                                    <h4>💡 Quick Tips</h4>
+                                    <p>
+                                        If you're still having issues, try clearing your browser
+                                        cache, checking if location services are enabled on your
+                                        device, or using a different browser. Most modern
+                                        browsers support location services for a better user
+                                        experience.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-bar">
+                            <div class="filter-group">
+                                <label for="radius-select">Radius:</label>
+                                <select id="radius-select" class="form-select form-select-sm">
+                                    <option value="5">5 km</option>
+                                    <option value="10" selected>10 km</option>
+                                    <option value="20">20 km</option>
+                                </select>
+                            </div>
+                            <button id="stop-location" class="btn-show-all">
+                                🔄 Show All
+                            </button>
+                        </div>
+
+                        <div id="map" style="width: 100%; height: 500px; border-radius: 10px; overflow: hidden;"></div>
+                    </div>
+                </section>
+
+                <!-- Category Filters -->
+                <div class="menu-tab-wp">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <!-- Section Title -->
-                            <div class="sec-title text-center mb-5">
-                                <p class="sec-sub-title mb-3">About Us</p>
-                                <div class="about_us">
-                                    <h2>What is</h2>
-                                    <h2>
-                                        <span class="rasa-text">Taste </span>of Indonesia?
-                                    </h2>
-                                </div>
-                                <div class="sec-title-shape mb-4">
-                                    <img src="assets/images/title-shape.svg" alt="Title Shape">
-                                </div>
-                                <!-- Description of Taste of Indonesia -->
-                                <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.</p>
-                                <p>We've gathered information on restaurants, cafes, and shops that serve Indonesian specialties, from rendang to satay to market snacks. Not only that, we also provide reviews, recommendations, and guides to help you find the best places that serve authentic Indonesian delights.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-8 m-auto">
-                            <!-- About Us Video Section -->
-                            <div class="about-video">
-                                <div class="about-video-img" style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
-                                </div>
+                        <div class="col-lg-12 m-auto">
+                            <div class="menu-tab text-center">
+                                <ul class="filters">
+                                    <div class="filter-active"></div>
+                                    <li class="filter" data-filter=".all">
+                                        <img src="assets/images/icon-all.png" alt="" class="icon-filter">
+                                        All
+                                    </li>
+                                    <li class="filter" data-filter=".shop">
+                                        <img src="assets/images/toko.png" alt="" class="icon-filter">
+                                        Shop
+                                    </li>
+                                    <li class="filter" data-filter=".restaurant">
+                                        <img src="assets/images/restoran.png" alt="" class="icon-filter">
+                                        Restaurant
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Section: Shop & Restaurant List -->
-            <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <!-- Section Title -->
-                                <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">Shop & Restaurant</p>
-                                    <h2 class="h2-title">Find List of <span>Shop & Restaurant Here!</span></h2>
-                                    <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="">
+                <!-- Shop and Restaurant Listings -->
+                <div class="menu-list-row">
+                    <div class="row g-xxl-5 bydefault_show" id="menu-dish">
+                        @foreach($businesses as $business)
+                        <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}" data-cat="{{ strtolower($business->type->title ?? 'all') }}">
+                            <div class="dish-box text-center">
+                                <!-- Business Logo -->
+                                <div class="dist-img">
+                                    <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}" loading="lazy">
+                                </div>
+                                <!-- Business Rating -->
+                                <div class="dish-rating">
+                                    {{ number_format($business->average_rating, 1) }}
+                                    <i class="uil uil-star"></i>
+                                </div>
+                                <!-- Business Title -->
+                                <div class="dish-title">
+                                    <h3 class="h3-title">
+                                        {{ $business->name }}
+                                    </h3>
+                                    @if ($business->user_id === null)
+                                    <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
+                                    @endif
+                                    <!-- Menampilkan Unique Code -->
+                                    <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
+                                        <p>{{ $business->unique_code ?? '' }}</p>
+                                    </a>
+                                    <p>{{ $business->type->title ?? 'N/A' }}</p>
+                                </div>
+                                <!-- Business Info -->
+                                <div class="info-container">
+                                    <div class="info-item">
+                                        <i class="uil uil-location-point"></i>
+                                        <p>{{ $business->address }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="uil uil-utensils"></i>
+                                        <p>
+                                            @foreach ($business->food_categories as $category)
+                                            {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
+                                            @endforeach
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Map -->
-                        <section class="about-sec section">
-                            <div class="container">
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-8">
-                                        <div class="scrapping-map-wrapper">
-
-                                            <div class="how-to-use">
-                                                <div class="tutorial-header">
-                                                    <h4 class="tutorial-title">How to Use</h4>
-                                                    <p class="tutorial-subtitle">
-                                                        Discover amazing Indonesian cuisine near you with our
-                                                        interactive map. Follow these simple steps to get started!
-                                                    </p>
-                                                </div>
-
-                                                <div class="tutorial-grid">
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">📍</span>
-                                                        <h4>Find Your Location</h4>
-                                                        <p>
-                                                            Click <b>My Location</b> to detect your current
-                                                            position. Allow location permission when prompted for
-                                                            the best experience.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">📏</span>
-                                                        <h4>Set Your Radius</h4>
-                                                        <p>
-                                                            Choose a <b>Radius</b> (5km, 10km, or 20km) to filter
-                                                            and discover Indonesian restaurants within your
-                                                            preferred distance.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">🗺️</span>
-                                                        <h4>Explore Details</h4>
-                                                        <p>
-                                                            Click any marker to view restaurant details, customer
-                                                            ratings, photo galleries, and authentic Indonesian
-                                                            cuisine offerings.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="tutorial-item">
-                                                        <span class="tutorial-icon">🚗</span>
-                                                        <h4>Get Directions</h4>
-                                                        <p>
-                                                            Use the <b>Directions</b> button to open navigation in
-                                                            your preferred maps app and find the quickest route to
-                                                            your chosen restaurant.
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="permission-section">
-                                                    <h3 class="permission-title">🔐 Enable Location Permission</h3>
-                                                    <p class="permission-subtitle">
-                                                        Follow these steps to allow location access for the best map
-                                                        experience:
-                                                    </p>
-
-                                                    <div class="permission-grid">
-                                                        <div class="permission-device">
-                                                            <div class="device-header">
-                                                                <span class="device-icon">📱</span>
-                                                                <h4 class="device-title">Mobile Device</h4>
-                                                            </div>
-                                                            <ol class="permission-steps">
-                                                                <li>
-                                                                    Tap the <b>lock icon</b> or
-                                                                    <b>site info icon</b> in your browser's address
-                                                                    bar
-                                                                </li>
-                                                                <li>
-                                                                    Select <b>Permissions</b>, <b>Site settings</b>,
-                                                                    or <b>Page info</b>
-                                                                </li>
-                                                                <li>
-                                                                    Find <b>Location</b> and change it to
-                                                                    <b>Allow</b> or <b>Enable</b>
-                                                                </li>
-                                                                <li>
-                                                                    Refresh the page and click
-                                                                    <b>My Location</b> again
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-
-                                                        <div class="permission-device">
-                                                            <div class="device-header">
-                                                                <span class="device-icon">💻</span>
-                                                                <h4 class="device-title">Desktop Browser</h4>
-                                                            </div>
-                                                            <ol class="permission-steps">
-                                                                <li>
-                                                                    Click the <b>lock icon</b> or
-                                                                    <b>shield icon</b> in the browser address bar
-                                                                </li>
-                                                                <li>
-                                                                    Look for <b>Location permissions</b> in the
-                                                                    dropdown menu
-                                                                </li>
-                                                                <li>
-                                                                    Select <b>Allow</b> or <b>Always allow</b> for
-                                                                    this site
-                                                                </li>
-                                                                <li>
-                                                                    Reload the page and try the location feature
-                                                                    again
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="quick-tips">
-                                                        <h4>💡 Quick Tips</h4>
-                                                        <p>
-                                                            If you're still having issues, try clearing your browser
-                                                            cache, checking if location services are enabled on your
-                                                            device, or using a different browser. Most modern
-                                                            browsers support location services for a better user
-                                                            experience.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="filter-bar">
-                                                <div class="filter-group">
-                                                    <label for="radius-select">Radius:</label>
-                                                    <select id="radius-select" class="form-select form-select-sm">
-                                                        <option value="5">5 km</option>
-                                                        <option value="10" selected>10 km</option>
-                                                        <option value="20">20 km</option>
-                                                    </select>
-                                                </div>
-                                                <button id="stop-location" class="btn-show-all">
-                                                    🔄 Show All
-                                                </button>
-                                            </div>
-
-                                            <div id="map" style="width: 100%; height: 500px; border-radius: 10px; overflow: hidden;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Category Filters -->
-                        <div class="menu-tab-wp">
-                            <div class="row">
-                                <div class="col-lg-12 m-auto">
-                                    <div class="menu-tab text-center">
-                                        <ul class="filters">
-                                            <div class="filter-active"></div>
-                                            <li class="filter" data-filter=".all">
-                                                <img src="assets/images/icon-all.png" alt="" class="icon-filter">
-                                                All
-                                            </li>
-                                            <li class="filter" data-filter=".shop">
-                                                <img src="assets/images/toko.png" alt="" class="icon-filter">
-                                                Shop
-                                            </li>
-                                            <li class="filter" data-filter=".restaurant">
-                                                <img src="assets/images/restoran.png" alt="" class="icon-filter">
-                                                Restaurant
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Shop and Restaurant Listings -->
-                        <div class="menu-list-row">
-                            <div class="row g-xxl-5 bydefault_show" id="menu-dish">
-                                @foreach($businesses as $business)
-                                <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}" data-cat="{{ strtolower($business->type->title ?? 'all') }}">
-                                    <div class="dish-box text-center">
-                                        <!-- Business Logo -->
-                                        <div class="dist-img">
-                                            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}" loading="lazy">
-                                        </div>
-                                        <!-- Business Rating -->
-                                        <div class="dish-rating">
-                                            {{ number_format($business->average_rating, 1) }}
-                                            <i class="uil uil-star"></i>
-                                        </div>
-                                        <!-- Business Title -->
-                                        <div class="dish-title">
-                                            <h3 class="h3-title">
-                                                {{ $business->name }}
-                                            </h3>
-                                            @if ($business->user_id === null)
-                                            <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
-                                            @endif
-                                            <!-- Menampilkan Unique Code -->
-                                            <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
-                                                <p>{{ $business->unique_code ?? '' }}</p>
+                                <hr>
+                                <!-- Business Actions -->
+                                <div class="menu-tab text-center">
+                                    <ul>
+                                        <div class="filter-active-data"></div>
+                                        <li class="filter-data active">
+                                            <a href="{{ route('business.show', $business->slug) }}">
+                                                <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
+                                                Details
                                             </a>
-                                            <p>{{ $business->type->title ?? 'N/A' }}</p>
-                                        </div>
-                                        <!-- Business Info -->
-                                        <div class="info-container">
-                                            <div class="info-item">
-                                                <i class="uil uil-location-point"></i>
-                                                <p>{{ $business->address }}</p>
-                                            </div>
-                                            <div class="info-item">
-                                                <i class="uil uil-utensils"></i>
-                                                <p>
-                                                    @foreach ($business->food_categories as $category)
-                                                    {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
-                                                    @endforeach
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <hr>
-                                        <!-- Business Actions -->
-                                        <div class="menu-tab text-center">
-                                            <ul>
-                                                <div class="filter-active-data"></div>
-                                                <li class="filter-data active">
-                                                    <a href="{{ route('business.show', $business->slug) }}">
-                                                        <img src="assets/images/icon-all.png" alt="Filter All" class="icon-filter">
-                                                        Details
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ $business->location }}" target="_blank">
-                                                        <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
-                                                        Maps
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <!-- View All Button -->
-                        <div class="button-container">
-                            <a href="{{ route('tokorestoran') }}" class="view-all-button">View All</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Gallery  -->
-            <section class="book-table section bg-light" id="gallery">
-                <div class="book-table-shape">
-                    <img src="assets/images/table-leaves-shape.png" alt="">
-                </div>
-
-                <div class="book-table-shape book-table-shape2">
-                    <img src="assets/images/table-leaves-shape.png" alt="">
-                </div>
-
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">Gallery</p>
-                                    <div class="about_us">
-                                        <h2>Here is the</h2>
-                                        <h2>
-                                            Gallery <span class="rasa-text"> Taste </span>of Indonesia
-                                        </h2>
-                                    </div>
-                                    <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="">
-                                    </div>
+                                        </li>
+                                        <li>
+                                            <a href="{{ $business->location }}" target="_blank">
+                                                <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
+                                                Maps
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-lg-10 m-auto">
-                                <div class="book-table-img-slider" id="icon">
-                                    <div class="swiper-wrapper">
-                                        @foreach($galleries as $gallery)
-                                        <a href="{{ asset('storage/' . $gallery->image) }}" data-fancybox="table-slider"
-                                            class="book-table-img back-img swiper-slide"
-                                            style="background-image: url('{{ asset('storage/' . $gallery->image) }}')"
-                                            loading="lazy">
-                                        </a>
-                                        @endforeach
-                                    </div>
-                                    <div class="swiper-button-wp">
-                                        <div class="swiper-button-prev swiper-button">
-                                            <i class="uil uil-angle-left"></i>
-                                        </div>
-                                        <div class="swiper-button-next swiper-button">
-                                            <i class="uil uil-angle-right"></i>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-pagination"></div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
 
-            </section>
-
-            <!-- QnA  -->
-            <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="qna">
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">qna</p>
-                                    <h2 class="h2-title">Frequently Asked <span>Questions</span></h2>
-                                    <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="faq-row">
-                            @foreach($qna as $qna)
-                            <div class="faq-box">
-                                <h4 class="h4-title">{{ $qna->question }}</h4>
-                                <p>{{ $qna->answer }}</p>
-                            </div>
-                            @endforeach
-                        </div>
-
-                    </div>
+                <!-- View All Button -->
+                <div class="button-container">
+                    <a href="{{ route('tokorestoran') }}" class="view-all-button">View All</a>
                 </div>
+            </div>
+        </div>
+    </section>
 
-            </section>
+    <!-- Gallery  -->
+    <section class="book-table section bg-light" id="gallery">
+        <div class="book-table-shape">
+            <img src="assets/images/table-leaves-shape.png" alt="">
+        </div>
 
-            <!-- Calendar  -->
-            <section class="faq-sec section bg-light" id="calendar">
+        <div class="book-table-shape book-table-shape2">
+            <img src="assets/images/table-leaves-shape.png" alt="">
+        </div>
+
+        <div class="sec-wp">
+            <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
-                            <p class="sec-sub-title mb-3">CALENDAR OF EVENTS</p>
+                            <p class="sec-sub-title mb-3">Gallery</p>
                             <div class="about_us">
-                                <h2>Calendar of </h2>
+                                <h2>Here is the</h2>
                                 <h2>
-                                    Events<span class="rasa-text"> Taste </span>of Indonesia
+                                    Gallery <span class="rasa-text"> Taste </span>of Indonesia
                                 </h2>
                             </div>
                             <div class="sec-title-shape mb-4">
@@ -606,165 +520,240 @@
                         </div>
                     </div>
                 </div>
-            </section>
 
-            @if($events->count())
-            <section id="tranding" class="calendar section bg-light">
-                <div class="container-card-calendar">
-                    <div class="swiper tranding-slider">
-                        <div class="swiper-wrapper">
-                            <!-- Slide-start -->
-                            @foreach ($events as $event)
-                            <div class="swiper-slide tranding-slide">
-                                <div class="tranding-slide-img">
-                                    <img src="{{ asset('storage/' . $event->image_events) }}" alt="Tranding" />
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="book-table-img-slider" id="icon">
+                            <div class="swiper-wrapper">
+                                @foreach($galleries as $gallery)
+                                <a href="{{ asset('storage/' . $gallery->image) }}" data-fancybox="table-slider"
+                                    class="book-table-img back-img swiper-slide"
+                                    style="background-image: url('{{ asset('storage/' . $gallery->image) }}')"
+                                    loading="lazy">
+                                </a>
+                                @endforeach
+                            </div>
+                            <div class="swiper-button-wp">
+                                <div class="swiper-button-prev swiper-button">
+                                    <i class="uil uil-angle-left"></i>
                                 </div>
-                                <div class="tranding-slide-content">
-                                    <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="link-calendar">
-                                        <h1 class="food-price">{{ $event->type_events }}</h1>
-                                        <div class="desc">
-                                            <div class="location">
-                                                <i class="fa-solid fa-location-dot"></i> {{ $event->place_name }}
-                                            </div>
-                                            <div class="title-calendar">{{ $event->title }}</div>
-                                            <div class="time">
-                                                {{ \Carbon\Carbon::parse($event->start_time)->format('j F Y - \a\t gA') }}
-                                                to
-                                                {{ \Carbon\Carbon::parse($event->end_time)->format('gA') }}
-                                            </div>
-                                        </div>
-                                    </a>
+                                <div class="swiper-button-next swiper-button">
+                                    <i class="uil uil-angle-right"></i>
                                 </div>
                             </div>
-                            @endforeach
-
-                            <!-- Slide-end -->
-
-                        </div>
-
-                        <div class="swiper-button-wp-calendar">
-                            <div class="swiper-button-prev swiper-button">
-                                <i class="uil uil-angle-left"></i>
-                            </div>
-                            <div class="swiper-button-next swiper-button">
-                                <i class="uil uil-angle-right"></i>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-            </section>
-            @else
-            <section class="faq-sec section bg-light text-center">
-                <h3>No upcoming events for now. Stay tuned!</h3>
-            </section>
-            @endif
-
-            <!-- News  -->
-            <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="news">
-                <div class="sec-wp">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">news</p>
-                                    <div class="about_us">
-                                        <h2>News About </h2>
-                                        <h2>
-                                            <span class="rasa-text"> Taste </span>of Indonesia
-                                        </h2>
-                                    </div>
-                                    <div class="sec-title-shape mb-4">
-                                        <img src="assets/images/title-shape.svg" alt="">
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="swiper-pagination"></div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <section class="collection">
-                <div class="swiper-container mySwiper">
-                    <div class="swiper-wrapper">
-                        @foreach ($news as $item)
-                        <div class="content-news swiper-slide">
-                            <img src="{{ asset('storage/' . $item->image_news) }}" alt="{{ $item->title }}">
-                            <div class="text-content">
-                                <h3>{{ Str::limit(strip_tags($item->title), 20) }}</h3>
-                                <p>{{ Str::limit(strip_tags($item->desc), 100) }}</p>
-                                <div class="button-container-news">
-                                    <a href="{{ route('news.show', $item->slug) }}" class="view-all-button-news">
-                                        Read More <span class="visually-hidden">about {{ $item->title }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-
-                    <div class="swiper-button-wp-news">
-                        <div class="swiper-button-prev swiper-button">
-                            <i class="uil uil-angle-left"></i>
-                        </div>
-                        <div class="swiper-button-next swiper-button">
-                            <i class="uil uil-angle-right"></i>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
-            </section>
-
-            <div class="button-container-news-view-all">
-                <a href="{{ route('news.index') }}" class="view-all-button-news-view-all">
-                    View All <span class="visually-hidden">news articles</span>
-                </a>
             </div>
-
-            <!-- Contact Want to add your business  -->
-            <div class="bg-pattern bg-light repeat-img"
-                style="background-image: url(assets/images/blog-pattern-bg.png);">
-
-                <section class="newsletter-sec section pt-0" id="contact">
-                    <div class="sec-wp">
-                        <div class="container-calendar">
-                            <div class="row">
-                                <div class="col-lg-8 m-auto">
-                                    <div class="newsletter-box text-center back-img white-text"
-                                        style="background-image: url(assets/images/news.jpg);">
-                                        <div class="bg-overlay dark-overlay"></div>
-                                        <div class="sec-wp">
-                                            <div class="newsletter-box-text">
-                                                <h2 class="h2-title">Want to add your business?</h2>
-                                                <p>Please contact us and tell us the details of your business.
-                                                </p>
-                                            </div>
-                                            <div class="contact-icons">
-                                                <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
-                                                    <i class="uil uil-facebook-f"></i>
-                                                </a>
-                                                <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
-                                                    <i class="uil uil-instagram"></i>
-                                                </a>
-                                                <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
-                                                    <i class="uil uil-youtube"></i>
-                                                </a>
-                                                <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
-                                                    <i class="fab fa-tiktok"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            @include('partials.footer')
-
         </div>
+
+    </section>
+
+    <!-- QnA  -->
+    <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="qna">
+        <div class="sec-wp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="sec-title text-center mb-5">
+                            <p class="sec-sub-title mb-3">qna</p>
+                            <h2 class="h2-title">Frequently Asked <span>Questions</span></h2>
+                            <div class="sec-title-shape mb-4">
+                                <img src="assets/images/title-shape.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-row">
+                    @foreach($qna as $qna)
+                    <div class="faq-box">
+                        <h4 class="h4-title">{{ $qna->question }}</h4>
+                        <p>{{ $qna->answer }}</p>
+                    </div>
+                    @endforeach
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Calendar  -->
+    <section class="faq-sec section bg-light" id="calendar">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title text-center mb-5">
+                    <p class="sec-sub-title mb-3">CALENDAR OF EVENTS</p>
+                    <div class="about_us">
+                        <h2>Calendar of </h2>
+                        <h2>
+                            Events<span class="rasa-text"> Taste </span>of Indonesia
+                        </h2>
+                    </div>
+                    <div class="sec-title-shape mb-4">
+                        <img src="assets/images/title-shape.svg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @if($events->count())
+    <section id="tranding" class="calendar section bg-light">
+        <div class="container-card-calendar">
+            <div class="swiper tranding-slider">
+                <div class="swiper-wrapper">
+                    <!-- Slide-start -->
+                    @foreach ($events as $event)
+                    <div class="swiper-slide tranding-slide">
+                        <div class="tranding-slide-img">
+                            <img src="{{ asset('storage/' . $event->image_events) }}" alt="Tranding" />
+                        </div>
+                        <div class="tranding-slide-content">
+                            <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="link-calendar">
+                                <h1 class="food-price">{{ $event->type_events }}</h1>
+                                <div class="desc">
+                                    <div class="location">
+                                        <i class="fa-solid fa-location-dot"></i> {{ $event->place_name }}
+                                    </div>
+                                    <div class="title-calendar">{{ $event->title }}</div>
+                                    <div class="time">
+                                        {{ \Carbon\Carbon::parse($event->start_time)->format('j F Y - \a\t gA') }}
+                                        to
+                                        {{ \Carbon\Carbon::parse($event->end_time)->format('gA') }}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <!-- Slide-end -->
+
+                </div>
+
+                <div class="swiper-button-wp-calendar">
+                    <div class="swiper-button-prev swiper-button">
+                        <i class="uil uil-angle-left"></i>
+                    </div>
+                    <div class="swiper-button-next swiper-button">
+                        <i class="uil uil-angle-right"></i>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+    @else
+    <section class="faq-sec section bg-light text-center">
+        <h3>No upcoming events for now. Stay tuned!</h3>
+    </section>
+    @endif
+
+    <!-- News  -->
+    <section class="faq-sec section-repeat-img" style="background-image: url(assets/images/faq-bg.png);" id="news">
+        <div class="sec-wp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="sec-title text-center mb-5">
+                            <p class="sec-sub-title mb-3">news</p>
+                            <div class="about_us">
+                                <h2>News About </h2>
+                                <h2>
+                                    <span class="rasa-text"> Taste </span>of Indonesia
+                                </h2>
+                            </div>
+                            <div class="sec-title-shape mb-4">
+                                <img src="assets/images/title-shape.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="collection">
+        <div class="swiper-container mySwiper">
+            <div class="swiper-wrapper">
+                @foreach ($news as $item)
+                <div class="content-news swiper-slide">
+                    <img src="{{ asset('storage/' . $item->image_news) }}" alt="{{ $item->title }}">
+                    <div class="text-content">
+                        <h3>{{ Str::limit(strip_tags($item->title), 20) }}</h3>
+                        <p>{{ Str::limit(strip_tags($item->desc), 100) }}</p>
+                        <div class="button-container-news">
+                            <a href="{{ route('news.show', $item->slug) }}" class="view-all-button-news">
+                                Read More <span class="visually-hidden">about {{ $item->title }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <div class="swiper-button-wp-news">
+                <div class="swiper-button-prev swiper-button">
+                    <i class="uil uil-angle-left"></i>
+                </div>
+                <div class="swiper-button-next swiper-button">
+                    <i class="uil uil-angle-right"></i>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <div class="button-container-news-view-all">
+        <a href="{{ route('news.index') }}" class="view-all-button-news-view-all">
+            View All <span class="visually-hidden">news articles</span>
+        </a>
     </div>
+
+    <!-- Contact Want to add your business  -->
+    <div class="bg-pattern bg-light repeat-img"
+        style="background-image: url(assets/images/blog-pattern-bg.png);">
+
+        <section class="newsletter-sec section pt-0" id="contact">
+            <div class="sec-wp">
+                <div class="container-calendar">
+                    <div class="row">
+                        <div class="col-lg-8 m-auto">
+                            <div class="newsletter-box text-center back-img white-text"
+                                style="background-image: url(assets/images/news.jpg);">
+                                <div class="bg-overlay dark-overlay"></div>
+                                <div class="sec-wp">
+                                    <div class="newsletter-box-text">
+                                        <h2 class="h2-title">Want to add your business?</h2>
+                                        <p>Please contact us and tell us the details of your business.
+                                        </p>
+                                    </div>
+                                    <div class="contact-icons">
+                                        <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
+                                            <i class="uil uil-facebook-f"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
+                                            <i class="uil uil-instagram"></i>
+                                        </a>
+                                        <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
+                                            <i class="uil uil-youtube"></i>
+                                        </a>
+                                        <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    @include('partials.footer')
 
     <!-- jquery  -->
     <script src="assets/js/jquery-3.5.1.min.js"></script>
