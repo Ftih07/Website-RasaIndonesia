@@ -968,7 +968,7 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">Other Businesses</p>
-                            <h2 class="h2-title">Explore Other <span>Stores & Restaurants!</span></h2>
+                            <h2 class="h2-title">Explore Other <span>Shops & Restaurants!</span></h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>
@@ -986,8 +986,8 @@
                                     <li class="filter" data-filter=".all">
                                         <img src="{{ asset('assets/images/icon-all.png') }}" alt="" class="icon-filter"> All
                                     </li>
-                                    <li class="filter" data-filter=".store">
-                                        <img src="{{ asset('assets/images/toko.png') }}" alt="" class="icon-filter"> Store
+                                    <li class="filter" data-filter=".shop">
+                                        <img src="{{ asset('assets/images/toko.png') }}" alt="" class="icon-filter"> Shop
                                     </li>
                                     <li class="filter" data-filter=".restaurant">
                                         <img src="{{ asset('assets/images/restoran.png') }}" alt="" class="icon-filter"> Restaurant
@@ -998,7 +998,7 @@
                     </div>
                 </div>
 
-                <!-- Store and Restaurant Items -->
+                <!-- Shops and Restaurant Items -->
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                         @foreach($otherBusinesses as $otherBusiness)

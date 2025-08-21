@@ -3,6 +3,16 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
     <div class="container-fluid px-4 py-6">
+        {{-- Back to Home Button Above Header --}}
+        <div class="row mb-3">
+            <div class="col-12">
+                <a href="{{ url('/') }}" class="bg-gradient-to-r from-orange-500 to-amber-500 btn btn-back-home text-white px-4 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-home me-2"></i>
+                    <span class="d-none d-sm-inline">Back to Home</span>
+                    <span class="d-sm-none">Home</span>
+                </a>
+            </div>
+        </div>
         {{-- Header Section --}}
         <div class="row mb-4">
             <div class="col-12">

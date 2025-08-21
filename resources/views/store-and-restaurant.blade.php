@@ -8,9 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Indonesian Stores & Restaurants in Australia | Taste of Indonesia</title>
-    <meta name="description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
-    <meta name="keywords" content="Indonesian restaurants Australia, Indonesian stores, halal Indonesian food, Indonesian groceries, Taste of Indonesia">
+    <title>Indonesian Shops & Restaurants in Australia | Taste of Indonesia</title>
+    <meta name="description" content="Find the best Indonesian restaurants and shops in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
+    <meta name="keywords" content="Indonesian restaurants Australia, Indonesian shops, halal Indonesian food, Indonesian groceries, Taste of Indonesia">
     <meta name="author" content="Taste of Indonesia">
     <meta name="copyright" content="Taste of Indonesia Australia">
     <meta name="robots" content="index, follow">
@@ -26,8 +26,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Taste of Indonesia Australia">
     <meta property="og:url" content="https://tasteofindonesia.com.au/store-and-restaurant">
-    <meta property="og:title" content="Indonesian Stores & Restaurants in Australia | Taste of Indonesia">
-    <meta property="og:description" content="Find the best Indonesian restaurants and stores in Australia. Explore halal food spots, grocery stores, and authentic Indonesian cuisine near you.">
+    <meta property="og:title" content="Indonesian shops & Restaurants in Australia | Taste of Indonesia">
+    <meta property="og:description" content="Find the best Indonesian restaurants and shops in Australia. Explore halal food spots, grocery shops, and authentic Indonesian cuisine near you.">
     <meta property="og:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
     <meta property="og:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
     <meta property="og:image:width" content="1200">
@@ -82,7 +82,7 @@
         <div id="viewport">
             <div id="js-scroll-content">
 
-                <!-- Store & Restaurant Section -->
+                <!-- shops & Restaurant Section -->
                 <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
                     <div class="sec-wp">
                         <div class="container">
@@ -97,8 +97,8 @@
                                 <!-- Section Title -->
                                 <div class="col-lg-12">
                                     <div class="sec-title text-center mb-5">
-                                        <p class="sec-sub-title mb-3">Store & Restaurant</p>
-                                        <h2 class="h2-title">Find List of<span>Store & Restaurant Here!</span></h2>
+                                        <p class="sec-sub-title mb-3">Shop & Restaurant</p>
+                                        <h2 class="h2-title">Find List of<span>Shop & Restaurant Here!</span></h2>
                                         <div class="sec-title-shape mb-4">
                                             <img src="assets/images/title-shape.svg" alt="">
                                         </div>
@@ -184,7 +184,7 @@
                                 </div>
                             </div>
 
-                            <!-- Store and Restaurant List -->
+                            <!-- Shop and Restaurant List -->
                             <div class="menu-list-row">
                                 @if($businesses->isEmpty())
                                 <div class="alert alert-warning text-center">

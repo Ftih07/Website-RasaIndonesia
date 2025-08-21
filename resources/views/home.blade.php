@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores</title>
-    <meta name="description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
-    <meta name="keywords" content="Indonesian food Australia, Indonesian restaurants, halal Indonesian food, Taste of Indonesia, Indonesian cuisine, Indonesian stores">
+    <title>Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Shops</title>
+    <meta name="description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, shops, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta name="keywords" content="Indonesian food Australia, Indonesian restaurants, halal Indonesian food, Taste of Indonesia, Indonesian cuisine, Indonesian shops">
     <meta name="author" content="Taste of Indonesia">
     <meta name="copyright" content="Taste of Indonesia Australia">
     <meta name="robots" content="index, follow">
@@ -24,8 +24,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Taste of Indonesia Australia">
     <meta property="og:url" content="https://tasteofindonesia.com.au/">
-    <meta property="og:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores">
-    <meta property="og:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta property="og:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Shops">
+    <meta property="og:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, shops, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
     <meta property="og:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
     <meta property="og:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
     <meta property="og:image:width" content="1200">
@@ -34,8 +34,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://tasteofindonesia.com.au/">
-    <meta name="twitter:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Stores">
-    <meta name="twitter:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, stores, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
+    <meta name="twitter:title" content="Taste of Indonesia Australia - Authentic Indonesian Food Guide, Restaurants & Shops">
+    <meta name="twitter:description" content="Discover authentic Indonesian food in Australia. Find local Indonesian restaurants, halal eateries, traditional dishes, shops, events, and news on Taste of Indonesia. Your guide to Indonesian cuisine Down Under!">
     <meta name="twitter:image" content="https://tasteofindonesia.com.au/assets/images/logo/logo.png">
     <meta name="twitter:image:alt" content="Taste of Indonesia Logo with Indonesian food spread">
 
@@ -81,16 +81,14 @@
 
 <body class="body-fixed">
     @if(session('success'))
-    <!-- prettier-ignore -->
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: '{{ session('
-            success ') }}', // ✅ tidak ada spasi
-            showConfirmButton: false,
-            timer: 2000
-        });
-    </script>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ session('success') }}', // ✅ hapus spasi
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
     @endif
 
     @include('partials.navbar')
@@ -125,7 +123,7 @@
                                         <span>Taste</span>
                                         <br> of Indonesia.
                                     </h1>
-                                    <p>Find a store or restaurant that serves Indonesian foods in Australia.</p>
+                                    <p>Find a shop or restaurant that serves Indonesian foods in Australia.</p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -230,7 +228,7 @@
                 </div>
             </section>
 
-            <!-- Section: Store & Restaurant List -->
+            <!-- Section: Shop & Restaurant List -->
             <section style="background-image: url(assets/images/menu-bg.png);" class="our-menu section bg-light repeat-img" id="menu">
                 <div class="sec-wp">
                     <div class="container">
@@ -238,8 +236,8 @@
                             <div class="col-lg-12">
                                 <!-- Section Title -->
                                 <div class="sec-title text-center mb-5">
-                                    <p class="sec-sub-title mb-3">Store & Restaurant</p>
-                                    <h2 class="h2-title">Find List of <span>Store & Restaurant Here!</span></h2>
+                                    <p class="sec-sub-title mb-3">Shop & Restaurant</p>
+                                    <h2 class="h2-title">Find List of <span>Shop & Restaurant Here!</span></h2>
                                     <div class="sec-title-shape mb-4">
                                         <img src="assets/images/title-shape.svg" alt="">
                                     </div>
@@ -410,9 +408,9 @@
                                                 <img src="assets/images/icon-all.png" alt="" class="icon-filter">
                                                 All
                                             </li>
-                                            <li class="filter" data-filter=".store">
+                                            <li class="filter" data-filter=".shop">
                                                 <img src="assets/images/toko.png" alt="" class="icon-filter">
-                                                Store
+                                                Shop
                                             </li>
                                             <li class="filter" data-filter=".restaurant">
                                                 <img src="assets/images/restoran.png" alt="" class="icon-filter">
@@ -424,7 +422,7 @@
                             </div>
                         </div>
 
-                        <!-- Store and Restaurant Listings -->
+                        <!-- Shop and Restaurant Listings -->
                         <div class="menu-list-row">
                             <div class="row g-xxl-5 bydefault_show" id="menu-dish">
                                 @foreach($businesses as $business)

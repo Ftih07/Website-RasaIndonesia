@@ -304,13 +304,14 @@
                     </ul>
                 </li>
 
-                <!-- Services Dropdown -->
+                <!-- Services (split Shop & Restaurant) -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         Services
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('tokorestoran') }}">Store & Restaurant</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tokorestoran', ['type' => 'shop']) }}">Shop</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tokorestoran', ['type' => 'restaurant']) }}">Restaurant</a></li>
                         <li><a class="dropdown-item" href="{{ route('home') }}#calendar">Calendar</a></li>
                         <li><a class="dropdown-item" href="{{ route('news.index') }}">News</a></li>
                     </ul>
@@ -324,8 +325,8 @@
 
             <!-- Right Side Navigation -->
             <ul class="navbar-nav ms-auto align-items-center">
-                <!-- Authentication -->
                 @guest
+                <!-- Login -->
                 <li class="nav-item">
                     <button class="btn btn-login" type="button" onclick="window.location.href='{{ route('testimonial.login') }}'">
                         <i class="fas fa-sign-in-alt me-2"></i>Login
@@ -333,7 +334,7 @@
                 </li>
                 @else
 
-                <!-- Business Actions for Customers -->
+                <!-- Business (for customers) -->
                 @if (auth()->user()->hasRole('customer'))
                 @php
                 $user = auth()->user();
@@ -358,7 +359,7 @@
                 @endif
                 @endif
 
-                <!-- Dashboard for Sellers -->
+                <!-- Dashboard (for sellers) -->
                 @if (auth()->user()->hasRole('seller'))
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link">
@@ -367,30 +368,71 @@
                 </li>
                 @endif
 
-                <!-- Notifications -->
+                <!-- Activities Dropdown (Notif, Messages, Orders) -->
                 @php
+                $unread = 0;
+                $unreadMessages = 0;
+                $activeOrders = 0;
+
+                if (auth()->check()) {
+                // unread notifications
                 $unread = auth()->user()->notifications()->where('is_read', false)->count();
+
+                // unread messages
+                $unreadMessages = \App\Models\Message::where('is_read', false)
+                ->whereHas('chat', function ($query) {
+                $query->where('user_one_id', auth()->id())
+                ->orWhere('user_two_id', auth()->id());
+                })
+                ->where('sender_id', '!=', auth()->id())
+                ->count();
+
+                // active orders
+                $activeOrders = \App\Models\Order::where('user_id', auth()->id())
+                ->whereIn('delivery_status', ['waiting', 'confirmed', 'assigned', 'on_delivery'])
+                ->count();
+                }
                 @endphp
-                <li class="nav-item">
-                    <a href="{{ route('notifications.index') }}" class="notification-icon">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-bell"></i>
-                        @if ($unread > 0)
-                        <span class="notification-badge">{{ $unread }}</span>
+                        @php
+                        $totalNotif = $unread + $unreadMessages + $activeOrders;
+                        @endphp
+                        @if ($totalNotif > 0)
+                        <span class="notification-badge">{{ $totalNotif }}</span>
                         @endif
                     </a>
-                </li>
 
-                <!-- Chat -->
-                <li class="nav-item">
-                    <a href="{{ route('chat.customer') }}" class="chat-icon">
-                        <i class="fas fa-comments"></i>
-                    </a>
-                </li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}">
+                                <span><i class="fas fa-bell me-2"></i>Notifications</span>
+                                @if ($unread > 0)
+                                <span class="badge bg-danger">{{ $unread }}</span>
+                                @endif
+                            </a>
+                        </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="chat-icon">
-                        <i class="fas fa-box"></i>
-                    </a>
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="{{ route('chat.customer') }}">
+                                <span><i class="fas fa-comments me-2"></i>Messages</span>
+                                @if ($unreadMessages > 0)
+                                <span class="badge bg-danger">{{ $unreadMessages }}</span>
+                                @endif
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="{{ route('orders.index') }}">
+                                <span><i class="fas fa-box me-2"></i>Orders</span>
+                                @if ($activeOrders > 0)
+                                <span class="badge bg-warning text-dark">{{ $activeOrders }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- User Profile Dropdown -->

@@ -7,22 +7,33 @@
         <div class="text-center mb-8 lg:mb-12">
             <div class="relative inline-block w-full max-w-4xl">
                 <!-- Background Decoration -->
-                <div class="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-2xl lg:rounded-3xl opacity-20 blur-xl"></div>
-
+                <div class="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-2xl lg:rounded-3xl opacity-20 blur-xl pointer-events-none"></div>
+                <!-- Back Button Above Header -->
+                <div class="flex justify-center mb-6 max-w-4xl mx-auto">
+                    <a href="/"
+                        class="group inline-flex items-center px-5 py-3 bg-white hover:bg-orange-50 text-orange-600 hover:text-orange-700 rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-orange-200 hover:border-orange-300">
+                        <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span class="font-medium">Back to Home</span>
+                    </a>
+                </div>
                 <!-- Main Header -->
                 <div class="relative bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl lg:rounded-3xl px-6 py-6 lg:px-12 lg:py-8 shadow-2xl border border-orange-200">
+
+                    <!-- Main Title Section -->
                     <div class="flex flex-col sm:flex-row items-center justify-center mb-4">
-                        <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-lg">
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-lg float">
                             <svg class="w-6 h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                         </div>
-                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent text-center sm:text-left">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r pb-2 from-orange-600 to-orange-800 bg-clip-text text-transparent text-center sm:text-left">
                             My Orders
                         </h1>
                     </div>
 
-                    <!-- Decorative Elements - Hidden on mobile -->
+                    <!-- Decorative Elements -->
                     <div class="hidden sm:flex justify-center items-center space-x-2 mb-4">
                         <div class="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
                         <div class="w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
@@ -34,7 +45,7 @@
                     <p class="text-gray-600 text-base lg:text-lg">Track your delicious Indonesian cuisine orders</p>
                 </div>
 
-                <!-- Floating Elements - Hidden on mobile -->
+                <!-- Floating Elements -->
                 <div class="hidden lg:block absolute -top-2 -right-2 w-6 h-6 bg-orange-400 rounded-full opacity-60 animate-bounce"></div>
                 <div class="hidden lg:block absolute -bottom-2 -left-2 w-4 h-4 bg-orange-500 rounded-full opacity-40 animate-bounce delay-300"></div>
             </div>

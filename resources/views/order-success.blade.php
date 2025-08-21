@@ -163,9 +163,10 @@
 
                 <!-- Action Buttons -->
                 <div class="text-center mt-5">
-                    <a href="{{ route('home') }}" class="btn btn-lg text-white fw-bold px-5 py-3 me-3" style="background: linear-gradient(135deg, #FF6B35, #F7931E); border: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);">
-                        <i class="fas fa-home me-2"></i>
-                        Back to Home
+                    <a href="{{ route('orders.index') }}" class="btn btn-lg text-white fw-bold px-5 py-3 me-3"
+                        style="background: linear-gradient(135deg, #28A745, #218838); border: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+                        <i class="fas fa-truck me-2"></i>
+                        Track Orders
                     </a>
                     <button onclick="window.print()" class="btn btn-outline-secondary btn-lg px-5 py-3" style="border-radius: 50px;">
                         <i class="fas fa-print me-2"></i>
