@@ -14,20 +14,48 @@ class OrderController extends Controller
     {
         $partner = auth()->user();
 
-        $orders = Order::with('items.product')
+        // Base query
+        $ordersQuery = Order::with('items.product')
             ->where('partner_id', $partner->id)
-            ->latest()
-            ->get();
+            ->latest();
 
-        // Proses options sama seperti di dashboard order show
+        // Apply filters
+        if ($status = request('status')) {
+            $ordersQuery->where('delivery_status', $status);
+        }
+
+        if ($dateFrom = request('date_from')) {
+            $ordersQuery->whereDate('created_at', '>=', $dateFrom);
+        }
+
+        if ($dateTo = request('date_to')) {
+            $ordersQuery->whereDate('created_at', '<=', $dateTo);
+        }
+
+        if ($orderNumber = request('order_number')) {
+            $ordersQuery->where('order_number', $orderNumber);
+        }
+
+        if ($deliveryOption = request('delivery_option')) {
+            $ordersQuery->where('delivery_option', $deliveryOption);
+        }
+
+        if ($productName = request('product')) {
+            $ordersQuery->whereHas('items.product', function ($q) use ($productName) {
+                $q->where('name', 'like', '%' . $productName . '%');
+            });
+        }
+
+        $perPage = request('per_page', 10);
+
+        $orders = $ordersQuery
+            ->paginate($perPage)
+            ->withQueryString();
+
+        // Proses options sama seperti sebelumnya
         foreach ($orders as $order) {
             foreach ($order->items as $item) {
-                if (is_string($item->options)) {
-                    $options = json_decode($item->options, true);
-                } else {
-                    $options = $item->options ?? [];
-                }
-
+                $options = is_string($item->options) ? json_decode($item->options, true) : ($item->options ?? []);
                 $processedOptions = [];
 
                 foreach ($options as $group) {
