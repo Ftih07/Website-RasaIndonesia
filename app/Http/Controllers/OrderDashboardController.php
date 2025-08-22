@@ -27,13 +27,43 @@ class OrderDashboardController extends Controller
         }
 
         if ($business->orders_status === 'approved') {
-            $orders = Order::with(['user', 'items', 'payment']) // tambahin payment
+            $ordersQuery = Order::with(['user', 'items.product', 'payment'])
                 ->where('business_id', $business->id)
                 ->whereHas('payment', function ($q) {
                     $q->whereNotIn('status', ['incomplete']);
                 })
-                ->latest()
-                ->get();
+                ->latest();
+
+            // ==== Apply Filters ====
+            if ($status = request('status')) {
+                $ordersQuery->where('delivery_status', $status);
+            }
+
+            if ($dateFrom = request('date_from')) {
+                $ordersQuery->whereDate('created_at', '>=', $dateFrom);
+            }
+
+            if ($dateTo = request('date_to')) {
+                $ordersQuery->whereDate('created_at', '<=', $dateTo);
+            }
+
+            if ($orderNumber = request('order_number')) {
+                $ordersQuery->where('order_number', 'like', '%' . $orderNumber . '%');
+            }
+
+            if ($deliveryOption = request('delivery_option')) {
+                $ordersQuery->where('delivery_option', $deliveryOption);
+            }
+
+            if ($productName = request('product')) {
+                $ordersQuery->whereHas('items.product', function ($q) use ($productName) {
+                    $q->where('name', 'like', '%' . $productName . '%');
+                });
+            }
+
+            // Pagination
+            $perPage = request('per_page', 10);
+            $orders = $ordersQuery->paginate($perPage)->withQueryString();
 
             return view('dashboard.orders.index', compact('business', 'orders'));
         }

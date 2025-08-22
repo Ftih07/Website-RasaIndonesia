@@ -1,173 +1,168 @@
-<!-- ✅ Enhanced Dashboard Navbar -->
+<!-- ✅ Enhanced Dashboard Navbar with Better Mobile/Tablet Support -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <nav class="dashboard-navbar mb-4">
     <div class="navbar-container bg-white rounded-3 shadow-sm border-0 p-3">
         <div class="row align-items-center">
             <!-- Navigation Tabs -->
             <div class="col-12 col-lg-8 mb-3 mb-lg-0">
-                <ul class="nav nav-pills dashboard-nav-pills" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}"
-                            href="{{ route('dashboard') }}"
-                            role="tab">
-                            <i class="fas fa-tachometer-alt me-2"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('dashboard/business*') ? 'active' : '' }}"
-                            href="{{ route('dashboard.business') }}"
-                            role="tab">
-                            <i class="fas fa-building me-2"></i>
-                            <span>Business</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('dashboard/product*') ? 'active' : '' }}"
-                            href="{{ route('dashboard.product') }}"
-                            role="tab">
-                            <i class="fas fa-utensils me-2"></i>
-                            <span>Products</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('dashboard/orders*') ? 'active' : '' }}"
-                            href="{{ route('dashboard.orders') }}"
-                            role="tab">
-                            <i class="fas fa-shopping-cart me-2"></i>
-                            <span>Orders</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('dashboard/testimonial*') ? 'active' : '' }}"
-                            href="{{ route('dashboard.testimonial') }}"
-                            role="tab">
-                            <i class="fas fa-star me-2"></i>
-                            <span>Testimonials</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->is('chat/seller*') ? 'active' : '' }}"
-                            href="{{ route('chat.seller') }}"
-                            role="tab">
-                            <i class="fas fa-comments me-2"></i>
-                            <span>Chat</span>
-                        </a>
-                    </li>
-                </ul>
+                <div class="nav-tabs-wrapper">
+                    <ul class="nav nav-pills dashboard-nav-pills" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}"
+                                href="{{ route('dashboard') }}"
+                                role="tab">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('dashboard/business*') ? 'active' : '' }}"
+                                href="{{ route('dashboard.business') }}"
+                                role="tab">
+                                <i class="fas fa-building me-2"></i>
+                                <span>Business</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('dashboard/product*') ? 'active' : '' }}"
+                                href="{{ route('dashboard.product') }}"
+                                role="tab">
+                                <i class="fas fa-utensils me-2"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('dashboard/orders*') ? 'active' : '' }}"
+                                href="{{ route('dashboard.orders') }}"
+                                role="tab">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('dashboard/testimonial*') ? 'active' : '' }}"
+                                href="{{ route('dashboard.testimonial') }}"
+                                role="tab">
+                                <i class="fas fa-star me-2"></i>
+                                <span>Testimonials</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ request()->is('chat/seller*') ? 'active' : '' }}"
+                                href="{{ route('chat.seller') }}"
+                                role="tab">
+                                <i class="fas fa-comments me-2"></i>
+                                <span>Chat</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="col-12 col-lg-4">
-                <div class="d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
-                    {{-- ✅ View Store Link --}}
-                    @php
-                    $slug = auth()->user()->business->slug ?? null;
-                    @endphp
-                    @if($slug)
-                    <a class="btn btn-outline-primary btn-sm d-flex align-items-center"
-                        href="{{ url('business/' . $slug) }}"
-                        target="_blank"
-                        rel="noopener noreferrer">
-                        <i class="fas fa-external-link-alt me-2"></i>
-                        <span class="d-none d-sm-inline">View Store</span>
-                        <span class="d-sm-none">Store</span>
-                    </a>
-                    @endif
+                <div class="action-buttons-wrapper">
+                    <div class="d-flex align-items-center justify-content-lg-end gap-2">
+                        {{-- ✅ View Store Link --}}
+                        @php
+                        $slug = auth()->user()->business->slug ?? null;
+                        @endphp
+                        @if($slug)
+                        <a class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                            href="{{ url('business/' . $slug) }}"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt me-2"></i>
+                            <span class="d-none d-sm-inline">View Store</span>
+                            <span class="d-sm-none">Store</span>
+                        </a>
+                        @endif
 
-                    <!-- Settings Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center"
-                            type="button"
-                            id="dashboardSettings"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-cog me-2"></i>
-                            <span class="d-none d-md-inline">Settings</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="dashboardSettings">
-                            <li>
-                                <h6 class="dropdown-header">
-                                    <i class="fas fa-user-cog me-2"></i>
-                                    Account Settings
-                                </h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-bell me-2"></i>Notifications</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-shield-alt me-2"></i>Security</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <h6 class="dropdown-header">
-                                    <i class="fas fa-tools me-2"></i>
-                                    Business Actions
-                                </h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <button class="dropdown-item text-danger"
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteBusinessModal">
-                                    <i class="fas fa-trash-alt me-2"></i>
-                                    Delete Business
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                        <!-- Settings Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center"
+                                type="button"
+                                id="dashboardSettings"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fas fa-cog me-2"></i>
+                                <span class="d-none d-md-inline">Settings</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="dashboardSettings">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <h6 class="dropdown-header">
+                                        <i class="fas fa-tools me-2"></i>
+                                        Business Actions
+                                    </h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteBusinessModal">
+                                        <i class="fas fa-trash-alt me-2"></i>
+                                        Delete Business
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <!-- User Profile Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-gradient-orange btn-sm dropdown-toggle d-flex align-items-center"
-                            type="button"
-                            id="userProfile"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <div class="user-avatar me-2">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=f97316&color=ffffff&size=24"
-                                    alt="Profile"
-                                    class="rounded-circle">
-                            </div>
-                            <span class="d-none d-md-inline">{{ auth()->user()->name ?? 'User' }}</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userProfile">
-                            <li>
-                                <div class="dropdown-item-text">
-                                    <div class="d-flex align-items-center">
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=f97316&color=ffffff&size=40"
-                                            alt="Profile"
-                                            class="rounded-circle me-3">
-                                        <div>
-                                            <div class="fw-semibold">{{ auth()->user()->name ?? 'User' }}</div>
-                                            <small class="text-muted">{{ auth()->user()->email ?? 'user@example.com' }}</small>
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-gradient-orange btn-sm dropdown-toggle d-flex align-items-center"
+                                type="button"
+                                id="userProfile"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <div class="user-avatar me-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=f97316&color=ffffff&size=24"
+                                        alt="Profile"
+                                        class="rounded-circle">
+                                </div>
+                                <span class="d-none d-md-inline">{{ auth()->user()->name ?? 'User' }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userProfile">
+                                <li>
+                                    <div class="dropdown-item-text">
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=f97316&color=ffffff&size=40"
+                                                alt="Profile"
+                                                class="rounded-circle me-3">
+                                            <div>
+                                                <div class="fw-semibold">{{ auth()->user()->name ?? 'User' }}</div>
+                                                <small class="text-muted">{{ auth()->user()->email ?? 'user@example.com' }}</small>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Account Settings</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form method="POST" action="#">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="fas fa-sign-out-alt me-2"></i>
-                                        Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form method="POST" action="#">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i>
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -217,12 +212,12 @@
     </div>
 </div>
 
-<!-- Custom Styles for Navbar -->
+<!-- Enhanced Custom Styles for Mobile/Tablet Optimization -->
 <style>
     /* Dashboard Navbar Styling */
     .dashboard-navbar {
         position: sticky;
-        top: 20px;
+        top: 10px;
         z-index: 1020;
     }
 
@@ -355,61 +350,247 @@
         padding: 0.25rem 0.5rem;
     }
 
-    /* Responsive Design */
-    @media (max-width: 991.98px) {
+    /* Enhanced Mobile/Tablet Responsive Design */
+
+    /* Tablet Landscape (768px - 991px) */
+    @media (max-width: 991.98px) and (min-width: 768px) {
+        .dashboard-navbar {
+            top: 15px;
+        }
+
+        .navbar-container {
+            padding: 1.25rem !important;
+        }
+
+        .nav-tabs-wrapper {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 0.25rem;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
         .dashboard-nav-pills {
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            flex-wrap: nowrap;
+            min-width: max-content;
+            gap: 0.25rem;
         }
 
         .dashboard-nav-pills .nav-link {
             margin-right: 0;
-            margin-bottom: 0.5rem;
-            flex: 1;
+            white-space: nowrap;
+            min-width: 120px;
             text-align: center;
-            min-width: 0;
+            padding: 0.625rem 1rem;
         }
 
-        .dashboard-nav-pills .nav-link span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .action-buttons-wrapper {
+            margin-top: 1rem;
+        }
+
+        .action-buttons-wrapper .d-flex {
+            justify-content: center;
         }
     }
 
-    @media (max-width: 767.98px) {
+    /* Tablet Portrait (576px - 767px) */
+    @media (max-width: 767.98px) and (min-width: 576px) {
+        .dashboard-navbar {
+            top: 10px;
+        }
+
         .navbar-container {
             padding: 1rem !important;
         }
 
+        .nav-tabs-wrapper {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 0.5rem;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar-track {
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 1px;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #f97316, #eab308);
+            border-radius: 1px;
+        }
+
+        .dashboard-nav-pills {
+            flex-wrap: nowrap;
+            min-width: max-content;
+            gap: 0.375rem;
+            padding-bottom: 0.25rem;
+        }
+
         .dashboard-nav-pills .nav-link {
-            padding: 0.5rem 0.75rem;
+            margin-right: 0;
+            white-space: nowrap;
+            min-width: 110px;
+            text-align: center;
+            padding: 0.5rem 0.875rem;
             font-size: 0.875rem;
         }
 
+        .dashboard-nav-pills .nav-link i {
+            font-size: 0.8rem;
+        }
+
+        .action-buttons-wrapper {
+            margin-top: 1rem;
+        }
+
+        .action-buttons-wrapper .d-flex {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .btn-sm {
-            padding: 0.375rem 0.75rem;
+            padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
         }
     }
 
+    /* Mobile (max-width: 575px) */
     @media (max-width: 575.98px) {
+        .dashboard-navbar {
+            top: 5px;
+            margin-bottom: 1rem !important;
+        }
+
+        .navbar-container {
+            padding: 0.75rem !important;
+            margin: 0 0.5rem;
+        }
+
+        /* Enhanced horizontal scrolling for mobile */
+        .nav-tabs-wrapper {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(249, 115, 22, 0.5) rgba(249, 115, 22, 0.1);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar-track {
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 2px;
+        }
+
+        .nav-tabs-wrapper::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #f97316, #eab308);
+            border-radius: 2px;
+        }
+
         .dashboard-nav-pills {
-            flex-direction: column;
+            flex-wrap: nowrap;
+            min-width: max-content;
+            gap: 0.5rem;
+            padding-bottom: 0.25rem;
         }
 
         .dashboard-nav-pills .nav-link {
-            margin-bottom: 0.25rem;
-            text-align: left;
+            margin-right: 0;
+            white-space: nowrap;
+            min-width: 100px;
+            text-align: center;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
         }
 
-        .d-flex.gap-2 {
-            flex-direction: column;
-            gap: 0.5rem;
+        .dashboard-nav-pills .nav-link i {
+            font-size: 0.75rem;
+            margin-right: 0.25rem !important;
         }
 
+        .dashboard-nav-pills .nav-link span {
+            font-size: 0.75rem;
+        }
+
+        /* Improved action buttons for mobile */
+        .action-buttons-wrapper {
+            margin-top: 0.75rem;
+        }
+
+        .action-buttons-wrapper .d-flex {
+            justify-content: space-between;
+            gap: 0.5rem !important;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+            flex: 1;
+            max-width: calc(50% - 0.25rem);
+        }
+
+        .btn-sm i {
+            font-size: 0.7rem;
+        }
+
+        /* Better dropdown positioning on mobile */
         .dropdown-menu {
-            min-width: 180px;
+            min-width: 160px;
+            max-width: 90vw;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 0.75rem;
+        }
+
+        .dropdown-item i {
+            width: 14px;
+            font-size: 0.8rem;
+        }
+
+        /* User profile text handling */
+        .user-avatar img {
+            width: 22px;
+            height: 22px;
+        }
+    }
+
+    /* Extra small devices (max-width: 375px) */
+    @media (max-width: 375px) {
+        .navbar-container {
+            padding: 0.5rem !important;
+            margin: 0 0.25rem;
+        }
+
+        .dashboard-nav-pills .nav-link {
+            min-width: 90px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .dashboard-nav-pills .nav-link i {
+            font-size: 0.7rem;
+        }
+
+        .dashboard-nav-pills .nav-link span {
+            font-size: 0.7rem;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.7rem;
         }
     }
 
@@ -468,12 +649,58 @@
             transform: translateY(-50%) rotate(360deg);
         }
     }
+
+    /* Smooth scrolling enhancement for nav tabs */
+    .nav-tabs-wrapper {
+        scroll-behavior: smooth;
+    }
+
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+        .dashboard-nav-pills .nav-link {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-sm {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-item {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    /* Modal responsive improvements */
+    @media (max-width: 575.98px) {
+        .modal-dialog {
+            margin: 1rem 0.5rem;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+        }
+
+        .modal-header,
+        .modal-body,
+        .modal-footer {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    }
 </style>
 
-<!-- Enhanced JavaScript for Navbar -->
+<!-- Enhanced JavaScript for Navbar (Preserved Original Functionality) -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Delete confirmation functionality
+        // Delete confirmation functionality (preserved)
         const deleteInput = document.getElementById('deleteConfirmation');
         const deleteBtn = document.getElementById('confirmDeleteBtn');
 
@@ -483,7 +710,7 @@
             });
         }
 
-        // Add loading state to nav links
+        // Add loading state to nav links (preserved)
         document.querySelectorAll('.dashboard-nav-pills .nav-link:not(.disabled)').forEach(link => {
             link.addEventListener('click', function(e) {
                 // Don't add loading to current page
@@ -497,7 +724,7 @@
             });
         });
 
-        // Enhanced dropdown behavior
+        // Enhanced dropdown behavior (preserved)
         document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
             toggle.addEventListener('click', function() {
                 const dropdown = this.nextElementSibling;
@@ -509,7 +736,7 @@
             });
         });
 
-        // Auto-hide navbar on scroll down, show on scroll up
+        // Auto-hide navbar on scroll down, show on scroll up (preserved)
         let lastScrollTop = 0;
         const navbar = document.querySelector('.dashboard-navbar');
 
@@ -527,9 +754,56 @@
 
             lastScrollTop = scrollTop;
         });
+
+        // Enhanced mobile navigation scrolling
+        const navWrapper = document.querySelector('.nav-tabs-wrapper');
+        const activeLink = document.querySelector('.dashboard-nav-pills .nav-link.active');
+
+        if (navWrapper && activeLink && window.innerWidth <= 991) {
+            // Scroll active tab into view on mobile/tablet
+            setTimeout(() => {
+                activeLink.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }, 100);
+        }
+
+        // Touch/swipe support for navigation tabs on mobile
+        if (navWrapper && 'ontouchstart' in window) {
+            let startX = 0;
+            let scrollLeft = 0;
+            let isScrolling = false;
+
+            navWrapper.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].pageX - navWrapper.offsetLeft;
+                scrollLeft = navWrapper.scrollLeft;
+                isScrolling = false;
+            });
+
+            navWrapper.addEventListener('touchmove', (e) => {
+                if (!isScrolling) {
+                    isScrolling = true;
+                }
+                const x = e.touches[0].pageX - navWrapper.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                navWrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            // Prevent click events when scrolling
+            navWrapper.addEventListener('touchend', (e) => {
+                if (isScrolling) {
+                    e.preventDefault();
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 100);
+                }
+            });
+        }
     });
 
-    // Fadeup animation keyframes
+    // Fadeup animation keyframes (preserved)
     const style = document.createElement('style');
     style.textContent = `
 @keyframes fadeInUp {

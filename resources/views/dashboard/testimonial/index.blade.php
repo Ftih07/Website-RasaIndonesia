@@ -90,6 +90,36 @@
                         <!-- Testimonial Text -->
                         <p class="text-gray-700 mb-4 leading-relaxed">{{ $testimonial->description }}</p>
 
+                        {{-- Produk yang direview --}}
+                        @if($testimonial->order && $testimonial->order->items->isNotEmpty())
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-gray-700 mb-1">Purchased products:</p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($testimonial->order->items as $item)
+                                <div class="flex items-center border rounded-lg p-2 max-w-[200px] bg-gray-50">
+                                    @if($item->product && $item->product->image)
+                                    <img src="{{ asset('storage/' . $item->product->image) }}"
+                                        alt="{{ $item->product->name }}"
+                                        class="w-10 h-10 rounded object-cover mr-2">
+                                    @endif
+                                    <span class="text-sm text-gray-700">{{ $item->product->name ?? 'Produk tidak ditemukan' }}</span>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- Gambar testimonial (bisa banyak) --}}
+                        @if($testimonial->images && $testimonial->images->isNotEmpty())
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @foreach($testimonial->images as $img)
+                            <img src="{{ asset('storage/' . $img->image_path) }}"
+                                alt="Testimonial Image"
+                                class="w-24 h-24 object-cover rounded-lg border">
+                            @endforeach
+                        </div>
+                        @endif
+
                         {{-- Additional Image --}}
                         @if($testimonial->image_url)
                         <div class="mb-4">

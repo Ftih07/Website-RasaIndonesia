@@ -14,12 +14,46 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $business = $user->business;
 
-        $products = $business->products()->with(['optionGroups.options', 'categories'])->get();
+        $query = $business->products()->with(['optionGroups.options', 'categories']);
+
+        // Filter by name
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('id', $request->category);
+            });
+        }
+
+        // ✅ Filter by Option Group
+        if ($request->filled('option_group')) {
+            $query->whereHas('optionGroups', function ($q) use ($request) {
+                $q->where('id', $request->option_group);
+            });
+        }
+
+        // 🔎 Filter by stock
+        if ($request->stock === 'in') {
+            $query->where('stock', '>', 0);
+        } elseif ($request->stock === 'out') {
+            $query->where('stock', '=', 0);
+        }
+
+        // 🔎 Filter by is_sell
+        if ($request->filled('is_sell')) {
+            $query->where('is_sell', $request->is_sell);
+        }
+
+        $products = $query->get();
+
         $optionGroups = $business->productOptionGroups()->with('options')->get();
         $categories = $business->categories;
 

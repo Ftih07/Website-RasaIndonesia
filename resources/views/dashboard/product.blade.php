@@ -48,6 +48,78 @@
                         </h2>
                     </div>
 
+                    <!-- Filter Section -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+                        <form method="GET" action="{{ route('dashboard.product') }}" class="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Name Search -->
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                                <input type="text" id="name" name="name"
+                                    value="{{ request('name') }}"
+                                    placeholder="Search by name..."
+                                    class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="category" name="category"
+                                    class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                                    <option value="">All Categories</option>
+                                    @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                        {{ $cat->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Option Group -->
+                            <div>
+                                <label for="option_group" class="block text-sm font-medium text-gray-700">Option Group</label>
+                                <select id="option_group" name="option_group"
+                                    class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                                    <option value="">All Option Groups</option>
+                                    @foreach($optionGroups as $og)
+                                    <option value="{{ $og->id }}" {{ request('option_group') == $og->id ? 'selected' : '' }}>
+                                        {{ $og->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Stock Filter -->
+                            <div>
+                                <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
+                                <select id="stock" name="stock"
+                                    class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                                    <option value="">All</option>
+                                    <option value="in" {{ request('stock') == 'in' ? 'selected' : '' }}>In Stock</option>
+                                    <option value="out" {{ request('stock') == 'out' ? 'selected' : '' }}>Out of Stock</option>
+                                </select>
+                            </div>
+
+                            <!-- Is Sell Filter -->
+                            <div>
+                                <label for="is_sell" class="block text-sm font-medium text-gray-700">Selling Status</label>
+                                <select id="is_sell" name="is_sell"
+                                    class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                                    <option value="">All</option>
+                                    <option value="1" {{ request('is_sell') === '1' ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ request('is_sell') === '0' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Filter Button -->
+                            <div class="flex items-end">
+                                <button type="submit"
+                                    class="w-full inline-flex justify-center px-4 py-2 bg-orange-600 text-white rounded-lg shadow hover:bg-orange-700 transition">
+                                    Filter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="p-6">
                         @forelse($products as $product)
                         <div class="bg-gray-50 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow border border-gray-100">
