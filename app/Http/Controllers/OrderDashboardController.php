@@ -228,29 +228,52 @@ class OrderDashboardController extends Controller
 
     public function reject(Order $order)
     {
-        if ($order->payment->status === 'pending') { // cukup cek payment aja
+        \Log::info('DEBUG: Masuk ke reject() dengan order_id=' . $order->id . ', payment_status=' . $order->payment->status);
+
+        if ($order->payment->status === 'pending') {
             try {
+                // --- Stripe cancel ---
+                \Log::info('DEBUG: Set Stripe API key');
                 Stripe::setApiKey(env('STRIPE_SECRET'));
+
+                \Log::info('DEBUG: Retrieve PaymentIntent ' . $order->payment->transaction_id);
                 $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);
+
+                \Log::info('DEBUG: Cancel PaymentIntent ' . $paymentIntent->id);
                 $paymentIntent->cancel();
+                \Log::info('DEBUG: PaymentIntent canceled SUCCESS');
 
+                // --- Update DB ---
                 $order->payment->update(['status' => 'failed']);
+                \Log::info('DEBUG: Payment status updated to failed');
+
                 $order->update(['delivery_status' => 'canceled']);
+                \Log::info('DEBUG: Order delivery_status updated to canceled');
 
-                \App\Helpers\NotificationHelper::send(
-                    $order->user_id,
-                    'Order Cancelled',
-                    "Heads up — order #{$order->order_number} didn't go through. No worries, if you've paid we'll shoot the refund back soon.",
-                    route('orders.index', $order->id)
-                );
+                // --- Send notification ---
+                try {
+                    \App\Helpers\NotificationHelper::send(
+                        $order->user_id,
+                        'Order Cancelled',
+                        "Heads up — order #{$order->order_number} didn't go through. No worries, if you've paid we'll shoot the refund back soon.",
+                        route('orders.index', $order->id)
+                    );
+                    \Log::info('DEBUG: NotificationHelper::send sukses');
+                } catch (\Throwable $e) {
+                    \Log::error('DEBUG: NotificationHelper::send ERROR: ' . $e->getMessage());
+                }
 
-                return back()->with('success', 'Pesanan berhasil ditolak dan pembayaran dibatalkan.');
-            } catch (\Exception $e) {
-                return back()->withErrors(['stripe' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()]);
+                // --- Flash message ---
+                \Log::info('DEBUG: Sampai sebelum redirect with success');
+                return redirect()->back()->with('success', 'Pesanan berhasil ditolak dan pembayaran dibatalkan.');
+            } catch (\Throwable $e) {
+                \Log::error('DEBUG: ERROR di try-catch utama: ' . $e->getMessage());
+                return redirect()->back()->withErrors(['stripe' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()]);
             }
         }
 
-        return back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
+        \Log::warning('DEBUG: Reject() dipanggil tapi payment_status bukan pending');
+        return redirect()->back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
     }
 
     public function shipping()
