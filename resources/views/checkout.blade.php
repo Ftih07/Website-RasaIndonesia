@@ -42,6 +42,7 @@
                             </div>
 
                             <!-- Delivery Options -->
+                            @if($business->supports_delivery || $business->supports_pickup)
                             <div class="mb-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #FF6B35, #F7931E);">
@@ -49,11 +50,12 @@
                                     </div>
                                     <h5 class="mb-0 fw-bold text-dark">Delivery Options</h5>
                                 </div>
-                                
+
                                 <div class="row g-3">
+                                    @if($business->supports_delivery)
                                     <div class="col-md-6">
                                         <div class="form-check custom-radio">
-                                            <input class="form-check-input" type="radio" name="delivery_option" id="delivery_radio" value="delivery" checked>
+                                            <input class="form-check-input" type="radio" name="delivery_option" id="delivery_radio" value="delivery" {{ $business->supports_delivery ? 'checked' : '' }}>
                                             <label class="form-check-label card h-100 border-2 p-3 cursor-pointer" for="delivery_radio" style="border-color: #FFE4D6 !important;">
                                                 <div class="text-center">
                                                     <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: #FFF5E6;">
@@ -65,26 +67,37 @@
                                             </label>
                                         </div>
                                     </div>
+                                    @endif
+
+                                    @if($business->supports_pickup)
                                     <div class="col-md-6">
                                         <div class="form-check custom-radio">
-                                            <input class="form-check-input" type="radio" name="delivery_option" id="pickup_radio" value="pickup">
+                                            <input class="form-check-input" type="radio" name="delivery_option" id="pickup_radio" value="pickup" {{ !$business->supports_delivery ? 'checked' : '' }}>
                                             <label class="form-check-label card h-100 border-2 p-3 cursor-pointer" for="pickup_radio" style="border-color: #FFE4D6 !important;">
                                                 <div class="text-center">
                                                     <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: #FFF5E6;">
                                                         <i class="fas fa-store" style="color: #FF6B35; font-size: 1.2rem;"></i>
                                                     </div>
                                                     <h6 class="mb-1 fw-bold">Restaurant Pickup</h6>
-                                                    <small class="text-muted">Pick up at restaurant</small>
+                                                    <small class="text-muted">Pick up at {{ $business->name }}</small>
                                                 </div>
                                             </label>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
+
+                                <!-- Hidden select untuk form submission -->
                                 <select id="delivery_option" name="delivery_option" class="form-select d-none" required>
+                                    @if($business->supports_delivery)
                                     <option value="delivery">Antar ke alamat</option>
+                                    @endif
+                                    @if($business->supports_pickup)
                                     <option value="pickup">Ambil di resto</option>
+                                    @endif
                                 </select>
                             </div>
+                            @endif
 
                             <!-- Delivery Address Fields -->
                             <div id="delivery_fields" class="mb-4">
@@ -309,30 +322,44 @@
     const pickupFields = document.getElementById('pickup_fields');
 
     function updateDeliveryOption() {
-        if (deliveryRadio.checked) {
+        if (deliveryRadio && deliveryRadio.checked) {
             deliveryOption.value = 'delivery';
-            deliveryFields.style.display = 'block';
-            pickupFields.style.display = 'none';
-        } else if (pickupRadio.checked) {
+            if (deliveryFields) deliveryFields.style.display = 'block';
+            if (pickupFields) pickupFields.style.display = 'none';
+        } else if (pickupRadio && pickupRadio.checked) {
             deliveryOption.value = 'pickup';
-            deliveryFields.style.display = 'none';
-            pickupFields.style.display = 'block';
+            if (deliveryFields) deliveryFields.style.display = 'none';
+            if (pickupFields) pickupFields.style.display = 'block';
         }
     }
 
-    deliveryRadio.addEventListener('change', updateDeliveryOption);
-    pickupRadio.addEventListener('change', updateDeliveryOption);
+    // Pasang event listener kalau radio ada
+    if (deliveryRadio) deliveryRadio.addEventListener('change', updateDeliveryOption);
+    if (pickupRadio) pickupRadio.addEventListener('change', updateDeliveryOption);
 
-    // Keep the original delivery option change listener for backward compatibility
-    deliveryOption.addEventListener('change', function () {
-        if (this.value === 'pickup') {
-            deliveryFields.style.display = 'none';
-            pickupFields.style.display = 'block';
-            pickupRadio.checked = true;
-        } else {
-            deliveryFields.style.display = 'block';
-            pickupFields.style.display = 'none';
-            deliveryRadio.checked = true;
+    // Sync hidden select
+    if (deliveryOption) {
+        deliveryOption.addEventListener('change', function () {
+            if (this.value === 'pickup') {
+                if (deliveryFields) deliveryFields.style.display = 'none';
+                if (pickupFields) pickupFields.style.display = 'block';
+                if (pickupRadio) pickupRadio.checked = true;
+            } else {
+                if (deliveryFields) deliveryFields.style.display = 'block';
+                if (pickupFields) pickupFields.style.display = 'none';
+                if (deliveryRadio) deliveryRadio.checked = true;
+            }
+        });
+    }
+
+    // Atur default tampilan field saat load
+    window.addEventListener('DOMContentLoaded', function () {
+        if (deliveryRadio && deliveryRadio.checked) {
+            if (deliveryFields) deliveryFields.style.display = 'block';
+            if (pickupFields) pickupFields.style.display = 'none';
+        } else if (pickupRadio && pickupRadio.checked) {
+            if (deliveryFields) deliveryFields.style.display = 'none';
+            if (pickupFields) pickupFields.style.display = 'block';
         }
     });
 

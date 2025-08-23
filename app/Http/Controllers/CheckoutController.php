@@ -39,7 +39,8 @@ class CheckoutController extends Controller
         return view('checkout', [
             'cart' => $cart,
             'user' => Auth::user(),
-            'maxDistances' => $maxDistances, // ✅ sekarang ada nama + max_distance
+            'business' => $cart->business, // ✅ tambahin ini
+            'maxDistances' => $maxDistances,
         ]);
     }
 
@@ -77,6 +78,14 @@ class CheckoutController extends Controller
         ]);
 
         $business = \App\Models\Business::findOrFail($request->business_id);
+
+        if ($request->delivery_option === 'pickup' && !$business->supports_pickup) {
+            return response()->json(['error' => 'Pickup tidak tersedia untuk bisnis ini.'], 422);
+        }
+
+        if ($request->delivery_option === 'delivery' && !$business->supports_delivery) {
+            return response()->json(['error' => 'Delivery tidak tersedia untuk bisnis ini.'], 422);
+        }
 
         if ($request->delivery_option === 'pickup') {
             return response()->json([
@@ -118,6 +127,21 @@ class CheckoutController extends Controller
             ->where('business_id', $request->business_id)
             ->with('items.product', 'business')
             ->firstOrFail();
+
+        $business = $cart->business;
+
+        // 3. ✅ Validasi apakah bisnis support opsi delivery yang dipilih
+        if ($request->delivery_option === 'pickup' && !$business->supports_pickup) {
+            throw ValidationException::withMessages([
+                'delivery_option' => 'Pickup tidak tersedia untuk bisnis ini.',
+            ]);
+        }
+
+        if ($request->delivery_option === 'delivery' && !$business->supports_delivery) {
+            throw ValidationException::withMessages([
+                'delivery_option' => 'Delivery tidak tersedia untuk bisnis ini.',
+            ]);
+        }
 
         // Hitung ongkir
         if ($request->delivery_option === 'pickup') {
@@ -234,9 +258,6 @@ class CheckoutController extends Controller
                 'preference_if_unavailable' => $item->preference_if_unavailable,
                 'options' => $item->options,
             ]);
-
-            // ✅ Kurangi stok produk
-            $item->product->decrement('stock', $item->quantity);
         }
 
         $order->load('items.product');

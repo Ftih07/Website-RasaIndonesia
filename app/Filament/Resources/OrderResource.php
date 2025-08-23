@@ -424,10 +424,25 @@ class OrderResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (Order $record) {
                         try {
+                            // ✅ 1. Cek stok dulu
+                            foreach ($record->items as $item) {
+                                $product = $item->product;
+                                if ($product->stock < $item->quantity) {
+                                    throw new \Exception("Produk {$product->name} stoknya tinggal {$product->stock}, tidak cukup untuk pesanan.");
+                                }
+                            }
+
+                            // ✅ 2. Kalau stok cukup → baru capture Stripe
                             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
                             $paymentIntent = \Stripe\PaymentIntent::retrieve($record->payment->transaction_id);
                             $paymentIntent->capture();
 
+                            // ✅ 3. Kurangi stok
+                            foreach ($record->items as $item) {
+                                $item->product->decrement('stock', $item->quantity);
+                            }
+
+                            // ✅ 4. Update status
                             $record->payment->update(['status' => 'paid']);
                             $record->update(['delivery_status' => 'confirmed']);
 

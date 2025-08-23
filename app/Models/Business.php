@@ -55,7 +55,9 @@ class Business extends Model
         'shipping_type',
         'flat_rate',
         'per_km_rate',
-        'per_km_unit'
+        'per_km_unit',
+        'supports_delivery',
+        'supports_pickup',
     ];
 
     /**

@@ -542,6 +542,19 @@ class BusinessResource extends Resource
                                                     ->minValue(1)
                                                     ->helperText('Produk hanya tersedia dalam radius ini dari lokasi user'),
 
+                                                Forms\Components\TextInput::make('stock')
+                                                    ->required()
+                                                    ->numeric()
+                                                    ->minValue(0)
+                                                    ->label('Stock')
+                                                    ->helperText('Available quantity of this product.'),
+
+                                                // ✅ Toggle untuk status jual
+                                                Forms\Components\Toggle::make('is_sell')
+                                                    ->label('Sell this product?')
+                                                    ->default(false) // defaultnya tidak dijual
+                                                    ->helperText('If unchecked, product will be hidden from cart.'),
+
                                                 // OPTION GROUPS (many-to-many)
                                                 MultiSelect::make('optionGroups')
                                                     ->label('Option Groups')
@@ -647,6 +660,22 @@ class BusinessResource extends Resource
                                     ->columns(2)
                             ]),
 
+                        Forms\Components\Tabs\Tab::make('Delivery Setting')
+                            ->schema([
+                                Forms\Components\Section::make('Delivery Options')
+                                    ->schema([
+                                        Forms\Components\Toggle::make('supports_delivery')
+                                            ->label('Enable Delivery')
+                                            ->helperText('Allow customers to order with home delivery')
+                                            ->default(true),
+
+                                        Forms\Components\Toggle::make('supports_pickup')
+                                            ->label('Enable Pickup')
+                                            ->helperText('Allow customers to pick up at the restaurant')
+                                            ->default(true),
+                                    ])
+                                    ->columns(2),
+                            ]),
 
                     ])
                     ->columnSpanFull() // Makes the tabs span the full width of the form.

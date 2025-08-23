@@ -9,7 +9,7 @@
         <div class="flex items-center space-x-3">
             <div class="bg-orange-400 p-3 rounded-full">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m4 0a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H8z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m4 0a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H8z" />
                 </svg>
             </div>
             <div>
@@ -24,7 +24,7 @@
         <div class="flex items-center">
             <div class="flex-shrink-0">
                 <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
             </div>
             <div class="ml-3">
@@ -39,7 +39,7 @@
         <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4">
             <h2 class="text-xl font-semibold text-white flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                 </svg>
                 Delivery Configuration
             </h2>
@@ -49,11 +49,36 @@
             @csrf
             @method('PATCH')
 
+            <!-- Delivery Options -->
+            <div class="mb-8">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                    <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17a1 1 0 11-2 0 1 1 0 012 0zm10 0a1 1 0 11-2 0 1 1 0 012 0zm-4-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v11h2a3 3 0 006 0h4a3 3 0 006 0h2v-5a1 1 0 00-1-1h-3l-3-4H7" />
+                    </svg>
+                    Delivery Options
+                </label>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <label class="flex items-center space-x-3 bg-orange-50 p-4 rounded-lg border border-orange-200 cursor-pointer">
+                        <input type="checkbox" name="supports_delivery" value="1" {{ old('supports_delivery', $business->supports_delivery) ? 'checked' : '' }} class="h-5 w-5 text-orange-600 rounded focus:ring-orange-500">
+                        <span class="text-gray-800 font-medium">Enable Delivery</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 bg-blue-50 p-4 rounded-lg border border-blue-200 cursor-pointer">
+                        <input type="checkbox" name="supports_pickup" value="1" {{ old('supports_pickup', $business->supports_pickup) ? 'checked' : '' }} class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                        <span class="text-gray-800 font-medium">Enable Pickup</span>
+                    </label>
+                </div>
+
+                <p class="text-sm text-gray-600 mt-2">💡 Choose which order methods you want to support.</p>
+            </div>
+
             <!-- Shipping Type Selection -->
             <div class="mb-8">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">
                     <svg class="w-4 h-4 inline mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     Shipping Type
                 </label>
@@ -71,7 +96,7 @@
                     </select>
                     <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
                 </div>
@@ -83,7 +108,7 @@
                     <div class="flex items-center mb-4">
                         <div class="bg-orange-100 p-2 rounded-full mr-3">
                             <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800">Flat Rate</h3>
@@ -107,7 +132,7 @@
                     <div class="flex items-center mb-4">
                         <div class="bg-blue-100 p-2 rounded-full mr-3">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800">Per Kilometre Rate</h3>
@@ -138,11 +163,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-blue-100 rounded-lg p-4 mt-4">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <div>
                                 <p class="text-sm text-blue-700 font-medium">Example:</p>
@@ -157,7 +182,7 @@
             <div class="flex justify-end pt-6 border-t border-gray-200">
                 <button type="submit" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition duration-200 transform hover:scale-105">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     Save Settings
                 </button>
@@ -169,7 +194,7 @@
     <div class="mt-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
             <svg class="w-5 h-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Help & Tips
         </h3>
@@ -195,11 +220,11 @@
         const type = document.querySelector('[name="shipping_type"]').value;
         const flatField = document.getElementById('flat-rate-field');
         const perKmField = document.getElementById('per-km-field');
-        
+
         // Add smooth transitions
         flatField.style.transition = 'all 0.3s ease';
         perKmField.style.transition = 'all 0.3s ease';
-        
+
         if (type === 'flat' || type === 'flat_plus_per_km') {
             flatField.style.display = 'block';
             setTimeout(() => {
@@ -213,7 +238,7 @@
                 flatField.style.display = 'none';
             }, 300);
         }
-        
+
         if (type === 'per_km' || type === 'flat_plus_per_km') {
             perKmField.style.display = 'block';
             setTimeout(() => {
@@ -228,7 +253,7 @@
             }, 300);
         }
     }
-    
+
     document.querySelector('[name="shipping_type"]').addEventListener('change', toggleFields);
     window.onload = function() {
         toggleFields();

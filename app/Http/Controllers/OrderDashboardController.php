@@ -11,6 +11,7 @@ use Stripe\PaymentIntent;
 use Illuminate\Validation\Rule;
 use App\Models\Chat;
 use App\Services\ChatService;
+use Illuminate\Validation\ValidationException;
 
 class OrderDashboardController extends Controller
 {
@@ -190,15 +191,32 @@ class OrderDashboardController extends Controller
     {
         if ($order->payment->status === 'pending' && $order->delivery_status === 'waiting') {
             try {
-                Stripe::setApiKey(env('STRIPE_SECRET'));
-                $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);
+                // ✅ 1. Cek stok dulu
+                foreach ($order->items as $item) {
+                    $product = $item->product;
+                    if ($product->stock < $item->quantity) {
+                        throw ValidationException::withMessages([
+                            'stock' => "Produk {$product->name} stoknya tinggal {$product->stock}, tidak cukup untuk pesanan."
+                        ]);
+                    }
+                }
+
+                // ✅ 2. Capture Stripe (kalau stok cukup)
+                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($order->payment->transaction_id);
                 $paymentIntent->capture();
 
+                // ✅ 3. Kurangi stok
+                foreach ($order->items as $item) {
+                    $item->product->decrement('stock', $item->quantity);
+                }
+
+                // ✅ 4. Update status
                 $order->payment->update(['status' => 'paid']);
                 $order->update(['delivery_status' => 'confirmed']);
 
                 // === Trigger Chat & Pesan ===
-                $sellerId   = $order->business->user_id; // pemilik bisnis
+                $sellerId   = $order->business->user_id;
                 $customerId = $order->user_id;
                 $businessId = $order->business_id;
 
@@ -228,52 +246,39 @@ class OrderDashboardController extends Controller
 
     public function reject(Order $order)
     {
-        \Log::info('DEBUG: Masuk ke reject() dengan order_id=' . $order->id . ', payment_status=' . $order->payment->status);
-
-        if ($order->payment->status === 'pending') {
-            try {
-                // --- Stripe cancel ---
-                \Log::info('DEBUG: Set Stripe API key');
-                Stripe::setApiKey(env('STRIPE_SECRET'));
-
-                \Log::info('DEBUG: Retrieve PaymentIntent ' . $order->payment->transaction_id);
-                $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);
-
-                \Log::info('DEBUG: Cancel PaymentIntent ' . $paymentIntent->id);
-                $paymentIntent->cancel();
-                \Log::info('DEBUG: PaymentIntent canceled SUCCESS');
-
-                // --- Update DB ---
-                $order->payment->update(['status' => 'failed']);
-                \Log::info('DEBUG: Payment status updated to failed');
-
-                $order->update(['delivery_status' => 'canceled']);
-                \Log::info('DEBUG: Order delivery_status updated to canceled');
-
-                // --- Send notification ---
-                try {
-                    \App\Helpers\NotificationHelper::send(
-                        $order->user_id,
-                        'Order Cancelled',
-                        "Heads up — order #{$order->order_number} didn't go through. No worries, if you've paid we'll shoot the refund back soon.",
-                        route('orders.index', $order->id)
-                    );
-                    \Log::info('DEBUG: NotificationHelper::send sukses');
-                } catch (\Throwable $e) {
-                    \Log::error('DEBUG: NotificationHelper::send ERROR: ' . $e->getMessage());
-                }
-
-                // --- Flash message ---
-                \Log::info('DEBUG: Sampai sebelum redirect with success');
-                return redirect()->back()->with('success', 'Pesanan berhasil ditolak dan pembayaran dibatalkan.');
-            } catch (\Throwable $e) {
-                \Log::error('DEBUG: ERROR di try-catch utama: ' . $e->getMessage());
-                return redirect()->back()->withErrors(['stripe' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()]);
-            }
+        if ($order->payment->status !== 'pending') {
+            return back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
         }
 
-        \Log::warning('DEBUG: Reject() dipanggil tapi payment_status bukan pending');
-        return redirect()->back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
+        try {
+            // Stripe cancel
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $paymentIntent = \Stripe\PaymentIntent::retrieve($order->payment->transaction_id);
+            $paymentIntent->cancel();
+
+            // Update database
+            $order->payment->update(['status' => 'failed']);
+            $order->update(['delivery_status' => 'canceled']);
+
+            try {
+                \Log::info('DEBUG: Mau kirim notif ke user_id=' . $order->user_id);
+                \App\Helpers\NotificationHelper::send(
+                    $order->user_id,
+                    'Order Cancelled',
+                    "Heads up - order #{$order->order_number} didn't go through. If you've paid, we'll refund you soon.",
+                    route('orders.index')
+                );
+                \Log::info('DEBUG: NotificationHelper::send sukses');
+            } catch (\Throwable $e) {
+                \Log::error('DEBUG: NotificationHelper::send ERROR: ' . $e->getMessage());
+            }
+
+            // Balik dengan pesan sukses
+            return back()->with('success', 'Payment canceled successfully!');
+        } catch (\Exception $e) {
+            // Kalau error
+            return back()->withErrors(['stripe' => 'Failed to cancel payment: ' . $e->getMessage()]);
+        }
     }
 
     public function shipping()
@@ -285,14 +290,23 @@ class OrderDashboardController extends Controller
     public function updateShipping(Request $request)
     {
         $request->validate([
-            'shipping_type' => 'required|in:flat,per_km,flat_plus_per_km',
-            'flat_rate'     => 'nullable|numeric|min:0',
-            'per_km_rate'   => 'nullable|numeric|min:0',
-            'per_km_unit'   => 'nullable|numeric|min:1',
+            'shipping_type'     => 'required|in:flat,per_km,flat_plus_per_km',
+            'flat_rate'         => 'nullable|numeric|min:0',
+            'per_km_rate'       => 'nullable|numeric|min:0',
+            'per_km_unit'       => 'nullable|numeric|min:1',
+            'supports_delivery' => 'nullable|boolean',
+            'supports_pickup'   => 'nullable|boolean',
         ]);
 
         $business = auth()->user()->business;
-        $business->update($request->only('shipping_type', 'flat_rate', 'per_km_rate', 'per_km_unit'));
+        $business->update([
+            'shipping_type'     => $request->shipping_type,
+            'flat_rate'         => $request->flat_rate,
+            'per_km_rate'       => $request->per_km_rate,
+            'per_km_unit'       => $request->per_km_unit,
+            'supports_delivery' => $request->has('supports_delivery'),
+            'supports_pickup'   => $request->has('supports_pickup'),
+        ]);
 
         return redirect()->route('dashboard.orders.shipping')->with('success', 'Shipping settings updated successfully!');
     }
