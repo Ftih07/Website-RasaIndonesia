@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Testimonial;
 use App\Helpers\NotificationHelper;
+use App\Models\Activity;
 use App\Models\Business;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class TestimonialController extends Controller
 {
@@ -31,6 +33,8 @@ class TestimonialController extends Controller
 
     public function reply(Request $request, Testimonial $testimonial)
     {
+        $user = Auth::user();
+
         $request->validate([
             'reply' => 'required|string|max:1000',
         ]);
@@ -41,11 +45,18 @@ class TestimonialController extends Controller
             'replied_by' => auth()->id(),
         ]);
 
+        Activity::create([
+            'business_id' => $testimonial->business_id,
+            'type'        => 'testimonial',
+            'title'       => 'Replied to Testimonial',
+            'description' => "{$user->name} replied to {$testimonial->name}'s testimonial.",
+        ]);
+
         // Kirim notifikasi ke user yang membuat testimoni
         NotificationHelper::send(
             $testimonial->user_id,
-            'Balasan dari pemilik bisnis',
-            'Testimoni kamu telah dibalas oleh pemilik bisnis. Klik untuk melihat detailnya.',
+            'Response from business owner',
+            'Your testimonial has been replied to by the business owner. Click to view the details.',
             url('/business/' . $testimonial->business->slug) // atau route detail testimoni jika ada
         );
 
@@ -59,19 +70,26 @@ class TestimonialController extends Controller
         $alreadyLiked = $testimonial->likes()->where('user_id', $user->id)->exists();
 
         if ($alreadyLiked) {
-            return back()->with('error', 'Kamu sudah memberi like.');
+            return back()->with('error', 'You have already liked it.');
         }
 
         $testimonial->likes()->create([
             'user_id' => $user->id,
         ]);
 
+        Activity::create([
+            'business_id' => $testimonial->business_id,
+            'type'        => 'testimonial',
+            'title'       => 'Testimonial Liked',
+            'description' => "{$user->name} liked testimonial from {$testimonial->name}.",
+        ]);
+
         // Notifikasi ke pemilik testimonial
         if ($testimonial->user_id !== $user->id) {
             NotificationHelper::send(
                 $testimonial->user_id,
-                'Komentar Anda Disukai',
-                $user->name . ' menyukai komentar/testimoni Anda.',
+                'Your comment is liked',
+                $user->name . ' likes your comment/testimonial.',
                 url('/business/' . $testimonial->business->slug) // atau link detail testimoni
             );
         }
@@ -91,6 +109,13 @@ class TestimonialController extends Controller
         $request->validate([
             'description' => 'required|string|max:500',
             'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        Activity::create([
+            'business_id' => $business->id,
+            'type'        => 'testimonial',
+            'title'       => 'New Testimonial',
+            'description' => "{$request->user()->name} added a testimonial with rating {$request->rating}.",
         ]);
 
         Testimonial::create([
@@ -120,7 +145,14 @@ class TestimonialController extends Controller
             'rating' => $request->rating,
         ]);
 
-        return back()->with('success', 'Testimonial berhasil diperbarui.');
+        Activity::create([
+            'business_id' => $testimonial->business_id,
+            'type'        => 'testimonial',
+            'title'       => 'Testimonial Updated',
+            'description' => "{$testimonial->name} updated their testimonial (rating: {$request->rating}).",
+        ]);
+
+        return back()->with('success', 'Testimonial successfully updated.');
     }
 
     public function destroy(Testimonial $testimonial)
@@ -128,6 +160,13 @@ class TestimonialController extends Controller
         $this->authorize('delete', $testimonial); // Opsional pakai policy
         $testimonial->delete();
 
-        return back()->with('success', 'Testimonial berhasil dihapus.');
+        Activity::create([
+            'business_id' => $testimonial->business_id,
+            'type'        => 'testimonial',
+            'title'       => 'Testimonial Deleted',
+            'description' => "{$testimonial->name}'s testimonial was removed.",
+        ]);
+
+        return back()->with('success', 'Testimonial successfully deleted.');
     }
 }

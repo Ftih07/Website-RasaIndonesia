@@ -228,7 +228,7 @@ class OrderDashboardController extends Controller
 
     public function reject(Order $order)
     {
-        if ($order->payment->status === 'pending' && $order->delivery_status === 'waiting') {
+        if ($order->payment->status === 'pending') { // cukup cek payment aja
             try {
                 Stripe::setApiKey(env('STRIPE_SECRET'));
                 $paymentIntent = PaymentIntent::retrieve($order->payment->transaction_id);

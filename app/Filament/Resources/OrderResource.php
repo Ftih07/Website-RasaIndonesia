@@ -483,7 +483,7 @@ class OrderResource extends Resource
                             \App\Helpers\NotificationHelper::send(
                                 $record->user_id,
                                 'Payment Cancelled',
-                                "Heads up — order #{$record->id} has been cancelled. No stress, if you've paid we'll shoot the refund back soon.",
+                                "Heads up — order #{$record->order_number} has been cancelled. No stress, if you've paid we'll shoot the refund back soon.",
                                 route('orders.index', $record->id)
                             );
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
@@ -143,6 +144,13 @@ class OrderTrackingController extends Controller
                 ]);
             }
         }
+
+        Activity::create([
+            'business_id' => $request->business_id,
+            'type'        => 'testimonial',
+            'title'       => 'New Verified Review',
+            'description' => "{$request->user()->name} reviewed order #{$order->order_number} with rating {$request->rating}.",
+        ]);
 
         return back()->with('success', 'Terima kasih! Ulasan Anda berhasil dikirim.');
     }

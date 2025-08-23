@@ -4,17 +4,6 @@
 @include('dashboard.partials.navbar')
 
 <div class="container-fluid px-3 px-md-4 py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <!-- ⚠️ Warning Info Box -->
-            <div class="alert alert-warning mt-4 d-flex align-items-center shadow-sm" role="alert" style="background-color: rgba(255, 193, 7, 0.2); border-left: 5px solid #ffc107;">
-                <i class="fas fa-exclamation-triangle me-3 fs-4 text-warning"></i>
-                <div>
-                    <strong>Note:</strong> All data displayed here is currently static and the dashboard is still under development. Some features may not function yet.
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Welcome Header -->
     <div class="row mb-4">
@@ -49,10 +38,15 @@
                             <div class="metric-icon bg-success bg-opacity-10 text-success rounded-circle p-3 mb-3">
                                 <i class="fas fa-dollar-sign fs-4"></i>
                             </div>
-                            <h6 class="text-muted text-uppercase small fw-semibold mb-1">Total Revenue</h6>
-                            <h3 class="text-dark fw-bold mb-1">$24,567</h3>
-                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">
-                                <i class="fas fa-arrow-up me-1"></i>+15.3%
+                            <h6 class="text-muted text-uppercase small fw-semibold mb-1">
+                                Revenue (This Month)
+                            </h6>
+                            <h3 class="text-dark fw-bold mb-1">
+                                A${{ number_format($currentMonthRevenue, 2) }}
+                            </h3>
+                            <span class="badge {{ $revenueGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill">
+                                <i class="fas {{ $revenueGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
+                                {{ number_format($revenueGrowth, 1) }}%
                             </span>
                         </div>
                         <div class="metric-chart">
@@ -72,9 +66,12 @@
                                 <i class="fas fa-shopping-bag fs-4"></i>
                             </div>
                             <h6 class="text-muted text-uppercase small fw-semibold mb-1">Products Sold</h6>
-                            <h3 class="text-dark fw-bold mb-1">1,247</h3>
-                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">
-                                <i class="fas fa-arrow-up me-1"></i>+8.2%
+                            <h3 class="text-dark fw-bold mb-1">
+                                {{ number_format($currentMonthProducts) }}
+                            </h3>
+                            <span class="badge {{ $productsGrowth >= 0 ? 'bg-primary text-primary' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill">
+                                <i class="fas {{ $productsGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
+                                {{ number_format($productsGrowth, 1) }}%
                             </span>
                         </div>
                         <div class="metric-chart">
@@ -94,9 +91,12 @@
                                 <i class="fas fa-receipt fs-4"></i>
                             </div>
                             <h6 class="text-muted text-uppercase small fw-semibold mb-1">Total Orders</h6>
-                            <h3 class="text-dark fw-bold mb-1">892</h3>
-                            <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">
-                                <i class="fas fa-arrow-up me-1"></i>+12.1%
+                            <h3 class="text-dark fw-bold mb-1">
+                                {{ number_format($currentMonthOrders) }}
+                            </h3>
+                            <span class="badge {{ $ordersGrowth >= 0 ? 'bg-warning text-warning' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill">
+                                <i class="fas {{ $ordersGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
+                                {{ number_format($ordersGrowth, 1) }}%
                             </span>
                         </div>
                         <div class="metric-chart">
@@ -116,17 +116,21 @@
                                 <i class="fas fa-star fs-4"></i>
                             </div>
                             <h6 class="text-muted text-uppercase small fw-semibold mb-1">Avg Rating</h6>
-                            <h3 class="text-dark fw-bold mb-1">4.8</h3>
-                            <span class="badge bg-info bg-opacity-10 text-info rounded-pill">
-                                <i class="fas fa-arrow-up me-1"></i>+0.3%
+                            <h3 class="text-dark fw-bold mb-1">
+                                {{ number_format($currentMonthRating, 1) ?: '0.0' }}
+                            </h3>
+
+                            <span class="badge {{ $ratingGrowth >= 0 ? 'bg-info text-info' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill">
+                                <i class="fas {{ $ratingGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
+                                {{ number_format($ratingGrowth, 1) }}%
                             </span>
                         </div>
+
+                        {{-- Dynamic stars --}}
                         <div class="rating-stars">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star {{ $i <= round($currentMonthRating) ? 'text-warning' : 'text-muted' }}"></i>
+                                @endfor
                         </div>
                     </div>
                 </div>
@@ -147,12 +151,16 @@
                         </div>
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                2024
+                                {{ $year }}
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">2024</a></li>
-                                <li><a class="dropdown-item" href="#">2023</a></li>
-                                <li><a class="dropdown-item" href="#">2022</a></li>
+                                @foreach($years as $y)
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('dashboard', ['year' => $y]) }}">
+                                        {{ $y }}
+                                    </a>
+                                </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -167,86 +175,27 @@
         <div class="col-12 col-xl-4 mb-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0 p-4">
-                    <h5 class="card-title mb-0 fw-bold">Best Selling Products</h5>
+                    <h5 class="card-title mb-0 fw-bold">Top 5 Best Selling Products</h5>
                     <p class="text-muted small mb-0">Top performers this month</p>
                 </div>
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
+                        @foreach($bestSellers as $index => $item)
                         <div class="list-group-item border-0 px-4 py-3">
                             <div class="d-flex align-items-center">
-                                <div class="product-rank bg-gradient-orange text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                                    1
+                                <div class="product-rank {{ $index < 3 ? 'bg-gradient-'.(['orange','yellow','secondary'][$index]).' text-white' : 'bg-light text-dark' }} rounded-circle d-flex align-items-center justify-content-center me-3">
+                                    {{ $index + 1 }}
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-semibold">Nasi Gudeg Yogya</h6>
-                                    <small class="text-muted">234 sold</small>
+                                    <h6 class="mb-1 fw-semibold">{{ $item->product->name ?? 'Unknown Product' }}</h6>
+                                    <small class="text-muted">{{ $item->total_sold }} sold</small>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fw-bold text-success">$2,340</div>
+                                    <div class="fw-bold text-success">A${{ number_format($item->revenue, 2) }}</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="list-group-item border-0 px-4 py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="product-rank bg-gradient-yellow text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                                    2
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-semibold">Rendang Padang</h6>
-                                    <small class="text-muted">198 sold</small>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold text-success">$1,980</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-4 py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="product-rank bg-gradient-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                                    3
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-semibold">Soto Ayam Lamongan</h6>
-                                    <small class="text-muted">176 sold</small>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold text-success">$1,760</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-4 py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="product-rank bg-light text-dark rounded-circle d-flex align-items-center justify-content-center me-3">
-                                    4
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-semibold">Gado-Gado Jakarta</h6>
-                                    <small class="text-muted">154 sold</small>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold text-success">$1,540</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-4 py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="product-rank bg-light text-dark rounded-circle d-flex align-items-center justify-content-center me-3">
-                                    5
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-semibold">Bakso Malang</h6>
-                                    <small class="text-muted">142 sold</small>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold text-success">$1,420</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-light border-0 p-3">
-                    <div class="text-center">
-                        <a href="#" class="btn btn-outline-primary btn-sm">View All Products</a>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -264,36 +213,31 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="activity-timeline">
+                        @forelse($activities as $activity)
                         <div class="activity-item d-flex mb-4">
-                            <div class="activity-icon bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
-                                <i class="fas fa-shopping-cart"></i>
+                            <div class="activity-icon 
+                @if($activity->type == 'order') bg-success text-success
+                @elseif($activity->type == 'product') bg-primary text-primary
+                @elseif($activity->type == 'review') bg-warning text-warning
+                @else bg-secondary text-muted
+                @endif
+                bg-opacity-10 rounded-circle p-2 me-3">
+                                <i class="fas 
+                    @if($activity->type == 'order') fa-shopping-cart
+                    @elseif($activity->type == 'product') fa-plus-circle
+                    @elseif($activity->type == 'review') fa-star
+                    @else fa-info-circle
+                    @endif"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-1 fw-semibold">New Order Received</h6>
-                                <p class="text-muted small mb-1">Order #ORD-2024-001 for Nasi Gudeg Yogya</p>
-                                <small class="text-muted">2 minutes ago</small>
+                                <h6 class="mb-1 fw-semibold">{{ $activity->title }}</h6>
+                                <p class="text-muted small mb-1">{{ $activity->description }}</p>
+                                <small class="text-muted">{{ $activity->created_at->diffForHumans() }}</small>
                             </div>
                         </div>
-                        <div class="activity-item d-flex mb-4">
-                            <div class="activity-icon bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                                <i class="fas fa-plus-circle"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1 fw-semibold">Product Added</h6>
-                                <p class="text-muted small mb-1">Nasi Liwet Solo added to menu</p>
-                                <small class="text-muted">1 hour ago</small>
-                            </div>
-                        </div>
-                        <div class="activity-item d-flex mb-4">
-                            <div class="activity-icon bg-warning bg-opacity-10 text-warning rounded-circle p-2 me-3">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1 fw-semibold">New Review</h6>
-                                <p class="text-muted small mb-1">5-star review for Rendang Padang</p>
-                                <small class="text-muted">3 hours ago</small>
-                            </div>
-                        </div>
+                        @empty
+                        <p class="text-muted small">No recent activity yet.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -308,21 +252,13 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="d-grid gap-3">
-                        <a href="#" class="btn btn-outline-primary d-flex align-items-center">
+                        <a href="{{ route('dashboard.product.store') }}" class="btn btn-outline-primary d-flex align-items-center">
                             <i class="fas fa-plus-circle me-2"></i>
                             Add New Product
                         </a>
-                        <a href="#" class="btn btn-outline-success d-flex align-items-center">
+                        <a href="{{ route('dashboard.orders') }}" class="btn btn-outline-success d-flex align-items-center">
                             <i class="fas fa-eye me-2"></i>
                             View All Orders
-                        </a>
-                        <a href="#" class="btn btn-outline-warning d-flex align-items-center">
-                            <i class="fas fa-chart-bar me-2"></i>
-                            Analytics Report
-                        </a>
-                        <a href="#" class="btn btn-outline-info d-flex align-items-center">
-                            <i class="fas fa-cog me-2"></i>
-                            Settings
                         </a>
                     </div>
                 </div>
@@ -483,19 +419,21 @@
     }
 </style>
 
-<!-- Chart.js Script -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Monthly Sales Chart
+        const labels = @json($monthLabels);
+        const revenueData = @json($revenueData);
+        const ordersData = @json($ordersData);
+
         const salesCtx = document.getElementById('monthlySalesChart').getContext('2d');
         new Chart(salesCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: labels,
                 datasets: [{
-                    label: 'Revenue ($)',
-                    data: [1800, 2200, 1900, 2800, 2400, 3200, 2900, 3400, 3100, 3600, 3300, 3800],
+                    label: 'Revenue (A$)',
+                    data: revenueData,
                     borderColor: '#f97316',
                     backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     borderWidth: 3,
@@ -507,7 +445,7 @@
                     pointRadius: 6
                 }, {
                     label: 'Orders',
-                    data: [45, 55, 48, 70, 60, 80, 73, 85, 78, 90, 83, 95],
+                    data: ordersData,
                     borderColor: '#eab308',
                     backgroundColor: 'rgba(234, 179, 8, 0.1)',
                     borderWidth: 3,
@@ -528,6 +466,16 @@
                         labels: {
                             usePointStyle: true,
                             padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (context.dataset.label.includes('Revenue')) {
+                                    return 'A$ ' + context.formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                }
+                                return context.formattedValue + ' orders';
+                            }
                         }
                     }
                 },
@@ -554,78 +502,6 @@
                     mode: 'index'
                 }
             }
-        });
-
-        // Mini Charts for Metric Cards
-        const miniChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    display: false
-                }
-            },
-            elements: {
-                point: {
-                    radius: 0
-                }
-            }
-        };
-
-        // Revenue Mini Chart
-        new Chart(document.getElementById('revenueChart'), {
-            type: 'line',
-            data: {
-                labels: ['', '', '', '', '', ''],
-                datasets: [{
-                    data: [20, 35, 25, 45, 30, 55],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: miniChartOptions
-        });
-
-        // Products Mini Chart
-        new Chart(document.getElementById('productsChart'), {
-            type: 'line',
-            data: {
-                labels: ['', '', '', '', '', ''],
-                datasets: [{
-                    data: [30, 25, 40, 35, 50, 45],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: miniChartOptions
-        });
-
-        // Orders Mini Chart
-        new Chart(document.getElementById('ordersChart'), {
-            type: 'line',
-            data: {
-                labels: ['', '', '', '', '', ''],
-                datasets: [{
-                    data: [15, 30, 20, 35, 25, 40],
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: miniChartOptions
         });
     });
 </script>

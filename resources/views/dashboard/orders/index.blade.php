@@ -408,7 +408,7 @@
             Orders will appear here once customers start placing them.
         </p>
         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-            <a href="{{ route('dashboard.products') }}" class="btn btn-lg px-6 py-3 fw-bold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl" 
+            <a href="{{ route('dashboard.product') }}" class="btn btn-lg px-6 py-3 fw-bold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl" 
                 style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none;">
                 <i class="fas fa-plus me-2"></i>Add Products
             </a>

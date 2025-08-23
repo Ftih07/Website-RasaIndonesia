@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Product;
 use App\Models\ProductOptionGroup;
 use App\Models\ProductOption;
@@ -78,6 +79,13 @@ class ProductDashboardController extends Controller
         $product->is_sell = !$product->is_sell;
         $product->save();
 
+        Activity::create([
+            'business_id' => $business->id,
+            'type' => 'product',
+            'title' => $product->is_sell ? 'Product Enabled' : 'Product Disabled',
+            'description' => "{$product->name} has been " . ($product->is_sell ? 'enabled for selling' : 'disabled'),
+        ]);
+
         return response()->json(['success' => true, 'is_sell' => $product->is_sell]);
     }
 
@@ -106,6 +114,13 @@ class ProductDashboardController extends Controller
         }
 
         $product->save();
+
+        Activity::create([
+            'business_id' => $business->id,
+            'type' => 'product',
+            'title' => 'Product Added',
+            'description' => "{$product->name} added to menu",
+        ]);
 
         if ($request->has('option_groups')) {
             $product->optionGroups()->sync($request->option_groups);
@@ -152,7 +167,7 @@ class ProductDashboardController extends Controller
             'serving' => 'nullable|string',
             'desc' => 'nullable|string',
             'max_distance' => 'nullable|numeric|min:1',
-            'stock' => 'required|integer|min:0', // ✅ Tambah validasi stok
+            'stock' => 'required|integer|min:0',
             'option_groups' => 'array',
             'categories' => 'array',
         ]);
@@ -169,6 +184,13 @@ class ProductDashboardController extends Controller
         }
 
         $product->save();
+
+        Activity::create([
+            'business_id' => $user->business->id,
+            'type' => 'product',
+            'title' => 'Product Updated',
+            'description' => "{$product->name} has been updated",
+        ]);
 
         $product->optionGroups()->sync($request->option_groups ?? []);
         $product->categories()->sync($request->categories ?? []);
@@ -191,6 +213,13 @@ class ProductDashboardController extends Controller
         }
 
         $product->delete();
+
+        Activity::create([
+            'business_id' => Auth::user()->business->id,
+            'type' => 'product',
+            'title' => 'Product Deleted',
+            'description' => "{$product->name} has been removed from menu",
+        ]);
 
         return back()->with('success', 'Product deleted.');
     }

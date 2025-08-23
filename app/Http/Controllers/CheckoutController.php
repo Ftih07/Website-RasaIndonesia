@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Order;
@@ -215,8 +216,8 @@ class CheckoutController extends Controller
             'total_price' => $total,
             'gross_price' => $grossAmount,
             'shipping_address' => $shipping_address,
-            'shipping_lat' => $request->shipping_lat, 
-            'shipping_lng' => $request->shipping_lng, 
+            'shipping_lat' => $request->shipping_lat,
+            'shipping_lng' => $request->shipping_lng,
             'delivery_note' => $request->delivery_note,
             'delivery_option' => $request->delivery_option,
             'delivery_status' => 'waiting',
@@ -306,6 +307,14 @@ class CheckoutController extends Controller
             // Simpan ke property baru untuk view
             $item->options_for_view = $processedOptions;
         }
+
+        // ✅ Tambahin Activity buat seller
+        Activity::create([
+            'business_id' => $order->business_id,
+            'type'        => 'order',
+            'title'       => 'New Order Received',
+            'description' => "Order #{$order->order_number} received with " . $order->items->count() . " item(s).",
+        ]);
 
         return view('order-success', compact('order'));
     }
