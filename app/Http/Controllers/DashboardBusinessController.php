@@ -51,7 +51,31 @@ class DashboardBusinessController extends Controller
 
         foreach ($keys as $i => $key) {
             if (!empty($key)) {
-                $open_hours[$key] = $values[$i] ?? '';
+                $rawTime = $values[$i] ?? '';
+
+                if ($rawTime) {
+                    try {
+                        // Pisahkan open & close time
+                        [$open, $close] = array_map('trim', explode('-', $rawTime));
+
+                        // Normalisasi titik ke colon
+                        $open  = str_replace('.', ':', $open);
+                        $close = str_replace('.', ':', $close);
+
+                        // Parse pakai Carbon
+                        $openTime  = \Carbon\Carbon::parse($open)->format('H:i');
+                        $closeTime = \Carbon\Carbon::parse($close)->format('H:i');
+
+                        // Gabung lagi ke format standar
+                        $time = $openTime . ' - ' . $closeTime;
+                    } catch (\Exception $e) {
+                        $time = $rawTime; // fallback kalau parsing gagal
+                    }
+                } else {
+                    $time = '';
+                }
+
+                $open_hours[$key] = $time;
             }
         }
 
@@ -99,7 +123,7 @@ class DashboardBusinessController extends Controller
         $validated = $request->validate([
             'type_id' => 'required|exists:types,id',
             'name' => 'required|string|max:255',
-            'is_open' => 'nullable|boolean',
+            'status_mode' => 'required|in:auto,manual_open,manual_closed',
             'description' => 'nullable|string',
             'food_categories' => 'nullable|array',
             'food_categories.*' => 'exists:food_categories,id',
@@ -149,7 +173,7 @@ class DashboardBusinessController extends Controller
         $business->update([
             'type_id' => $validated['type_id'],
             'name' => $validated['name'],
-            'is_open' => $validated['is_open'] ?? $business->is_open,
+            'status_mode' => $validated['status_mode'],
             'description' => $validated['description'] ?? null,
             'country' => $validated['country'] ?? null,
             'city' => $validated['city'] ?? null,

@@ -249,10 +249,11 @@
 
                         @if($business->orders_status === 'approved')
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Toko Buka?</label>
-                                <select name="is_open" class="form-select">
-                                    <option value="1" {{ $business->is_open ? 'selected' : '' }}>Ya</option>
-                                    <option value="0" {{ !$business->is_open ? 'selected' : '' }}>Tidak</option>
+                                <label class="form-label">Business Status</label>
+                                <select name="status_mode" class="form-select">
+                                    <option value="auto" {{ $business->status_mode === 'auto' ? 'selected' : '' }}>Auto (Follow Schedule)</option>
+                                    <option value="manual_open" {{ $business->status_mode === 'manual_open' ? 'selected' : '' }}>Force Open</option>
+                                    <option value="manual_closed" {{ $business->status_mode === 'manual_closed' ? 'selected' : '' }}>Force Closed</option>
                                 </select>
                             </div>
                         @else
@@ -263,6 +264,11 @@
                                 </div>
                             </div>
                         @endif
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Status</label>
+                            <input type="text" class="form-control" value="{{ $business->is_open ? 'Open' : 'Closed' }}" readonly>
+                        </div>
                         
                         <div class="col-12 mb-3">
                             <label class="form-label">Business Name</label>
@@ -415,24 +421,32 @@
                         <label class="form-label">Operating Hours</label>
                         <div id="operating-hours-container">
                             @php
-                            $open_hours = old('open_hours_keys', array_keys($business->open_hours ?? []));
-                            $open_hours_values = old('open_hours_values', array_values($business->open_hours ?? []));
+                                $open_hours = old('open_hours_keys', array_keys($business->open_hours ?? []));
+
+                                $open_hours_values = old('open_hours_values', array_values($business->open_hours ?? []));
+
+                                // kalau kosong (misalnya masih []), kasih fallback default 1 row
+                                if (empty($open_hours)) {
+                                    $open_hours = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                                    $open_hours_values = array_fill(0, count($open_hours), ''); // isi kosong semua
+                                }
                             @endphp
+
                             @foreach ($open_hours as $index => $day)
-                            <div class="operating-hours-item">
-                                <input type="text" name="open_hours_keys[]" class="form-control" 
-                                       value="{{ $day }}" placeholder="Day(s)" required>
-                                <input type="text" name="open_hours_values[]" class="form-control" 
-                                       value="{{ $open_hours_values[$index] ?? '' }}" placeholder="Hours" required>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeOperatingHour(this)">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
+                                <div class="operating-hours-item d-flex gap-2 mb-2">
+                                    <input type="text" 
+                                        name="open_hours_keys[]" 
+                                        class="form-control w-1/3"
+                                        value="{{ $day }}" 
+                                        placeholder="Day(s)" readonly>
+                                    <input type="text" 
+                                        name="open_hours_values[]" 
+                                        class="form-control w-2/3" 
+                                        value="{{ $open_hours_values[$index] ?? '' }}" 
+                                        placeholder="Hours (e.g. 08:00 - 17:00)" required>
+                                </div>
                             @endforeach
                         </div>
-                        <button type="button" class="btn btn-outline-success btn-sm mt-2" onclick="addOperatingHour()">
-                            <i class="fas fa-plus me-2"></i>Add Operating Hour
-                        </button>
                         <small class="d-block text-muted mt-2">Example: Monday => 08.00 - 17.00</small>
                     </div>
 

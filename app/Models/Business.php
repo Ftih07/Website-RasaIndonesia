@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str; // Facade for string manipulation, used here for slug generation.
 use Illuminate\Database\Eloquent\Model; // Base Eloquent Model class.
 use Illuminate\Database\Eloquent\SoftDeletes; // Trait to enable soft deletion functionality.
+use Carbon\Carbon;
 
 /**
  * Class Business
@@ -37,6 +38,7 @@ class Business extends Model
         'address',          // Physical address of the business.
         'iframe_url',       // URL for an embedded iframe (e.g., Google Maps).
         'open_hours',       // Business opening and closing hours.
+        'status_mode',
         'services',         // Services offered by the business.
         'menu',             // Link or details about the business menu.
         'media_social',     // Links to the business's social media profiles.
@@ -77,6 +79,47 @@ class Business extends Model
         'order'        => 'array',    // Casts 'order' JSON string to a PHP array.
         'reserve'      => 'array',    // Casts 'reserve' JSON string to a PHP array.
     ];
+
+    protected $appends = ['is_open'];
+
+    public function getIsOpenAttribute()
+    {
+        $timezone = config('app.timezone', 'UTC');
+        $now = Carbon::now($timezone);
+
+        // --- cek status_mode dulu ---
+        if ($this->status_mode === 'manual_open') {
+            return true;
+        }
+
+        if ($this->status_mode === 'manual_closed') {
+            return false;
+        }
+
+        // --- mode auto pakai open_hours ---
+        $today = $now->format('l'); // ex: Monday
+        $currentTime = $now->format('H:i');
+
+        $schedule = $this->open_hours[$today] ?? null;
+
+        if (
+            !$schedule ||
+            stripos($schedule, 'closed') !== false ||
+            stripos($schedule, 'tutup') !== false
+        ) {
+            return false;
+        }
+
+        [$open, $close] = array_map('trim', explode('-', $schedule));
+
+        $open = str_replace('.', ':', $open);
+        $close = str_replace('.', ':', $close);
+
+        $openTime  = Carbon::parse($open, $timezone)->format('H:i');
+        $closeTime = Carbon::parse($close, $timezone)->format('H:i');
+
+        return $currentTime >= $openTime && $currentTime <= $closeTime;
+    }
 
     /**
      * Get the galleries associated with the business.

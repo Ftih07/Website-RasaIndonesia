@@ -262,15 +262,11 @@ class CheckoutController extends Controller
 
         $order->load('items.product');
 
-        // Hapus cart
-        $cart->items()->delete();
-        $cart->delete();
-
         // Kirim client_secret ke view untuk frontend Stripe.js
         return view('checkout-payment', [
             'clientSecret' => $paymentIntent->client_secret,
             'order' => $order,
-            'maxDistances' => [], // kalau memang viewnya “menuntut” variabel ini
+            'maxDistances' => [],
         ]);
     }
 
@@ -336,6 +332,13 @@ class CheckoutController extends Controller
             'title'       => 'New Order Received',
             'description' => "Order #{$order->order_number} received with " . $order->items->count() . " item(s).",
         ]);
+
+        // ✅ Hapus cart setelah payment sukses
+        $cart = Cart::where('user_id', Auth::id())->first();
+        if ($cart) {
+            $cart->items()->delete();
+            $cart->delete();
+        }
 
         return view('order-success', compact('order'));
     }

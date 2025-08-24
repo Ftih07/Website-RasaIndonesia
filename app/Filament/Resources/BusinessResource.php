@@ -134,9 +134,20 @@ class BusinessResource extends Resource
                                             ->label('Business Name')
                                             ->required() // This field is mandatory.
                                             ->placeholder('Enter business name'),
-                                        Forms\Components\Toggle::make('is_open')
-                                            ->label('Toko Buka?')
-                                            ->default(true),
+                                        Forms\Components\Select::make('status_mode')
+                                            ->label('Business Status')
+                                            ->options([
+                                                'auto' => 'Auto (Follow Schedule)',
+                                                'manual_open' => 'Force Open',
+                                                'manual_closed' => 'Force Closed',
+                                            ])
+                                            ->required()
+                                            ->native(false),
+
+                                        Forms\Components\TextInput::make('is_open')
+                                            ->label('Current Status')
+                                            ->default(fn($record) => $record?->is_open ? 'Open' : 'Closed')
+                                            ->disabled(),
 
                                         // Multi-select field for 'Food Categories', related to 'food_categories'.
                                         Forms\Components\Select::make('food_categories')
@@ -694,6 +705,14 @@ class BusinessResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\BadgeColumn::make('is_open')
+                    ->label('Current Status')
+                    ->colors([
+                        'success' => fn($state) => $state === true,
+                        'danger' => fn($state) => $state === false,
+                    ])
+                    ->formatStateUsing(fn($state) => $state ? 'Open' : 'Closed'),
+
                 Tables\Columns\BadgeColumn::make('orders_status')
                     ->label('Orders Status')
                     ->colors([
