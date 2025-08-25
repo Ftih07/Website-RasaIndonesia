@@ -152,24 +152,28 @@
                     <div class="bg-light rounded p-3">
                         <div class="d-flex justify-content-between py-2">
                             <span>Subtotal:</span>
-                            <span class="fw-medium">${{ number_format($order->subtotal, 2) }} AUD</span>
+                            <span class="fw-medium">A${{ number_format($order->subtotal, 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span>Tax:</span>
-                            <span class="fw-medium">${{ number_format($order->tax, 2) }} AUD</span>
+                            <span class="fw-medium">A${{ number_format($order->tax, 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span>Delivery Fee:</span>
-                            <span class="fw-medium">${{ number_format($order->delivery_fee, 2) }} AUD</span>
+                            <span class="fw-medium">A${{ number_format($order->delivery_fee, 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span>Order Fee:</span>
-                            <span class="fw-medium">${{ number_format($order->order_fee, 2) }} AUD</span>
+                            <span class="fw-medium">A${{ number_format($order->order_fee, 2) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span>Customer Paid (Gross Value + Stripe Fee):</span>
+                            <span class="fw-medium">A${{ number_format($order->gross_price, 2) }}</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between py-2">
-                            <span class="fw-bold">Total:</span>
-                            <span class="fw-bold text-warning fs-5">${{ number_format($order->gross_price, 2) }} AUD</span>
+                            <span class="fw-bold">Net Payout:</span>
+                            <span class="fw-bold text-warning fs-5">A${{ number_format($order->total_price - $order->order_fee, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -189,7 +193,7 @@
                     <div class="mb-3">
                         <label class="small text-muted fw-bold mb-1">Order Date</label>
                         <div class="fw-medium">
-                            <i class="fas fa-calendar-alt text-muted me-2"></i>{{ $order->order_date->format('d M Y H:i') }}
+                            <i class="fas fa-calendar-alt text-muted me-2"></i>{{ $order->created_at->format('d M Y H:i') }}
                         </div>
                     </div>
                     <div class="mb-3">
@@ -297,8 +301,8 @@
                             <td class="py-3 px-4 text-center">
                                 <span class="badge bg-warning text-dark">{{ $item->quantity }}</span>
                             </td>
-                            <td class="py-3 px-4 text-end">${{ number_format($item->unit_price, 2) }}<br><small class="text-muted">AUD</small></td>
-                            <td class="py-3 px-4 text-end fw-bold text-warning">${{ number_format($item->total_price, 2) }}<br><small class="text-muted">AUD</small></td>
+                            <td class="py-3 px-4 text-end">A${{ number_format($item->unit_price, 2) }}<br><small class="text-muted"></small></td>
+                            <td class="py-3 px-4 text-end fw-bold text-warning">A${{ number_format($item->total_price, 2) }}<br><small class="text-muted"></small></td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -13,13 +13,13 @@
                 </div>
                 <div>
                     <h1 class="text-4xl font-bold mb-1">Order #{{ $order->order_number }}</h1>
-                    <p class="text-orange-100 opacity-90 mb-0">ID: {{ $order->id }} • {{ $order->order_date->format('d M Y H:i') }}</p>
+                    <p class="text-orange-100 opacity-90 mb-0">ID: {{ $order->id }} • {{ $order->created_at->format('d M Y H:i') }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4 text-end">
             <div class="bg-black bg-opacity-20 p-4 rounded-xl backdrop-blur-sm">
-                <div class="fs-3 fw-bold mb-1">${{ number_format($order->gross_price, 2) }} AUD</div>
+                <div class="fs-3 fw-bold mb-1">A${{ number_format($order->total_price - $order->order_fee, 2) }}</div>
                 <div class="text-orange-100 opacity-90">Total Amount</div>
             </div>
         </div>
@@ -224,31 +224,39 @@
                         <td class="px-4 py-3 fw-semibold text-gray-700">
                             <i class="fas fa-shopping-cart text-orange-500 me-2"></i>Subtotal
                         </td>
-                        <td class="px-4 py-3 text-end fw-bold">${{ number_format($order->subtotal, 2) }} AUD</td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->subtotal, 2) }}</td>
                     </tr>
                     <tr class="border-bottom">
                         <td class="px-4 py-3 fw-semibold text-gray-700">
                             <i class="fas fa-percentage text-orange-500 me-2"></i>Tax
                         </td>
-                        <td class="px-4 py-3 text-end fw-bold">${{ number_format($order->tax, 2) }} AUD</td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->tax, 2) }}</td>
                     </tr>
                     <tr class="border-bottom">
                         <td class="px-4 py-3 fw-semibold text-gray-700">
                             <i class="fas fa-truck text-orange-500 me-2"></i>Delivery Fee
                         </td>
-                        <td class="px-4 py-3 text-end fw-bold">${{ number_format($order->delivery_fee, 2) }} AUD</td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->delivery_fee, 2) }}</td>
                     </tr>
                     <tr class="border-bottom">
                         <td class="px-4 py-3 fw-semibold text-gray-700">
                             <i class="fas fa-receipt text-orange-500 me-2"></i>Order Fee
                         </td>
-                        <td class="px-4 py-3 text-end fw-bold">${{ number_format($order->order_fee, 2) }} AUD</td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->order_fee, 2) }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="px-4 py-3 fw-semibold text-gray-700">
+                            <i class="fas fa-receipt text-orange-500 me-2"></i>Customer Paid (Gross Value + Stripe Fee)
+                        </td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->gross_price, 2) }}</td>
                     </tr>
                     <tr class="bg-gradient-to-r from-orange-50 to-amber-50">
                         <td class="px-4 py-4 fw-bold text-gray-800 fs-5">
-                            <i class="fas fa-money-bill-wave text-orange-500 me-2"></i>Total Price
+                            <i class="fas fa-money-bill-wave text-orange-500 me-2"></i>Net Payout
                         </td>
-                        <td class="px-4 py-4 text-end fw-bold text-orange-600 fs-4">${{ number_format($order->gross_price, 2) }} AUD</td>
+                        <td class="px-4 py-4 text-end fw-bold text-orange-600 fs-4">
+                            A${{ number_format($order->total_price - $order->order_fee, 2) }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -330,7 +338,7 @@
                         </div>
 
                         <div class="col-md-2 text-end">
-                            <div class="fw-bold text-orange-600 fs-5">${{ number_format($item->total_price, 2) }} AUD</div>
+                            <div class="fw-bold text-orange-600 fs-5">A${{ number_format($item->total_price, 2) }}</div>
                             <small class="text-gray-500">Total</small>
                         </div>
                     </div>

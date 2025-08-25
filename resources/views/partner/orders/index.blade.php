@@ -255,7 +255,7 @@
                                     </td>
                                     <td class="py-4 px-4">
                                         <span class="fw-bold text-success" style="font-size: 1.1rem;">
-                                            ${{ number_format($order->gross_price,2) }}
+                                            A${{ number_format($order->total_price - $order->order_fee, 2) }}
                                         </span>
                                     </td>
                                     <td class="py-4 px-4">

@@ -100,7 +100,17 @@
                                         Business Actions
                                     </h6>
                                 </li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('dashboard.export', [
+                                            'from' => request('from'),
+                                            'until' => request('until'),
+                                            'year' => request('year')
+                                        ]) }}">
+                                        <i class="fas fa-download me-2"></i>Export Data
+                                    </a>
+                                </li>
+
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

@@ -281,6 +281,13 @@ Route::get('/export-business-pdf/{id}', [BusinessExportController::class, 'expor
 
 Route::get('businesses/export-all-pdf', [BusinessExportController::class, 'exportAllPdf'])
     ->name('export-all-businesses-pdf');
+Route::get('/export/payouts', [\App\Http\Controllers\ExportController::class, 'exportPayouts'])->name('export.payouts');
+Route::get('/export/revenue', [\App\Http\Controllers\ExportController::class, 'exportRevenue'])
+    ->name('export.revenue');
+Route::get('/export/orders', [\App\Http\Controllers\ExportController::class, 'exportOrders'])
+    ->name('export.orders');
+Route::get('/dashboard/export', [DashboardController::class, 'export'])
+    ->name('dashboard.export');
 
 // Define a GET route for displaying the registration form.
 // When a user visits the URL '/prosperity-expo' using a GET request (e.g., by typing it in the browser),

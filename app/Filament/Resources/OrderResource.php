@@ -20,9 +20,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Notifications\Notification;
-use App\Models\Chat;
 use App\Models\User;
 use App\Services\ChatService;
+use Filament\Forms\Components\DateTimePicker;
 
 class OrderResource extends Resource
 {
@@ -31,7 +31,7 @@ class OrderResource extends Resource
     protected static ?string $navigationLabel = 'Orders';
     protected static ?string $pluralModelLabel = 'Orders';
     protected static ?string $modelLabel = 'Order';
-    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationGroup = 'Orders';
 
     // 🔹 Method filter query
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
@@ -90,15 +90,40 @@ class OrderResource extends Resource
                         ->disabled()
                         ->prefix('AUD'),
 
-                    TextInput::make('gross_price')
+                    TextInput::make('total_price')
+                        ->label('Gross Value')
                         ->disabled()
                         ->prefix('AUD'),
+
+                    TextInput::make('gross_price')
+                        ->label('Total Paid Customer')
+                        ->disabled()
+                        ->prefix('AUD'),
+
+                    TextInput::make('net_payout')
+                        ->label('Partner/Seller Net Payout')
+                        ->disabled()
+                        ->prefix('AUD')
+                        ->dehydrated(false) // biar ga dicoba simpan ke DB
+                        ->formatStateUsing(fn($record) => number_format($record->total_price - $record->order_fee, 2)),
+
+                    DateTimePicker::make('created_at')
+                        ->label('Order Date')
+                        ->disabled(),
                 ])->columns(2),
 
                 Section::make('Shipping Info')->schema([
                     Textarea::make('shipping_address')
                         ->label('Shipping Address')
                         ->rows(3)
+                        ->disabled(),
+
+                    TextInput::make('shipping_lat')
+                        ->label('Shipping Latitude')
+                        ->disabled(),
+
+                    TextInput::make('shipping_lng')
+                        ->label('Shipping Longitude')
                         ->disabled(),
 
                     TextInput::make('delivery_note')
@@ -239,6 +264,43 @@ class OrderResource extends Resource
                         ->disableItemCreation()
                         ->disableItemDeletion(),
                 ])->columns(1),
+
+                Section::make('Payment Info')->schema([
+                    TextInput::make('payment_method')
+                        ->label('Payment Method')
+                        ->disabled()
+                        ->afterStateHydrated(function ($component, $state, $record) {
+                            $component->state($record->payment?->payment_method);
+                        }),
+
+                    TextInput::make('transaction_id')
+                        ->label('Transaction ID')
+                        ->disabled()
+                        ->afterStateHydrated(function ($component, $state, $record) {
+                            $component->state($record->payment?->transaction_id);
+                        }),
+
+                    TextInput::make('payment_proof_url')
+                        ->label('Proof URL')
+                        ->disabled()
+                        ->afterStateHydrated(function ($component, $state, $record) {
+                            $component->state($record->payment?->payment_proof_url);
+                        }),
+
+                    Select::make('payment_status')
+                        ->label('Payment Status')
+                        ->options([
+                            'incomplete' => 'Incomplete',
+                            'pending' => 'Pending',
+                            'paid' => 'Paid',
+                            'failed' => 'Failed',
+                        ])
+                        ->required()
+                        ->disabled(true)
+                        ->afterStateHydrated(function ($component, $state, $record) {
+                            $component->state($record->payment?->status);
+                        }),
+                ])
             ]);
     }
 
@@ -272,10 +334,23 @@ class OrderResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('gross_price')
+                    ->label('Total Paid Customer')
                     ->money('AUD')
                     ->sortable(),
 
+                TextColumn::make('total_price')
+                    ->label('Gross Value')
+                    ->sortable()
+                    ->money('AUD'),
+
+                TextColumn::make('net_payout')
+                    ->label('Partner/Seller Net Payout')
+                    ->sortable()
+                    ->money('AUD')
+                    ->getStateUsing(fn($record) => $record->total_price - $record->order_fee),
+
                 TextColumn::make('created_at')
+                    ->label('Order Date')
                     ->dateTime()
                     ->sortable(),
 
@@ -478,7 +553,11 @@ class OrderResource extends Resource
                                 ->send();
                         }
                     })
-                    ->visible(fn(Order $record) => $record->payment->status === 'pending'),
+                    ->visible(
+                        fn(Order $record) =>
+                        $record->delivery_status === 'waiting' &&
+                            $record->payment?->status === 'pending'
+                    ),
 
                 // Cancel Payment
                 Tables\Actions\Action::make('cancelPayment')
@@ -514,7 +593,49 @@ class OrderResource extends Resource
                                 ->send();
                         }
                     })
-                    ->visible(fn(Order $record) => $record->payment->status === 'pending'),
+                    ->visible(
+                        fn(Order $record) =>
+                        $record->delivery_status === 'waiting' &&
+                            $record->payment?->status === 'pending'
+                    ),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('export')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->form([
+                        DatePicker::make('from')->label('From'),
+                        DatePicker::make('until')->label('Until'),
+                        Select::make('business_id')
+                            ->label('Business')
+                            ->relationship('business', 'name')
+                            ->searchable(),
+                        Select::make('payment_status')
+                            ->options([
+                                'pending' => 'Pending',
+                                'paid' => 'Paid',
+                                'failed' => 'Failed',
+                                'incomplete' => 'Incomplete',
+                            ]),
+                        Select::make('delivery_status')
+                            ->options([
+                                'waiting' => 'Waiting',
+                                'confirmed' => 'Confirmed',
+                                'assigned' => 'Assigned',
+                                'on_delivery' => 'On Delivery',
+                                'delivered' => 'Delivered',
+                                'canceled' => 'Canceled',
+                            ]),
+                    ])
+                    ->action(function (array $data) {
+                        $params = [];
+                        foreach (['from', 'until', 'business_id', 'payment_status', 'delivery_status'] as $field) {
+                            if (!empty($data[$field])) {
+                                $params[$field] = $data[$field];
+                            }
+                        }
+                        return redirect()->route('export.orders', $params);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

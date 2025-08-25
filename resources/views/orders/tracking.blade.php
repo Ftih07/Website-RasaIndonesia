@@ -113,24 +113,28 @@
                             </h6>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Subtotal:</span>
-                                <span class="fw-semibold">${{ number_format($order->subtotal, 2) }} AUD</span>
+                                <span class="fw-semibold">A${{ number_format($order->subtotal, 2) }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Tax:</span>
-                                <span class="fw-semibold">${{ number_format($order->tax, 2) }} AUD</span>
+                                <span class="fw-semibold">A${{ number_format($order->tax, 2) }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Delivery Fee:</span>
-                                <span class="fw-semibold">${{ number_format($order->delivery_fee, 2) }} AUD</span>
+                                <span class="fw-semibold">A${{ number_format($order->delivery_fee, 2) }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-3">
                                 <span class="text-muted">Order Fee:</span>
-                                <span class="fw-semibold">${{ number_format($order->order_fee, 2) }} AUD</span>
+                                <span class="fw-semibold">A${{ number_format($order->order_fee, 2) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Gross Value:</span>
+                                <span class="fw-semibold">A${{ number_format($order->total_price, 2) }}</span>
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold text-dark">Total:</span>
-                                <span class="fw-bold text-warning fs-5">${{ number_format($order->gross_price, 2) }} AUD</span>
+                                <span class="fw-bold text-warning fs-5">A${{ number_format($order->gross_price, 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -151,7 +155,7 @@
                                 <small class="text-muted d-block">Order Date</small>
                                 <span class="fw-semibold text-dark">
                                     <i class="fas fa-calendar me-1 text-muted"></i>
-                                    {{ $order->order_date->format('d M Y H:i') }}
+                                    {{ $order->created_at->format('d M Y H:i') }}
                                 </span>
                             </div>
                             <div class="mb-3">
@@ -279,13 +283,13 @@
                         </td>
 
                         <td class="py-3 text-end">
-                            <span class="fw-semibold text-dark">${{ number_format($item->unit_price, 2) }}</span>
-                            <small class="d-block text-muted">AUD</small>
+                            <span class="fw-semibold text-dark">A${{ number_format($item->unit_price, 2) }}</span>
+                            <small class="d-block text-muted"></small>
                         </td>
 
                         <td class="py-3 text-end px-4">
-                            <span class="fw-bold text-warning fs-6">${{ number_format($item->total_price, 2) }}</span>
-                            <small class="d-block text-muted">AUD</small>
+                            <span class="fw-bold text-warning fs-6">A${{ number_format($item->total_price, 2) }}</span>
+                            <small class="d-block text-muted"></small>
                         </td>
                     </tr>
                     @endforeach

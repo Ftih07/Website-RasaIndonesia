@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RevenueExport;
 
 class DashboardController extends Controller
 {
@@ -27,15 +29,17 @@ class DashboardController extends Controller
         }
 
         // === Revenue ===
-        $currentMonthRevenue = Order::where('business_id', $business->id)
+        $currentMonthRevenue = Order::valid()
+            ->where('business_id', $business->id)
             ->whereMonth('order_date', now()->month)
             ->whereYear('order_date', now()->year)
-            ->sum('total_price');
+            ->sum(DB::raw('total_price - order_fee'));
 
-        $lastMonthRevenue = Order::where('business_id', $business->id)
+        $lastMonthRevenue = Order::valid()
+            ->where('business_id', $business->id)
             ->whereMonth('order_date', now()->subMonth()->month)
             ->whereYear('order_date', now()->subMonth()->year)
-            ->sum('total_price');
+            ->sum(DB::raw('total_price - order_fee'));
 
         $revenueGrowth = $lastMonthRevenue > 0
             ? (($currentMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100
@@ -43,30 +47,32 @@ class DashboardController extends Controller
 
         // === Products Sold ===
         $currentMonthProducts = OrderItem::whereHas('order', function ($q) use ($business) {
-            $q->where('business_id', $business->id)
+            $q->valid() // pakai scope
+                ->where('business_id', $business->id)
                 ->whereMonth('order_date', now()->month)
                 ->whereYear('order_date', now()->year);
-        })
-            ->sum('quantity');
+        })->sum('quantity');
 
         $lastMonthProducts = OrderItem::whereHas('order', function ($q) use ($business) {
-            $q->where('business_id', $business->id)
+            $q->valid()
+                ->where('business_id', $business->id)
                 ->whereMonth('order_date', now()->subMonth()->month)
                 ->whereYear('order_date', now()->subMonth()->year);
-        })
-            ->sum('quantity');
+        })->sum('quantity');
 
         $productsGrowth = $lastMonthProducts > 0
             ? (($currentMonthProducts - $lastMonthProducts) / $lastMonthProducts) * 100
             : 0;
 
         // === Total Orders ===
-        $currentMonthOrders = Order::where('business_id', $business->id)
+        $currentMonthOrders = Order::valid()
+            ->where('business_id', $business->id)
             ->whereMonth('order_date', now()->month)
             ->whereYear('order_date', now()->year)
             ->count();
 
-        $lastMonthOrders = Order::where('business_id', $business->id)
+        $lastMonthOrders = Order::valid()
+            ->where('business_id', $business->id)
             ->whereMonth('order_date', now()->subMonth()->month)
             ->whereYear('order_date', now()->subMonth()->year)
             ->count();
@@ -79,10 +85,11 @@ class DashboardController extends Controller
         $year = $request->input('year', now()->year);
 
         // === Monthly Revenue ===
-        $monthlyRevenue = Order::select(
-            DB::raw('MONTH(order_date) as month'),
-            DB::raw('SUM(total_price) as total')
-        )
+        $monthlyRevenue = Order::valid()
+            ->select(
+                DB::raw('MONTH(order_date) as month'),
+                DB::raw('SUM(total_price - order_fee) as total')
+            )
             ->where('business_id', $business->id)
             ->whereYear('order_date', $year)
             ->groupBy('month')
@@ -91,10 +98,11 @@ class DashboardController extends Controller
             ->toArray();
 
         // === Monthly Orders ===
-        $monthlyOrders = Order::select(
-            DB::raw('MONTH(order_date) as month'),
-            DB::raw('COUNT(id) as total')
-        )
+        $monthlyOrders = Order::valid()
+            ->select(
+                DB::raw('MONTH(order_date) as month'),
+                DB::raw('COUNT(id) as total')
+            )
             ->where('business_id', $business->id)
             ->whereYear('order_date', $year)
             ->groupBy('month')
@@ -122,7 +130,8 @@ class DashboardController extends Controller
             DB::raw('SUM(total_price) as revenue')
         )
             ->whereHas('order', function ($q) use ($business) {
-                $q->where('business_id', $business->id)
+                $q->valid()
+                    ->where('business_id', $business->id)
                     ->whereMonth('order_date', now()->month)
                     ->whereYear('order_date', now()->year);
             })
@@ -171,5 +180,34 @@ class DashboardController extends Controller
             'currentMonthRating',
             'ratingGrowth'
         ));
+    }
+
+    public function export(Request $request)
+    {
+        $user = auth()->user();
+        $business = $user->business;
+
+        if (!$business) {
+            return redirect()->route('home')->with('error', "You don't have a business yet.");
+        }
+
+        // Ambil filter: bisa kirim ?from=YYYY-MM-DD&until=YYYY-MM-DD (opsional)
+        $year  = (int) $request->input('year', now()->year);
+        $from  = $request->input('from');
+        $until = $request->input('until');
+
+        // Fallback: kalau from/until kosong, pakai full year
+        if (!$from || !$until) {
+            $from  = Carbon::create($year, 1, 1)->toDateString();
+            $until = Carbon::create($year, 12, 31)->toDateString();
+        }
+
+        $filename = "revenue-report_{$from}_to_{$until}.xlsx";
+
+        // Kirim 3 argumen + (opsional) businessName buat header
+        return Excel::download(
+            new RevenueExport($business->id, $from, $until, $business->name ?? null),
+            $filename
+        );
     }
 }

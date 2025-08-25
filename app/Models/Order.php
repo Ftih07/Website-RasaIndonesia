@@ -20,8 +20,8 @@ class Order extends Model
         'total_price',
         'gross_price',
         'shipping_address',
-        'shipping_lat', // ✅
-        'shipping_lng', // ✅
+        'shipping_lat',
+        'shipping_lng', 
         'delivery_note',
         'delivery_option',
         'delivery_status',
@@ -63,5 +63,12 @@ class Order extends Model
     public function testimonial()
     {
         return $this->hasOne(Testimonial::class);
+    }
+
+    public function scopeValid($query)
+    {
+        return $query
+            ->whereHas('payment', fn($q) => $q->whereNotIn('status', ['incomplete', 'failed']))
+            ->whereNotIn('delivery_status', ['waiting', 'canceled']);
     }
 }

@@ -255,7 +255,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="text-center">
-                                    <div class="fw-bold text-gray-800 fs-5">AUD {{ number_format($order->gross_price, 2, '.', ',') }}</div>
+                                    <div class="fw-bold text-gray-800 fs-5">A${{ number_format($order->total_price - $order->order_fee, 2) }}</div>
                                     <small class="text-gray-500">Total Amount</small>
                                 </div>
                             </div>
@@ -279,8 +279,8 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="text-end">
-                                    <div class="fw-semibold text-gray-800">{{ \Carbon\Carbon::parse($order->order_date)->format('M d, Y') }}</div>
-                                    <small class="text-gray-500">{{ \Carbon\Carbon::parse($order->order_date)->format('h:i A') }}</small>
+                                    <div class="fw-semibold text-gray-800">{{ \Carbon\Carbon::parse($order->created_at)->format('M d, Y') }}</div>
+                                    <small class="text-gray-500">{{ \Carbon\Carbon::parse($order->created_at)->format('h:i A') }}</small>
                                 </div>
                             </div>
                         </div>
@@ -308,10 +308,10 @@
                                                 <div class="fw-bold text-gray-800 mb-1">{{ $item->product->name }}</div>
                                                 <div class="text-sm text-gray-600 mb-1">
                                                     <span class="badge bg-orange-100 text-orange-800">{{ $item->quantity }}x</span>
-                                                    AUD {{ number_format($item->unit_price, 2, '.', ',') }}
+                                                    A$ {{ number_format($item->unit_price, 2, '.', ',') }}
                                                 </div>
                                                 <div class="fw-bold text-orange-600">
-                                                    = AUD {{ number_format($item->total_price, 2, '.', ',') }}
+                                                    = A$ {{ number_format($item->total_price, 2, '.', ',') }}
                                                 </div>
                                                 @if($item->note)
                                                 <div class="text-xs text-gray-500 mt-2 p-2 bg-yellow-50 rounded border-l-3 border-yellow-400">
