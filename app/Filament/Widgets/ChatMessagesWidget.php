@@ -39,12 +39,22 @@ class ChatMessagesWidget extends Widget
 
         $this->reset(['message', 'image']);
     }
-
     public function getMessagesProperty()
     {
-        return Message::where('chat_id', $this->record->id)
+        $messages = Message::where('chat_id', $this->record->id)
             ->with('sender')
             ->oldest()
             ->get();
+
+        // tandai sebagai read
+        Message::where('chat_id', $this->record->id)
+            ->where('is_read', false)
+            ->where('sender_id', '!=', auth()->id())
+            ->update([
+                'is_read' => true,
+                'read_at' => now(),
+            ]);
+
+        return $messages;
     }
 }

@@ -49,4 +49,23 @@ class Chat extends Model
             ->whereNull('read_at')
             ->count();
     }
+
+    public function unreadMessages()
+    {
+        return $this->messages()
+            ->where('is_read', false)
+            ->where('sender_id', '!=', auth()->id()); // hanya pesan yg bukan dari user login
+    }
+
+    public function getUnreadCountAttribute()
+    {
+        return $this->unreadMessages()->count();
+    }
+
+    public function getLatestMessageTextAttribute(): ?string
+    {
+        return $this->latestMessage?->message
+            ? \Illuminate\Support\Str::limit($this->latestMessage->message, 30) // batasi biar pendek
+            : null;
+    }
 }

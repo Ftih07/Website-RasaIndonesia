@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\PayoutsExport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ChatMessagesExport;
 
 class ExportController extends Controller
 {
@@ -49,5 +50,17 @@ class ExportController extends Controller
             . '.xlsx';
 
         return \Maatwebsite\Excel\Facades\Excel::download($export, $filename);
+    }
+
+    public function exportMessages(Request $request)
+    {
+        $businessId = $request->input('business_id');
+        $startDate  = $request->input('start_date');
+        $endDate    = $request->input('end_date');
+
+        return Excel::download(
+            new ChatMessagesExport($businessId, $startDate, $endDate),
+            'chat-messages.xlsx'
+        );
     }
 }

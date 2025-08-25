@@ -288,6 +288,7 @@ Route::get('/export/orders', [\App\Http\Controllers\ExportController::class, 'ex
     ->name('export.orders');
 Route::get('/dashboard/export', [DashboardController::class, 'export'])
     ->name('dashboard.export');
+Route::get('/export/messages', [\App\Http\Controllers\ExportController::class, 'exportMessages'])->name('export.messages');
 
 // Define a GET route for displaying the registration form.
 // When a user visits the URL '/prosperity-expo' using a GET request (e.g., by typing it in the browser),
