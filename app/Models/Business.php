@@ -60,6 +60,7 @@ class Business extends Model
         'per_km_unit',
         'supports_delivery',
         'supports_pickup',
+        'is_virtual',
     ];
 
     /**

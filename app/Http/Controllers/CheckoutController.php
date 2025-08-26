@@ -79,6 +79,14 @@ class CheckoutController extends Controller
 
         $business = \App\Models\Business::findOrFail($request->business_id);
 
+        // 🔹 kalau virtual, langsung balikin flat ongkir aja
+        if ($business->is_virtual) {
+            return response()->json([
+                'distance_km' => 0,
+                'delivery_fee' => $business->flat_rate ?? 0,
+            ]);
+        }
+
         if ($request->delivery_option === 'pickup' && !$business->supports_pickup) {
             return response()->json(['error' => 'Pickup tidak tersedia untuk bisnis ini.'], 422);
         }
@@ -148,20 +156,21 @@ class CheckoutController extends Controller
             $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'pickup', 0);
             $shipping_address = $cart->business->address;
             $distance_km = 0;
+        } elseif ($business->is_virtual) {
+            // 👉 Virtual store, langsung flat rate
+            $delivery_fee = $business->flat_rate;
+            $shipping_address = $request->shipping_address ?? 'Virtual Store';
+            $distance_km = 0;
         } else {
             $apiKey = env('GOOGLE_MAPS_API_KEY');
             $distance_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$cart->business->latitude},{$cart->business->longitude}&destinations={$request->shipping_lat},{$request->shipping_lng}&units=metric&key={$apiKey}";
             $distance_data = json_decode(file_get_contents($distance_url), true);
 
-            if (isset($distance_data['rows'][0]['elements'][0]['distance']['value'])) {
-                $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
-                $delivery_fee = 2 + (round($distance_km / 3) * 4);
-            } else {
+            if (!isset($distance_data['rows'][0]['elements'][0]['distance']['value'])) {
                 throw new \Exception('Tidak dapat menghitung jarak');
             }
-            // hitung jarak Google API...
-            $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
 
+            $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
             $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'delivery', $distance_km);
 
             $shipping_address = $request->shipping_address;

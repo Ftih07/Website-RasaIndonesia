@@ -144,6 +144,11 @@ class BusinessResource extends Resource
                                             ->required()
                                             ->native(false),
 
+                                        Forms\Components\Toggle::make('is_virtual')
+                                            ->label('Virtual Store')
+                                            ->helperText('Enable if this business is only for online/delivery with flat shipping fee')
+                                            ->default(false),
+
                                         Forms\Components\TextInput::make('is_open')
                                             ->label('Current Status')
                                             ->default(fn($record) => $record?->is_open ? 'Open' : 'Closed')

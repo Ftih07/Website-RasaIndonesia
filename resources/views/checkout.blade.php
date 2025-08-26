@@ -367,7 +367,14 @@
         const input = document.getElementById('shipping_address');
         const autocomplete = new google.maps.places.Autocomplete(input);
 
-        const businessLocation = { lat: {{ $cart->business->latitude }}, lng: {{ $cart->business->longitude }} };
+        // Tentukan center map
+        @if ($cart->business->is_virtual)
+            // Virtual Store → default ke Victoria (Melbourne CBD misalnya)
+            const businessLocation = { lat: -37.8136, lng: 144.9631 };
+        @else
+            // Real Store → pakai koordinat resto
+            const businessLocation = { lat: {{ $cart->business->latitude }}, lng: {{ $cart->business->longitude }} };
+        @endif
 
         // Map Delivery
         const map = new google.maps.Map(document.getElementById("map"), {
@@ -436,7 +443,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data.delivery_fee !== undefined) {
-                    // 🔹 Cek apakah ada produk yg melebihi max_distance
+                    // 🔹 Cek max distance
                     let exceeded = [];
                     Object.entries(productMaxDistances).forEach(([productId, product]) => {
                         if (product.max_distance && data.distance_km > product.max_distance) {
@@ -454,30 +461,37 @@
                         document.querySelector('button[type="submit"]').disabled = false;
                     }
 
-                    // --- Hitung rute + ETA kalau lolos ---
-                    directionsService.route({
-                        origin: businessLocation,
-                        destination: { lat, lng },
-                        travelMode: 'DRIVING'
-                    }, (response, status) => {
-                        if (status === 'OK') {
-                            directionsRenderer.setDirections(response);
+                    // --- 🔹 Bedakan Virtual Store vs Real Store ---
+                    @if ($cart->business->is_virtual)
+                        // 👉 Virtual: flat ongkir aja, tanpa jarak & ETA
+                        document.getElementById('shipping_cost_display').innerHTML =
+                            `<span class="text-success fw-bold">$${data.delivery_fee} AUD</span>`;
+                    @else
+                        // 👉 Resto asli: hitung rute + ETA
+                        directionsService.route({
+                            origin: businessLocation,
+                            destination: { lat, lng },
+                            travelMode: 'DRIVING'
+                        }, (response, status) => {
+                            if (status === 'OK') {
+                                directionsRenderer.setDirections(response);
+                                const leg = response.routes[0].legs[0];
+                                const eta = leg.duration.text;
 
-                            const leg = response.routes[0].legs[0];
-                            const eta = leg.duration.text;
+                                document.getElementById('shipping_cost_display').innerHTML =
+                                    `<span class="text-success fw-bold">$${data.delivery_fee} AUD</span> <small class="text-muted">(${data.distance_km} km, ETA: ${eta})</small>`;
 
-                            document.getElementById('shipping_cost_display').innerHTML =
-                                `<span class="text-success fw-bold">$${data.delivery_fee} AUD</span> <small class="text-muted">(${data.distance_km} km, ETA: ${eta})</small>`;
-
-                            new google.maps.Marker({
-                                map: map,
-                                position: businessLocation,
-                                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-                            });
-                        }
-                    });
+                                new google.maps.Marker({
+                                    map: map,
+                                    position: businessLocation,
+                                    icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                                });
+                            }
+                        });
+                    @endif
                 } else {
-                    document.getElementById('shipping_cost_display').innerHTML = '<span class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Unable to calculate shipping cost</span>';
+                    document.getElementById('shipping_cost_display').innerHTML =
+                        '<span class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Unable to calculate shipping cost</span>';
                 }
             });
         }
