@@ -581,3 +581,27 @@
         });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const openCartBtn = document.getElementById('openCartBtn');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+
+        // Fungsi untuk nutup navbar kalau di mobile
+        function closeNavbarIfMobile() {
+            if (window.innerWidth <= 991 && navbarCollapse.classList.contains('show')) {
+                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) ||
+                    new bootstrap.Collapse(navbarCollapse);
+                bsCollapse.hide();
+            }
+        }
+
+        // Tutup navbar kalau klik link (non-dropdown)
+        document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)')
+            .forEach(function(link) {
+                link.addEventListener('click', closeNavbarIfMobile);
+            });
+
+        // Tutup navbar kalau klik tombol Cart
+        openCartBtn.addEventListener('click', closeNavbarIfMobile);
+    });
+</script>

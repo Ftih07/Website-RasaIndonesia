@@ -68,7 +68,15 @@
                     <div class="col-lg-12">
                         <div class="sec-title text-center mb-5">
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                            <h2 class="h2-title">All Catalogue Menu</h2>
+                            <h2 class="h2-title">
+                                @if($business->type->title === 'Shop')
+                                All {{ $business->name }} Product
+                                @elseif($business->type->title === 'Restaurant')
+                                All {{ $business->name }} Menu
+                                @else
+                                All Catalogue Menu
+                                @endif
+                            </h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
                             </div>

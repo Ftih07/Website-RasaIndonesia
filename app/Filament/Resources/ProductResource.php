@@ -93,9 +93,10 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 // Column for business ID (numeric and sortable)
-                Tables\Columns\TextColumn::make('business_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('business.name')
+                    ->label('Business')
+                    ->sortable()
+                    ->searchable(),
 
                 // Column for product name (searchable)
                 Tables\Columns\TextColumn::make('name')
@@ -138,7 +139,12 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Add any table filters if needed
+                // ✅ Filter by Business
+                Tables\Filters\SelectFilter::make('business_id')
+                    ->label('Business')
+                    ->relationship('business', 'name') // ambil kolom "name" dari tabel business
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 // Action buttons for viewing, editing, and deleting a product
@@ -147,9 +153,44 @@ class ProductResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                // Bulk delete action
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
+                    // 🔄 Bulk update status "is_sell"
+                    Tables\Actions\BulkAction::make('setSellStatus')
+                        ->label('Update Selling Status')
+                        ->icon('heroicon-o-shopping-cart')
+                        ->form([
+                            Forms\Components\Toggle::make('is_sell')
+                                ->label('Sell this product?')
+                                ->required(),
+                        ])
+                        ->action(function (array $data, $records): void {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'is_sell' => $data['is_sell'],
+                                ]);
+                            }
+                        }),
+
+                    // 📦 Bulk update stock
+                    Tables\Actions\BulkAction::make('updateStock')
+                        ->label('Update Stock')
+                        ->icon('heroicon-o-archive-box')
+                        ->form([
+                            Forms\Components\TextInput::make('stock')
+                                ->numeric()
+                                ->required()
+                                ->minValue(0)
+                                ->label('New Stock'),
+                        ])
+                        ->action(function (array $data, $records): void {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'stock' => $data['stock'],
+                                ]);
+                            }
+                        }),
                 ]),
             ]);
     }
