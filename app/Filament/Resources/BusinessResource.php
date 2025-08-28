@@ -691,6 +691,19 @@ class BusinessResource extends Resource
                                             ->default(true),
                                     ])
                                     ->columns(2),
+
+                                Forms\Components\Select::make('pickupLocations')
+                                    ->label('Pickup Locations')
+                                    ->multiple()
+                                    ->relationship(
+                                        name: 'pickupLocations',
+                                        titleAttribute: 'name',
+                                        modifyQueryUsing: fn($query) => $query->where('is_virtual', false)
+                                    )
+                                    ->preload()
+                                    ->searchable()
+                                    ->hidden(fn($get) => ! $get('is_virtual')),
+
                             ]),
 
                     ])

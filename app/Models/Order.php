@@ -12,6 +12,7 @@ class Order extends Model
         'cart_id',
         'payment_id',
         'business_id',
+        'pickup_business_id', // wajib kalau mau mass assignment
         'order_number',
         'subtotal',
         'tax',
@@ -21,7 +22,7 @@ class Order extends Model
         'gross_price',
         'shipping_address',
         'shipping_lat',
-        'shipping_lng', 
+        'shipping_lng',
         'delivery_note',
         'delivery_option',
         'delivery_status',
@@ -70,5 +71,10 @@ class Order extends Model
         return $query
             ->whereHas('payment', fn($q) => $q->whereNotIn('status', ['incomplete', 'failed']))
             ->whereNotIn('delivery_status', ['waiting', 'canceled']);
+    }
+
+    public function pickupBusiness()
+    {
+        return $this->belongsTo(Business::class, 'pickup_business_id');
     }
 }

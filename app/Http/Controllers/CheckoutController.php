@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\Business;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Order;
@@ -123,12 +124,13 @@ class CheckoutController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'shipping_address' => 'required_if:delivery_option,delivery|string|nullable',
-            'shipping_lat'     => 'required_if:delivery_option,delivery|numeric|nullable',
-            'shipping_lng'     => 'required_if:delivery_option,delivery|numeric|nullable',
-            'delivery_note'    => 'nullable|string',
-            'business_id'      => 'required|exists:businesses,id',
-            'delivery_option'  => 'required|string|in:pickup,delivery'
+            'shipping_address'   => 'required_if:delivery_option,delivery|string|nullable',
+            'shipping_lat'       => 'required_if:delivery_option,delivery|numeric|nullable',
+            'shipping_lng'       => 'required_if:delivery_option,delivery|numeric|nullable',
+            'delivery_note'      => 'nullable|string',
+            'business_id'        => 'required|exists:businesses,id',
+            'delivery_option'    => 'required|string|in:pickup,delivery',
+            'pickup_business_id' => 'nullable|exists:businesses,id', // 🔹 tambahan
         ]);
 
         $cart = Cart::where('user_id', Auth::id())
@@ -153,15 +155,39 @@ class CheckoutController extends Controller
 
         // Hitung ongkir
         if ($request->delivery_option === 'pickup') {
-            $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'pickup', 0);
-            $shipping_address = $cart->business->address;
-            $distance_km = 0;
+            if ($business->is_virtual) {
+                // ✅ Virtual store, ambil lokasi pickup dari request
+                $pickupBusiness = Business::findOrFail($request->pickup_business_id);
+
+                $delivery_fee = 0; // pickup = gratis
+                $shipping_address = $pickupBusiness->address;
+                $shipping_lat = $pickupBusiness->latitude;
+                $shipping_lng = $pickupBusiness->longitude;
+                $distance_km = 0;
+            } else {
+                // ✅ Normal business pickup
+                $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'pickup', 0);
+                $shipping_address = $cart->business->address;
+                $shipping_lat = $cart->business->latitude;   // 🔹 ambil dari bisnis
+                $shipping_lng = $cart->business->longitude;  // 🔹 ambil dari bisnis
+                $distance_km = 0;
+            }
         } elseif ($business->is_virtual) {
-            // 👉 Virtual store, langsung flat rate
+            // ✅ Virtual store, delivery flat rate
             $delivery_fee = $business->flat_rate;
             $shipping_address = $request->shipping_address ?? 'Virtual Store';
+
+            // wajib ada koordinat
+            $shipping_lat = $request->shipping_lat ?? null;
+            $shipping_lng = $request->shipping_lng ?? null;
+
+            if (!$shipping_lat || !$shipping_lng) {
+                throw new \Exception('Lokasi pengiriman belum dipilih');
+            }
+
             $distance_km = 0;
         } else {
+            // ✅ Normal delivery
             $apiKey = env('GOOGLE_MAPS_API_KEY');
             $distance_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={$cart->business->latitude},{$cart->business->longitude}&destinations={$request->shipping_lat},{$request->shipping_lng}&units=metric&key={$apiKey}";
             $distance_data = json_decode(file_get_contents($distance_url), true);
@@ -174,6 +200,8 @@ class CheckoutController extends Controller
             $delivery_fee = $this->calculateBusinessShippingFee($cart->business, 'delivery', $distance_km);
 
             $shipping_address = $request->shipping_address;
+            $shipping_lat = $request->shipping_lat;
+            $shipping_lng = $request->shipping_lng;
         }
 
         // ✅ Validasi stok produk sebelum checkout
@@ -238,22 +266,23 @@ class CheckoutController extends Controller
         ]);
 
         $order = Order::create([
-            'user_id' => Auth::id(),
-            'payment_id' => $payment->id,
-            'business_id' => $request->business_id,
-            'order_number' => 'TOI-' . strtoupper(Str::random(8)),
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'delivery_fee' => $delivery_fee,
-            'order_fee' => $order_fee,
-            'total_price' => $total,
-            'gross_price' => $grossAmount,
-            'shipping_address' => $shipping_address,
-            'shipping_lat' => $request->shipping_lat,
-            'shipping_lng' => $request->shipping_lng,
-            'delivery_note' => $request->delivery_note,
-            'delivery_option' => $request->delivery_option,
-            'delivery_status' => 'waiting',
+            'user_id'            => Auth::id(),
+            'payment_id'         => $payment->id,
+            'business_id'        => $request->business_id,
+            'pickup_business_id' => $request->pickup_business_id,
+            'order_number'       => 'TOI-' . strtoupper(Str::random(8)),
+            'subtotal'           => $subtotal,
+            'tax'                => $tax,
+            'delivery_fee'       => $delivery_fee,
+            'order_fee'          => $order_fee,
+            'total_price'        => $total,
+            'gross_price'        => $grossAmount,
+            'shipping_address'   => $shipping_address,
+            'shipping_lat'       => $shipping_lat ?? $request->shipping_lat, // 🔹 fallback ke request kalau bukan virtual pickup
+            'shipping_lng'       => $shipping_lng ?? $request->shipping_lng, // 🔹 sama
+            'delivery_note'      => $request->delivery_note,
+            'delivery_option'    => $request->delivery_option,
+            'delivery_status'    => 'waiting',
         ]);
 
         foreach ($cart->items as $item) {

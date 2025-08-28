@@ -143,21 +143,53 @@
                                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #FF6B35, #F7931E);">
                                         <i class="fas fa-store text-white"></i>
                                     </div>
-                                    <h5 class="mb-0 fw-bold text-dark">Restaurant Location</h5>
+                                    <h5 class="mb-0 fw-bold text-dark">Pickup Location</h5>
                                 </div>
-                                
-                                <div class="card border-2 mb-3" style="border-color: #FFE4D6 !important; background: #FFF8F5;">
-                                    <div class="card-body">
-                                        <h6 class="fw-bold text-dark mb-2">{{ $cart->business->name }}</h6>
-                                        <p class="text-muted mb-3">{{ $cart->business->address }}</p>
-                                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $cart->business->latitude }},{{ $cart->business->longitude }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                            <i class="fas fa-directions me-2"></i>Get Directions
-                                        </a>
+
+                                @if($cart->business->is_virtual)
+                                    <div class="form-floating mb-3">
+                                        <select id="pickup_business_id" name="pickup_business_id" class="form-select border-2" style="border-color: #FFE4D6 !important; background-color: #FFF8F5;" required>
+                                            <option value="">-- Select Pickup Location --</option>
+                                            @foreach($cart->business->pickupLocations as $location)
+                                                <option value="{{ $location->id }}"
+                                                    data-lat="{{ $location->latitude }}"
+                                                    data-lng="{{ $location->longitude }}"
+                                                    data-address="{{ $location->address }}">
+                                                    {{ $location->name }} - {{ $location->address }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="pickup_business_id" class="text-muted">Choose where you want to pickup</label>
                                     </div>
-                                </div>
-                                <div class="card border-2" style="border-color: #FFE4D6 !important;">
-                                    <div id="pickup_map" style="width: 100%; height: 300px; border-radius: 8px;"></div>
-                                </div>
+
+                                    <div id="pickup_info" class="card border-2 mb-3 d-none" style="border-color: #FFE4D6 !important; background: #FFF8F5;">
+                                        <div class="card-body">
+                                            <h6 id="pickup_name" class="fw-bold text-dark mb-2"></h6>
+                                            <p id="pickup_address" class="text-muted mb-3"></p>
+                                            <a id="pickup_directions" href="#" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-directions me-2"></i>Get Directions
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="card border-2" style="border-color: #FFE4D6 !important;">
+                                        <div id="pickup_map" style="width: 100%; height: 300px; border-radius: 8px;"></div>
+                                    </div>
+                                @else
+                                    <!-- Kalau resto fisik biasa -->
+                                    <div class="card border-2 mb-3" style="border-color: #FFE4D6 !important; background: #FFF8F5;">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold text-dark mb-2">{{ $cart->business->name }}</h6>
+                                            <p class="text-muted mb-3">{{ $cart->business->address }}</p>
+                                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $cart->business->latitude }},{{ $cart->business->longitude }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-directions me-2"></i>Get Directions
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card border-2" style="border-color: #FFE4D6 !important;">
+                                        <div id="pickup_map" style="width: 100%; height: 300px; border-radius: 8px;"></div>
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- Order Notes -->
@@ -321,6 +353,18 @@
     const deliveryFields = document.getElementById('delivery_fields');
     const pickupFields = document.getElementById('pickup_fields');
 
+    function toggleRequired() {
+        const pickupSelect = document.getElementById('pickup_business_id');
+        const pickupFields = document.getElementById('pickup_fields');
+        if (!pickupSelect) return;
+
+        if (pickupFields && pickupFields.style.display !== 'none') {
+            pickupSelect.setAttribute('required', 'required');
+        } else {
+            pickupSelect.removeAttribute('required');
+        }
+    }
+
     function updateDeliveryOption() {
         if (deliveryRadio && deliveryRadio.checked) {
             deliveryOption.value = 'delivery';
@@ -331,6 +375,9 @@
             if (deliveryFields) deliveryFields.style.display = 'none';
             if (pickupFields) pickupFields.style.display = 'block';
         }
+
+        // ⬅️ selalu update required setelah show/hide
+        toggleRequired();
     }
 
     // Pasang event listener kalau radio ada
@@ -349,21 +396,50 @@
                 if (pickupFields) pickupFields.style.display = 'none';
                 if (deliveryRadio) deliveryRadio.checked = true;
             }
+
+            // ⬅️ update required juga di sini
+            toggleRequired();
         });
     }
 
     // Atur default tampilan field saat load
     window.addEventListener('DOMContentLoaded', function () {
-        if (deliveryRadio && deliveryRadio.checked) {
-            if (deliveryFields) deliveryFields.style.display = 'block';
-            if (pickupFields) pickupFields.style.display = 'none';
-        } else if (pickupRadio && pickupRadio.checked) {
-            if (deliveryFields) deliveryFields.style.display = 'none';
-            if (pickupFields) pickupFields.style.display = 'block';
-        }
+        updateDeliveryOption(); // inisialisasi + toggle required
     });
 
     function initAutocomplete() {
+        // Pickup dropdown handler (khusus Virtual Store)
+        const pickupSelect = document.getElementById('pickup_business_id');
+        if (pickupSelect) {
+            pickupSelect.addEventListener('change', function () {
+                const selected = this.options[this.selectedIndex];
+                if (!selected.value) return;
+
+                const lat = parseFloat(selected.dataset.lat);
+                const lng = parseFloat(selected.dataset.lng);
+                const address = selected.dataset.address;
+                const name = selected.text.split(" - ")[0];
+
+                // Update info card
+                document.getElementById('pickup_name').innerText = name;
+                document.getElementById('pickup_address').innerText = address;
+                document.getElementById('pickup_directions').href =
+                    `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+                document.getElementById('pickup_info').classList.remove('d-none');
+
+                // Update map
+                const pickupMap = new google.maps.Map(document.getElementById("pickup_map"), {
+                    zoom: 15,
+                    center: { lat, lng }
+                });
+                new google.maps.Marker({
+                    map: pickupMap,
+                    position: { lat, lng },
+                    title: name
+                });
+            });
+        }
+
         const input = document.getElementById('shipping_address');
         const autocomplete = new google.maps.places.Autocomplete(input);
 

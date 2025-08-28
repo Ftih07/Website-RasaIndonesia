@@ -335,4 +335,26 @@ class Business extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // Kalau bisnis ini virtual → punya banyak pickup location
+    public function pickupLocations()
+    {
+        return $this->belongsToMany(
+            Business::class,          // relasi balik ke Business juga
+            'virtual_pickup_locations',
+            'virtual_business_id',    // FK dari bisnis virtual
+            'pickup_business_id'      // FK dari bisnis fisik
+        );
+    }
+
+    // Kalau bisnis ini fisik → bisa jadi pickup location untuk banyak bisnis virtual
+    public function virtualBusinesses()
+    {
+        return $this->belongsToMany(
+            Business::class,
+            'virtual_pickup_locations',
+            'pickup_business_id',
+            'virtual_business_id'
+        );
+    }
 }
