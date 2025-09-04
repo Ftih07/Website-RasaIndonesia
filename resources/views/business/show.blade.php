@@ -285,9 +285,9 @@
                 <!-- Update your existing menu cards to include data-menu-id attribute -->
                 <div class="menu-list-row">
                     <div class="row g-xxl-5 bydefault_show-menu" id="menu-list">
-                        @foreach($menus as $menu)
+                        @foreach($latestMenus as $menu)
                         <div class="col-lg-4 col-sm-6 dish-box-wp all {{ $menu->type }}
-                    @foreach($menu->categories as $cat) category-{{ Str::slug($cat->name) }} @endforeach"
+                                @foreach($menu->categories as $cat) category-{{ Str::slug($cat->name) }} @endforeach"
                             data-cat="{{ $menu->type }}" data-name="{{ strtolower($menu->name) }}">
                             <div class="dish-box text-center" data-menu-id="{{ $menu->id }}">
                                 <div class="dist-img">
@@ -332,6 +332,7 @@
                             </div>
                         </div>
                         @endforeach
+
                     </div>
                 </div>
 

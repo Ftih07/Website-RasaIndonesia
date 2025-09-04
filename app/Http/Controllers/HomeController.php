@@ -31,23 +31,46 @@ class HomeController extends Controller
         // Get type filter from request (default: 'all')
         $typeFilter = $request->get('type', 'all');
 
-        // Query businesses based on type filter
-        $businesses = Business::with('testimonials', 'type')
+        // Ambil yang approved dulu (acak)
+        $approvedBusinesses = Business::with('testimonials', 'type')
             ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
                 $query->whereHas('type', function ($q) use ($typeFilter) {
                     $q->where('title', $typeFilter);
                 });
             })
+            ->where('orders_status', 'approved')
+            ->inRandomOrder()
             ->take(6)
             ->get();
 
-        // Calculate the average rating for each business
+        // Kalau kurang dari 6, ambil sisanya dari yang lain (acak)
+        if ($approvedBusinesses->count() < 6) {
+            $remaining = 6 - $approvedBusinesses->count();
+
+            $otherBusinesses = Business::with('testimonials', 'type')
+                ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
+                    $query->whereHas('type', function ($q) use ($typeFilter) {
+                        $q->where('title', $typeFilter);
+                    });
+                })
+                ->where('orders_status', '!=', 'approved')
+                ->inRandomOrder()
+                ->take($remaining)
+                ->get();
+
+            // gabungkan hasilnya
+            $businesses = $approvedBusinesses->concat($otherBusinesses);
+        } else {
+            $businesses = $approvedBusinesses;
+        }
+
+        // Hitung rata-rata rating untuk masing-masing bisnis
         foreach ($businesses as $business) {
             $business->average_rating = $business->testimonials->avg('rating') ?? 0;
         }
 
         $events = Events::where('end_time', '>', Carbon::now('Australia/Melbourne'))->get();
-        $news = News::where('status', 'published')->latest()->take(6)->get(); // ambil 6 news terbaru
+        $news   = News::where('status', 'published')->latest()->take(6)->get();
 
         return view('home', compact('galleries', 'qna', 'businesses', 'types', 'typeFilter', 'events', 'news'));
     }
@@ -87,6 +110,7 @@ class HomeController extends Controller
                 ],
                 'average_rating' => round($business->testimonials->avg('rating') ?? 0, 1),
                 'total_responses' => $business->testimonials->count(),
+                'orders_status' => $business->orders_status, // << tambahkan ini
                 'galleries' => $business->galleries->map(fn($gallery) => [
                     'title' => $gallery->title,
                     'image' => asset('storage/' . $gallery->image),

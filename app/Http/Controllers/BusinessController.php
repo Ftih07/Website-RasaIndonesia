@@ -83,7 +83,13 @@ class BusinessController extends Controller
                 return $menu;
             });
 
-        $latestMenus = $business->products()->latest()->take(6)->get();
+        $latestMenus = $business->products()
+            ->with(['optionGroups.options', 'categories'])
+            ->orderByDesc('is_sell') // Prioritas available dulu
+            ->orderByDesc('stock')   // Lalu stok paling banyak
+            ->inRandomOrder()        // Sisanya acak
+            ->take(6)
+            ->get();
 
         return view('business.show', compact(
             'business',
@@ -94,7 +100,7 @@ class BusinessController extends Controller
             'ratingFilter',
             'sortOrder',
             'latestMenus',
-            'menus' // <-- jangan lupa dimasukin ke compact
+            'menus'
         ));
     }
 

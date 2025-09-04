@@ -121,13 +121,16 @@
                                 <span>Taste</span>
                                 <br> of Indonesia.
                             </h1>
-                            <p>Find a shop or restaurant that serves Indonesian foods in Australia.</p>
+                            <p>Discover authentic Indonesian food and grocery products in Australia.</p>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="banner-img-wp">
-                            <!-- Background Image Section -->
-                            <div class="banner-img" style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
+                            <div class="banner-img banner-img-1"
+                                style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
+                            </div>
+                            <div class="banner-img banner-img-2"
+                                style="background-image: url('{{ asset('assets/images/home/hero/hero2.png') }}');">
                             </div>
                         </div>
                     </div>
@@ -135,6 +138,34 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const img1 = document.querySelector('.banner-img-1');
+            const img2 = document.querySelector('.banner-img-2');
+
+            let showingFirst = true;
+
+            // set awal
+            img1.classList.add('active');
+            img2.classList.add('inactive');
+
+            setInterval(() => {
+                if (showingFirst) {
+                    img1.classList.remove('active');
+                    img1.classList.add('inactive');
+                    img2.classList.remove('inactive');
+                    img2.classList.add('active');
+                } else {
+                    img2.classList.remove('active');
+                    img2.classList.add('inactive');
+                    img1.classList.remove('inactive');
+                    img1.classList.add('active');
+                }
+                showingFirst = !showingFirst;
+            }, 3000);
+        });
+    </script>
 
     <!-- Section: Food Category -->
     <section class="book-table section bg-light">
@@ -152,8 +183,8 @@
                     <div class="col-lg-12">
                         <!-- Section Title -->
                         <div class="sec-title text-center mb-5">
-                            <p class="sec-sub-title mb-3">category</p>
-                            <h2 class="h2-title">Find Food<br>Category Easily</h2>
+                            <p class="sec-sub-title mb-3">Explore Categories</p>
+                            <h2 class="h2-title">Find Indonesian<br>Foods & Products Easily</h2>
                             <div class="sec-title-shape mb-4">
                                 <img src="assets/images/title-shape.svg" alt="Title Shape">
                             </div>
@@ -164,25 +195,48 @@
                 <!-- Food Category Information -->
                 <div class="book-table-info">
                     <div class="row align-items-center">
-                        <!-- Authentic Category -->
                         <div class="col-lg-4">
                             <div class="call-now-side table-title text-center">
                                 <i class="uil uil-coffee icon"></i>
                                 <h3>Authentic</h3>
                             </div>
                         </div>
-                        <!-- Halal Category -->
                         <div class="col-lg-4">
                             <div class="call-now text-center">
                                 <i class="uil uil-moon icon"></i>
                                 <h3>Halal</h3>
                             </div>
                         </div>
-                        <!-- Traditional Category -->
                         <div class="col-lg-4">
                             <div class="call-now-side table-title text-center">
                                 <i class="uil uil-utensils icon"></i>
                                 <h3>Traditional</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- row tambahan untuk produk shop -->
+                    <div class="row align-items-center mt-4">
+                        <div class="col-lg-4">
+                            <div class="category-mini-divider"></div>
+                            <div class="call-now-side text-center">
+                                <i class="uil uil-pizza-slice icon"></i>
+                                <h3>Snacks & Biscuits</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="category-mini-divider"></div>
+                            <div class="call-now text-center">
+                                <i class="uil uil-restaurant icon"></i>
+                                <h3>Noodles</h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="category-mini-divider"></div>
+                            <div class="call-now-side text-center">
+                                <i class="uil uil-coffee icon"></i>
+                                <h3>Beverages</h3>
                             </div>
                         </div>
                     </div>
@@ -209,16 +263,25 @@
                             <img src="assets/images/title-shape.svg" alt="Title Shape">
                         </div>
                         <!-- Description of Taste of Indonesia -->
-                        <p>Taste of Indonesia is a culinary guide specifically designed to introduce the rich flavors of Indonesia in Australia. This website serves as a bridge for Indonesian food lovers who long for authentic cuisine in the land of Kangaroos.</p>
-                        <p>We've gathered information on restaurants, cafes, and shops that serve Indonesian specialties, from rendang to satay to market snacks. Not only that, we also provide reviews, recommendations, and guides to help you find the best places that serve authentic Indonesian delights.</p>
+                        <p>
+                            Taste of Indonesia is your one-stop guide to authentic Indonesian culture in Australia — from food and beverages to unique products and specialty shops.
+                        </p>
+                        <p>
+                            We connect you with Indonesian restaurants, cafés, grocery stores, and online shops offering traditional dishes, snacks, and handmade goods. You’ll also find reviews, recommendations, and shopping tips to make it easy to experience Indonesia’s rich flavors and products wherever you are.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-8 m-auto">
-                    <!-- About Us Video Section -->
                     <div class="about-video">
-                        <div class="about-video-img" style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
+                        <div class="about-video-img-wrap">
+                            <div class="about-video-img"
+                                style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
+                            </div>
+                            <div class="about-video-img"
+                                style="background-image: url('{{ asset('assets/images/home/about-us/images2.webp') }}');">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -434,8 +497,10 @@
                                     <h3 class="h3-title">
                                         {{ $business->name }}
                                     </h3>
-                                    @if ($business->user_id === null)
-                                    <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
+                                    @if ($business->orders_status === 'approved')
+                                    <span class="badge bg-success text-light" style="font-size: 0.7rem; margin-left: 5px;">
+                                        Open Order
+                                    </span>
                                     @endif
                                     <!-- Menampilkan Unique Code -->
                                     <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
@@ -447,14 +512,41 @@
                                 <div class="info-container">
                                     <div class="info-item">
                                         <i class="uil uil-location-point"></i>
-                                        <p>{{ $business->address }}</p>
+                                        <div>
+                                            @if($business->address)
+                                            <p>{{ $business->address }}</p>
+                                            @if($business->pickupLocations->count() > 0)
+                                            <small class="text-muted">
+                                                Pickup locations available at:
+                                                @foreach($business->pickupLocations as $pickup)
+                                                {{ $pickup->name }}@if(!$loop->last), @endif
+                                                @endforeach
+                                            </small>
+                                            @endif
+                                            @elseif($business->pickupLocations->count() > 0)
+                                            <p>
+                                                <small class="text-muted">
+                                                    No main address available. Pickup locations available at:
+                                                </small>
+                                                @foreach($business->pickupLocations as $pickup)
+                                                {{ $pickup->name }}@if(!$loop->last), @endif
+                                                @endforeach
+                                            </p>
+                                            @else
+                                            <p>No address available</p>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="info-item">
                                         <i class="uil uil-utensils"></i>
                                         <p>
-                                            @foreach ($business->food_categories as $category)
+                                            @forelse ($business->food_categories as $category)
                                             {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
-                                            @endforeach
+                                            @empty
+                                            <span class="text-muted" style="font-size: 0.85rem;">
+                                                No categories available
+                                            </span>
+                                            @endforelse
                                         </p>
                                     </div>
                                 </div>
@@ -471,10 +563,19 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ $business->location }}" target="_blank">
-                                                <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
+                                            @if ($business->orders_status === 'approved')
+                                            <a href="{{ route('business.menu', $business->slug) }}"
+                                                class="cta-button order-now">
+                                                <img src="/assets/images/toko.png" alt="Order Now" class="icon-filter">
+                                                Order
+                                            </a>
+                                            @else
+                                            <a href="{{ $business->location }}" target="_blank"
+                                                class="cta-button maps-link">
+                                                <img src="/assets/images/toko.png" alt="Filter Store" class="icon-filter">
                                                 Maps
                                             </a>
+                                            @endif
                                         </li>
                                     </ul>
                                 </div>
@@ -712,7 +813,7 @@
         </a>
     </div>
 
-    <!-- Contact Want to add your business  -->
+    <!-- Contact Customer Service -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
 
@@ -726,9 +827,9 @@
                                 <div class="bg-overlay dark-overlay"></div>
                                 <div class="sec-wp">
                                     <div class="newsletter-box-text">
-                                        <h2 class="h2-title">Want to add your business?</h2>
-                                        <p>Please contact us and tell us the details of your business.
-                                        </p>
+                                        <h2 class="h2-title">Contact Customer Service</h2>
+                                        <p>If you have any questions or need assistance,
+                                            please reach out to our customer service team.</p>
                                     </div>
                                     <div class="contact-icons">
                                         <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
@@ -752,6 +853,7 @@
             </div>
         </section>
     </div>
+
 
     @include('partials.footer')
 
@@ -951,6 +1053,11 @@
                             lng: parseFloat(business.longitude),
                         };
 
+                        // 🔹 Tombol Order hanya muncul kalau status approved
+                        const orderButton = (business.orders_status ?? business.ordersStatus ?? '').toLowerCase() === 'approved' ?
+                            `<a href="/business/${business.slug}/menu" class="btn-maps btn-order">Order Now</a>` :
+                            ''; // kalau bukan approved, jangan tampilkan apa-apa
+
                         const marker = new google.maps.Marker({
                             position,
                             map: map,
@@ -992,6 +1099,7 @@
                                     <div class="info">${business.type?.title || 'N/A'}</div>
                                     <div class="buttons-maps">
                                         <a href="/business/${business.slug}" target="_blank" class="btn-maps btn-details">Details</a>
+                                        ${orderButton}
                                         <button onclick="getDirections(${business.latitude}, ${business.longitude})" class="btn-maps btn-route">Directions</button>
                                         <a href="https://www.google.com/maps?q=${business.latitude},${business.longitude}" target="_blank" class="btn-maps btn-view-map">View in Google Maps</a>
                                     </div>

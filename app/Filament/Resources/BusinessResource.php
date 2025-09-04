@@ -218,7 +218,6 @@ class BusinessResource extends Resource
                                         // Textarea for 'Full Address'.
                                         Forms\Components\Textarea::make('address')
                                             ->label('Full Address')
-                                            ->required() // This field is mandatory.
                                             ->placeholder('Enter complete address')
                                             ->rows(2), // Sets the visible height of the textarea.
 
@@ -228,7 +227,6 @@ class BusinessResource extends Resource
                                                 // Text input for 'Google Maps Link'.
                                                 Forms\Components\TextInput::make('location')
                                                     ->label('Google Maps Link')
-                                                    ->required() // This field is mandatory.
                                                     ->url() // Validates input as a URL.
                                                     ->reactive() // Updates other fields based on this input.
                                                     ->placeholder('https://maps.google.com/...'),
