@@ -14,7 +14,7 @@ class BusinessClaimController extends Controller
         $user = auth()->user();
 
         if ($user->business) {
-            return redirect()->route('home')->with('error', 'Kamu sudah memiliki bisnis.');
+            return redirect()->route('home')->with('error', 'You already own a business.');
         }
 
         $businesses = Business::whereNull('user_id')->get();
@@ -27,7 +27,7 @@ class BusinessClaimController extends Controller
         $user = auth()->user();
 
         if ($user->business) {
-            return back()->with('error', 'Kamu sudah memiliki bisnis.');
+            return back()->with('error', 'You already own a business.');
         }
 
         $request->validate([
@@ -36,7 +36,7 @@ class BusinessClaimController extends Controller
 
         $business = Business::find($request->business_id);
         if ($business->user_id !== null) {
-            return back()->with('error', 'Bisnis sudah dimiliki user lain.');
+            return back()->with('error', 'The business is already owned by another user.');
         }
 
         BusinessClaim::firstOrCreate([
@@ -46,11 +46,11 @@ class BusinessClaimController extends Controller
 
         NotificationHelper::send(
             $user->id,
-            'Klaim bisnis kamu sedang diproses',
-            'Admin akan mengevaluasi permintaan klaim kamu.',
-            route('dashboard') // Ganti sesuai kebutuhan
+            'Your business claim is being processed',
+            'The admin will evaluate your claim request.',
+            route('dashboard') // Change as needed
         );
 
-        return redirect()->route('home')->with('success', 'Permintaan klaim bisnis telah dikirim.');
+        return redirect()->route('home')->with('success', 'Your business claim request has been sent.');
     }
 }

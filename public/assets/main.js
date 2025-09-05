@@ -317,6 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchKeyword = document.getElementById("search-keyword");
     const countrySelect = document.getElementById("country");
     const citySelect = document.getElementById("city");
+    const ordersStatus = document.getElementById("orders-status"); // ✅ baru
     const searchButton = document.getElementById("search-button");
 
     // ✅ Tambahkan pengecekan
@@ -327,6 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const selectedType = businessType ? businessType.value : "all";
             const selectedCountry = countrySelect ? countrySelect.value : "all";
             const selectedCity = citySelect ? citySelect.value : "all";
+            const selectedStatus = ordersStatus ? ordersStatus.value : "all"; // ✅ baru
             const keyword = searchKeyword ? searchKeyword.value.trim() : "";
 
             // Construct URL with query parameters
@@ -336,6 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
             url.searchParams.set("type", selectedType);
             url.searchParams.set("country", selectedCountry);
             url.searchParams.set("city", selectedCity);
+            url.searchParams.set("orders_status", selectedStatus); // ✅ baru
 
             if (keyword) {
                 url.searchParams.set("keyword", keyword);

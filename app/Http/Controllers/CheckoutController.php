@@ -89,11 +89,11 @@ class CheckoutController extends Controller
         }
 
         if ($request->delivery_option === 'pickup' && !$business->supports_pickup) {
-            return response()->json(['error' => 'Pickup tidak tersedia untuk bisnis ini.'], 422);
+            return response()->json(['error' => 'Pickup is not available for this business.'], 422);
         }
 
         if ($request->delivery_option === 'delivery' && !$business->supports_delivery) {
-            return response()->json(['error' => 'Delivery tidak tersedia untuk bisnis ini.'], 422);
+            return response()->json(['error' => 'Delivery is not available for this business.'], 422);
         }
 
         if ($request->delivery_option === 'pickup') {
@@ -110,7 +110,7 @@ class CheckoutController extends Controller
         if (isset($distance_data['rows'][0]['elements'][0]['distance']['value'])) {
             $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
         } else {
-            return response()->json(['error' => 'Tidak dapat menghitung jarak'], 422);
+            return response()->json(['error' => 'Unable to calculate distance'], 422);
         }
 
         $delivery_fee = $this->calculateBusinessShippingFee($business, $request->delivery_option, $distance_km);
@@ -143,13 +143,13 @@ class CheckoutController extends Controller
         // 3. ✅ Validasi apakah bisnis support opsi delivery yang dipilih
         if ($request->delivery_option === 'pickup' && !$business->supports_pickup) {
             throw ValidationException::withMessages([
-                'delivery_option' => 'Pickup tidak tersedia untuk bisnis ini.',
+                'delivery_option' => 'Pickup is not available for this business.',
             ]);
         }
 
         if ($request->delivery_option === 'delivery' && !$business->supports_delivery) {
             throw ValidationException::withMessages([
-                'delivery_option' => 'Delivery tidak tersedia untuk bisnis ini.',
+                'delivery_option' => 'Delivery is not available for this business.',
             ]);
         }
 
@@ -182,7 +182,7 @@ class CheckoutController extends Controller
             $shipping_lng = $request->shipping_lng ?? null;
 
             if (!$shipping_lat || !$shipping_lng) {
-                throw new \Exception('Lokasi pengiriman belum dipilih');
+                throw new \Exception('Delivery location has not been selected');
             }
 
             $distance_km = 0;
@@ -193,7 +193,7 @@ class CheckoutController extends Controller
             $distance_data = json_decode(file_get_contents($distance_url), true);
 
             if (!isset($distance_data['rows'][0]['elements'][0]['distance']['value'])) {
-                throw new \Exception('Tidak dapat menghitung jarak');
+                throw new \Exception('Unable to calculate distance');
             }
 
             $distance_km = $distance_data['rows'][0]['elements'][0]['distance']['value'] / 1000;
@@ -210,7 +210,7 @@ class CheckoutController extends Controller
 
             if ($product->stock < $item->quantity) {
                 throw ValidationException::withMessages([
-                    'cart' => "Produk {$product->name} stoknya tinggal {$product->stock}, tidak cukup untuk pesanan {$item->quantity}."
+                    'cart' => "Product {$product->name} has only {$product->stock} stock left, which is not enough for the order of {$item->quantity}."
                 ]);
             }
         }
@@ -219,7 +219,7 @@ class CheckoutController extends Controller
         foreach ($cart->items as $item) {
             if ($item->product->max_distance && $distance_km > $item->product->max_distance) {
                 throw ValidationException::withMessages([
-                    'shipping_address' => "Produk {$item->product->name} tidak bisa dikirim (maksimal {$item->product->max_distance} km)"
+                    'shipping_address' => "The product {$item->product->name} cannot be shipped (maximum {$item->product->max_distance} km)"
                 ]);
             }
         }

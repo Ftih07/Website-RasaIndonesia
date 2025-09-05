@@ -111,7 +111,7 @@
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">No Orders Yet</h3>
                     <p class="text-gray-600 mb-6 leading-relaxed">You haven't placed any orders yet. Start exploring our delicious Indonesian cuisine and create your first culinary adventure!</p>
 
-                    <a href="{{ route('products.index') }}" class="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                    <a href="{{ route('tokorestoran') }}" class="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                         <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>

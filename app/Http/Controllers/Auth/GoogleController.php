@@ -35,6 +35,6 @@ class GoogleController extends Controller
 
         Auth::login($user, true);
 
-        return redirect()->route('home')->with('success', 'Login dengan Google berhasil!');
+        return redirect()->route('home')->with('success', 'Login with Google successful!');
     }
 }

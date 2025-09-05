@@ -179,9 +179,9 @@ class BusinessController extends Controller
 
         NotificationHelper::send(
             auth()->id(),
-            'Bisnismu sedang menunggu verifikasi',
-            'Tim kami akan memverifikasi bisnismu dalam waktu dekat.',
-            route('dashboard') // Ganti dengan route seller kamu
+            'Your business is awaiting verification',
+            'Our team will verify your business shortly.',
+            route('dashboard')
         );
 
         return redirect()->route('home')->with('success', 'Business submitted for verification!');

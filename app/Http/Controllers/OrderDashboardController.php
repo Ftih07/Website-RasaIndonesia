@@ -132,7 +132,7 @@ class OrderDashboardController extends Controller
             'orders_status' => 'pending',
         ]);
 
-        return redirect()->route('dashboard.orders')->with('success', 'Pengajuan aktivasi Orders telah dikirim. Menunggu persetujuan admin.');
+        return redirect()->route('dashboard.orders')->with('success', 'Orders activation request has been submitted. Awaiting admin approval.');
     }
 
     public function updateStatus(Request $request, Order $order)
@@ -184,7 +184,7 @@ class OrderDashboardController extends Controller
         );
 
         return redirect()->route('dashboard.orders')
-            ->with('success', 'Status order berhasil diperbarui.');
+            ->with('success', 'Order status updated successfully.');
     }
 
     public function approve(Order $order)
@@ -196,7 +196,7 @@ class OrderDashboardController extends Controller
                     $product = $item->product;
                     if ($product->stock < $item->quantity) {
                         throw ValidationException::withMessages([
-                            'stock' => "Produk {$product->name} stoknya tinggal {$product->stock}, tidak cukup untuk pesanan."
+                            'stock' => "Product {$product->name} has only {$product->stock} stock left, which is not enough for the order."
                         ]);
                     }
                 }
@@ -235,19 +235,19 @@ class OrderDashboardController extends Controller
                     route('orders.index', $order->id)
                 );
 
-                return back()->with('success', 'Pesanan berhasil diterima dan pembayaran dikonfirmasi.');
+                return back()->with('success', 'Order received successfully and payment confirmed.');
             } catch (\Exception $e) {
-                return back()->withErrors(['stripe' => 'Gagal mengkonfirmasi pembayaran: ' . $e->getMessage()]);
+                return back()->withErrors(['stripe' => 'Failed to confirm payment: ' . $e->getMessage()]);
             }
         }
 
-        return back()->withErrors(['order' => 'Pesanan tidak valid untuk disetujui.']);
+        return back()->withErrors(['order' => 'The order is not valid for approval.']);
     }
 
     public function reject(Order $order)
     {
         if ($order->payment->status !== 'pending') {
-            return back()->withErrors(['order' => 'Pesanan tidak valid untuk ditolak.']);
+            return back()->withErrors(['order' => 'The order is not valid for rejection.']);
         }
 
         try {
@@ -261,7 +261,7 @@ class OrderDashboardController extends Controller
             $order->update(['delivery_status' => 'canceled']);
 
             try {
-                \Log::info('DEBUG: Mau kirim notif ke user_id=' . $order->user_id);
+                \Log::info('DEBUG: About to send a notification to user_id=' . $order->user_id);
                 \App\Helpers\NotificationHelper::send(
                     $order->user_id,
                     'Order Cancelled',

@@ -60,7 +60,7 @@ class TestimonialController extends Controller
             url('/business/' . $testimonial->business->slug) // atau route detail testimoni jika ada
         );
 
-        return back()->with('success', 'Balasan berhasil dikirim dan notifikasi telah dikirim ke pengguna.');
+        return back()->with('success', 'Reply sent successfully and notification has been sent to the user.');
     }
 
     public function like(Testimonial $testimonial)
@@ -94,7 +94,7 @@ class TestimonialController extends Controller
             );
         }
 
-        return back()->with('success', 'Terima kasih atas feedbacknya!');
+        return back()->with('success', 'Thank you for your feedback!');
     }
 
     // TestimonialController.php (dashboard namespace atau pindah ke general namespace jika untuk frontend user)

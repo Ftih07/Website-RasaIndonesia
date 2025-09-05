@@ -169,6 +169,14 @@
                                                     </select>
                                                 </li>
 
+                                                <!-- Dropdown for Orders Status -->
+                                                <li class="filter">
+                                                    <select id="orders-status" class="form-select">
+                                                        <option value="all" {{ request('orders_status') == 'all' ? 'selected' : '' }}>All Status</option>
+                                                        <option value="approved" {{ request('orders_status') == 'approved' ? 'selected' : '' }}>Open Order</option>
+                                                    </select>
+                                                </li>
+
                                                 <!-- Search Field -->
                                                 <li class="filter">
                                                     <input type="text" id="search-keyword" class="form-control" placeholder="Search Here" value="{{ request('keyword') }}">
@@ -184,23 +192,15 @@
                                 </div>
                             </div>
 
-                            <!-- Shop and Restaurant List -->
+                            <!-- Shop and Restaurant Listings -->
                             <div class="menu-list-row">
-                                @if($businesses->isEmpty())
-                                <div class="alert alert-warning text-center">
-                                    Data not found
-                                </div>
-                                @else
                                 <div class="row g-xxl-5 bydefault_show" id="menu-dish">
-                                    @foreach($businesses as $business)
+                                    @forelse($businesses as $business)
                                     <div class="col-lg-4 col-sm-6 dish-box-wp all {{ strtolower($business->type->title ?? 'all') }}" data-cat="{{ strtolower($business->type->title ?? 'all') }}">
                                         <div class="dish-box text-center">
                                             <!-- Business Logo -->
                                             <div class="dist-img">
-                                                <img
-                                                    src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}"
-                                                    alt="{{ $business->name_business }}"
-                                                    fetchpriority="high">
+                                                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png') }}" alt="{{ $business->name_business }}" loading="lazy">
                                             </div>
                                             <!-- Business Rating -->
                                             <div class="dish-rating">
@@ -209,9 +209,13 @@
                                             </div>
                                             <!-- Business Title -->
                                             <div class="dish-title">
-                                                <h3 class="h3-title">{{ $business->name }}</h3>
-                                                @if ($business->user_id === null)
-                                                <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
+                                                <h3 class="h3-title">
+                                                    {{ $business->name }}
+                                                </h3>
+                                                @if ($business->orders_status === 'approved')
+                                                <span class="badge bg-success text-light" style="font-size: 0.7rem; margin-left: 5px;">
+                                                    Open Order
+                                                </span>
                                                 @endif
                                                 <!-- Menampilkan Unique Code -->
                                                 <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
@@ -223,17 +227,45 @@
                                             <div class="info-container">
                                                 <div class="info-item">
                                                     <i class="uil uil-location-point"></i>
-                                                    <p>{{ $business->address }}</p>
+                                                    <div>
+                                                        @if($business->address)
+                                                        <p>{{ $business->address }}</p>
+                                                        @if($business->pickupLocations->count() > 0)
+                                                        <small class="text-muted">
+                                                            Pickup locations available at:
+                                                            @foreach($business->pickupLocations as $pickup)
+                                                            {{ $pickup->name }}@if(!$loop->last), @endif
+                                                            @endforeach
+                                                        </small>
+                                                        @endif
+                                                        @elseif($business->pickupLocations->count() > 0)
+                                                        <p>
+                                                            <small class="text-muted">
+                                                                No main address available. Pickup locations available at:
+                                                            </small>
+                                                            @foreach($business->pickupLocations as $pickup)
+                                                            {{ $pickup->name }}@if(!$loop->last), @endif
+                                                            @endforeach
+                                                        </p>
+                                                        @else
+                                                        <p>No address available</p>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="info-item">
                                                     <i class="uil uil-utensils"></i>
                                                     <p>
-                                                        @foreach ($business->food_categories as $category)
+                                                        @forelse ($business->food_categories as $category)
                                                         {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
-                                                        @endforeach
+                                                        @empty
+                                                        <span class="text-muted" style="font-size: 0.85rem;">
+                                                            No categories available
+                                                        </span>
+                                                        @endforelse
                                                     </p>
                                                 </div>
                                             </div>
+
                                             <hr>
                                             <!-- Business Actions -->
                                             <div class="menu-tab text-center">
@@ -246,18 +278,34 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ $business->location }}" target="_blank">
-                                                            <img src="assets/images/toko.png" alt="Filter Toko" class="icon-filter">
+                                                        @if ($business->orders_status === 'approved')
+                                                        <a href="{{ route('business.menu', $business->slug) }}"
+                                                            class="cta-button order-now">
+                                                            <img src="/assets/images/order.png" alt="Order Now" class="icon-filter">
+                                                            Order
+                                                        </a>
+                                                        @else
+                                                        <a href="{{ $business->location }}" target="_blank"
+                                                            class="cta-button maps-link">
+                                                            <img src="/assets/images/toko.png" alt="Filter Store" class="icon-filter">
                                                             Maps
                                                         </a>
+                                                        @endif
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    @endforeach
+                                    @empty
+                                    {{-- Tampilan jika tidak ada data --}}
+                                    <div class="col-12">
+                                        <div class="alert alert-warning text-center py-4">
+                                            <h5 class="mt-3 mb-0">No business found for this filter.</h5>
+                                            <small class="text-muted">Try changing your search filters.</small>
+                                        </div>
+                                    </div>
+                                    @endforelse
                                 </div>
-                                @endif
                             </div>
                         </div>
                     </div>

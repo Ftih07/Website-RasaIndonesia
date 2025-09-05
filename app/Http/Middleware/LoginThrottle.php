@@ -31,7 +31,7 @@ class LoginThrottle
             if (now()->lt($blockUntil)) {
                 $remaining = $blockUntil->diffForHumans(null, true);
                 return back()->withErrors([
-                    'error' => "Terlalu banyak percobaan login. Coba lagi dalam $remaining.",
+                    'error' => "Too many login attempts. Try again in $remaining."
                 ]);
             } else {
                 // Reset blokir dan lanjutkan

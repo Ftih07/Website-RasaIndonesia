@@ -19,7 +19,7 @@ class StickerController extends Controller
         // Ambil data QR code dari relasi
         $qrLink = $business->qrLink;
         if (!$qrLink || !$qrLink->qr_path) {
-            return redirect()->back()->with('error', 'QR Code belum tersedia untuk bisnis ini.');
+            return redirect()->back()->with('error', 'QR Code is not yet available for this business.');
         }
 
         // Tentukan ukuran PDF (300x300 px setara dengan 8x8 cm)

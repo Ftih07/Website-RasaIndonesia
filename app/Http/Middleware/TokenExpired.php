@@ -17,7 +17,7 @@ class TokenExpired
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('testimonial.login')->withErrors(['error' => 'Sesi login telah habis. Silakan login ulang.']);
+            return redirect()->route('testimonial.login')->withErrors(['error' => 'Your login session has expired. Please log in again.']);
         }
 
         return $next($request);

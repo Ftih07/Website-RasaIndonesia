@@ -80,16 +80,15 @@
 </head>
 
 <body class="body-fixed">
-    @if(session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: '{{ session('
-            success ') }}', // ✅ hapus spasi
-            showConfirmButton: false,
-            timer: 2000
-        });
-    </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
     @endif
 
     @include('partials.navbar')
@@ -566,7 +565,7 @@
                                             @if ($business->orders_status === 'approved')
                                             <a href="{{ route('business.menu', $business->slug) }}"
                                                 class="cta-button order-now">
-                                                <img src="/assets/images/toko.png" alt="Order Now" class="icon-filter">
+                                                <img src="/assets/images/order.png" alt="Order Now" class="icon-filter">
                                                 Order
                                             </a>
                                             @else

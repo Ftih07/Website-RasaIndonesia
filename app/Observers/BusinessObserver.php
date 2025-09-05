@@ -47,9 +47,9 @@ class BusinessObserver
             // Kirim notifikasi penghapusan
             NotificationHelper::send(
                 $business->user_id,
-                'Bisnismu telah dihapus',
-                'Bisnis "' . $business->name . '" telah dihapus oleh admin.',
-                route('dashboard') // arahkan ke dashboard seller
+                'Your business has been deleted',
+                'The business "' . $business->name . '" has been deleted by an admin.',
+                route('dashboard') // direct to seller dashboard
             );
         }
     }

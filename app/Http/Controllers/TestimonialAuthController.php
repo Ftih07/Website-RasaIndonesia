@@ -21,7 +21,7 @@ class TestimonialAuthController extends Controller
     {
         $request->validate([
             'username' => 'required|unique:users,email|max:255',
-            'password' => 'required|min:3|confirmed', // Tambahkan konfirmasi password
+            'password' => 'required|min:3|confirmed',
         ]);
 
         $user = User::create([
@@ -57,9 +57,9 @@ class TestimonialAuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             $seconds = LoginThrottle::recordFailedAttempt($request);
 
-            $message = 'Username atau password salah.';
+            $message = 'Incorrect username or password.';
             if ($seconds !== null) {
-                $message .= ' Coba lagi dalam ' . now()->addSeconds($seconds)->diffForHumans(null, true) . '.';
+                $message .= ' Try again in ' . now()->addSeconds($seconds)->diffForHumans(null, true) . '.';
             }
 
             return back()->withErrors(['error' => $message]);
@@ -67,7 +67,7 @@ class TestimonialAuthController extends Controller
 
         // Cek role
         if (!$user->roles()->whereIn('name', ['customer', 'seller'])->exists()) {
-            return back()->withErrors(['error' => 'Anda tidak memiliki akses.']);
+            return back()->withErrors(['error' => 'You do not have access.']);
         }
 
         // Login berhasil, reset percobaan
@@ -76,7 +76,7 @@ class TestimonialAuthController extends Controller
         Auth::login($user, true);
         session(['auth_token_created' => now()]);
 
-        return redirect()->route('home')->with('success', 'Login berhasil!');
+        return redirect()->route('home')->with('success', 'Login successful!');
     }
 
     public function logout(Request $request)

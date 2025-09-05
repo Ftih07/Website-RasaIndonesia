@@ -150,6 +150,12 @@ class HomeController extends Controller
             $query->where('city', $request->city);
         }
 
+        // 🔹 Filter by orders_status
+        if ($request->filled('orders_status') && $request->orders_status !== 'all') {
+            // misalnya approved / not_approved
+            $query->where('orders_status', $request->orders_status);
+        }
+
         // Search by name
         if ($request->filled('keyword')) {
             $query->where('name', 'like', '%' . $request->keyword . '%');

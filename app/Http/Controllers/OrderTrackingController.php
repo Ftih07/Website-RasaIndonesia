@@ -122,7 +122,7 @@ class OrderTrackingController extends Controller
 
         // Cegah review ganda
         if ($order->testimonial) {
-            return back()->with('error', 'Order ini sudah pernah direview.');
+            return back()->with('error', 'This order has already been reviewed.');
         }
 
         $testimonial = Testimonial::create([
@@ -152,6 +152,6 @@ class OrderTrackingController extends Controller
             'description' => "{$request->user()->name} reviewed order #{$order->order_number} with rating {$request->rating}.",
         ]);
 
-        return back()->with('success', 'Terima kasih! Ulasan Anda berhasil dikirim.');
+        return back()->with('success', 'Thank you! Your review has been submitted successfully.');
     }
 }
