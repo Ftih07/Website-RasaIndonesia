@@ -54,16 +54,24 @@ ul {
 .fab {
     color: #ff8243;
 }
-/* ************************** */
-
 .sec-wp {
     position: relative;
     margin-bottom: 50px;
     z-index: 4;
 }
+.content h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    color: #000;
+}
 .profile-dropdown {
     position: relative;
     display: inline-block;
+}
+.content p {
+    font-size: 14px;
+    color: #555;
 }
 h1,
 h2,
@@ -81,13 +89,11 @@ p {
 }
 
 /* ******************** */
-
 .section {
     padding-top: 100px;
     padding-bottom: 100px;
     position: relative;
 }
-
 .sec-sub-title {
     text-transform: uppercase;
     display: inline-block;
@@ -98,6 +104,9 @@ p {
     color: #ff8243;
     font-size: 14px;
 }
+.calendar-events{
+    margin-top: 5em;
+}
 .h2-title {
     font-size: 46px;
     line-height: 56px;
@@ -105,12 +114,10 @@ p {
     text-transform: capitalize;
     position: relative;
 }
-
 .title-news {
     margin-left: 8em;
     margin-right: 8em;
 }
-
 .about_us h2 {
     font-size: 46px;
     line-height: 56px;
@@ -118,15 +125,10 @@ p {
     text-transform: capitalize;
     position: relative;
 }
-
 .h2-title span,
-.h3-title span,
-.h4-title span,
-.h5-title span,
 .sub-title span {
     display: block;
 }
-
 .about-video-img {
     position: relative;
     overflow: hidden;
@@ -182,9 +184,10 @@ p {
     color: #000;
     text-align: left; /* Membuat teks paragraf rata kiri */
 }
-
-/* ****************** */
-
+.info-item b {
+    font-size: 16px;
+    color: #111;
+}
 .book-table {
     margin-top: 20px;
     overflow: hidden;
@@ -279,7 +282,6 @@ p {
 }
 
 /* *************** */
-
 .social-icon {
     margin: 15px 0px 10px;
 }
@@ -434,8 +436,28 @@ p {
     box-shadow: inset 9px 9px 12px #cccccc, inset -9px -9px 12px #ffffff;
     color: #0d0d25;
 }
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #38507d;
+    margin-left: 10px;
+}
+iframe {
+    border: 0;
+    width: 100%;
+    height: 280px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 /* **************** responsiveness ***************** */
+
 @media (min-width: 2100px) {
     .container {
         max-width: 1400px;
@@ -446,6 +468,12 @@ p {
     input {
         font-size: 18px;
         line-height: 32px;
+    }
+}
+@media (max-width: 1399px) {
+    .h2-title {
+        font-size: 38px;
+        line-height: 48px;
     }
 }
 @media (max-width: 1199px) {
@@ -463,6 +491,9 @@ p {
     }
     .book-table {
         overflow: hidden;
+    }
+    .dropdown-menu {
+        left: 0;
     }
     .swiper-button-wp .swiper-button {
         display: none !important;
@@ -656,104 +687,326 @@ p {
     display: flex;
     gap: 15px; /* Menambahkan jarak antar ikon */
 }
-.social-icons a i {
+.social-icons a i{
     color: #000;
 }
 .article-content p {
     font-size: 18px;
     line-height: 1.6;
 }
-.article-content img {
-    display: block; /* supaya treat seperti block element */
-    max-width: 100%; /* jangan lebih lebar dari kontainer */
-    width: 100%; /* biar ngikut lebar kontainer */
-    height: auto; /* biar rasio nggak pecah */
-    object-fit: contain; /* penting supaya nggak ketarik */
-}
 
-/* News */
-.collection {
-    margin-top: -7em;
-    height: 100vh;
+/* Events */
+.container-events {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    border-radius: 8px;
 }
-.collection .content-news {
-    height: 28rem;
-    width: 25rem;
-    background-color: #1b1f2a;
-    border: 0.2rem solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.7rem;
-    border-bottom: 0.4rem solid #ff8243;
-    border-top: 0.4rem solid #ff8243;
-    overflow: hidden;
-    /* padding: .2rem; */
+.event-description {
+    flex: 2;
+    padding-right: 20px;
 }
-.content-news img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom-left-radius: 0.6rem;
-    border-bottom-right-radius: 0.6rem;
-}
-.text-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.sidebar {
+    flex: 2;
+    background: linear-gradient(145deg, #ececec, #ffffff);
+    box-shadow: 28px 28px 45px #d4d4d4, -28px -28px 45px #ffffff;
+    padding: 20px;
+    border-radius: 8px;
     flex-direction: column;
 }
-.text-content h3 {
-    font-size: 1.7rem;
-    font-weight: 900;
-    color: #fff;
-    margin-top: 20px;
+.event-address {
+    max-width: 30ch;
+    word-wrap: break-word;
 }
-.text-content p {
-    margin-top: 10px;
-    max-width: 22rem;
-    font-size: 0.9rem;
-    font-weight: 400;
-    text-align: center;
-    color: #fff;
-    line-height: 1.3; /* Atur sesuai kebutuhan */
+.sidebar p {
+    margin: 5px 0;
 }
-.button-container-news {
-    text-align: center;
-    margin-top: 10px;
+.sidebar p i {
+    margin-right: 5px;
+    color: #ff8243;
 }
-.view-all-button-news {
+.content {
+    margin-right: 50px;
+    flex: 4; /* Lebih kecil */
+}
+.event-tag {
     display: inline-block;
-    padding: 10px 20px;
-    font-size: 14px;
+    background: #ecad00;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
     font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-    background: linear-gradient(90deg, #ff7e5f, #ff8243);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
 }
-.view-all-button-news:hover {
-    background: linear-gradient(90deg, #ff8243, #ff7e5f);
-    transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    color: #fff;
+.contact-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #ddd;
 }
-.swiper-button-wp-news {
+.contact-section h3 {
+    font-size: 25px;
+}
+.contact-section p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #000;
+}
+.contact-section p a {
+    color: #000;
+}
+.contact-section i {
+    color: #000;
+}
+.sidebar a,
+.sidebar p {
     position: relative;
-    margin-top: 60px;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+/* Underline hanya pada teks, tidak termasuk ikon */
+.sidebar a::after,
+.sidebar p::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 0;
+    height: 2px;
+    background-color: #ff8243; /* Warna underline */
+    transition: width 0.3s ease-in-out;
+}
+/* Efek animasi underline mengikuti panjang teks */
+.sidebar a:hover::after,
+.sidebar p:hover::after {
+    width: 100%; /* Menyesuaikan panjang teks */
+}
+/* Supaya ikon tidak ikut underline */
+.sidebar i {
+    margin-right: 8px;
+    display: inline-block;
+}
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .container-events {
+        flex-direction: column-reverse; /* Sidebar muncul duluan */
+    }
+    .container-events-sidebar {
+        margin-bottom: 3em;
+    }
+    .content {
+        margin-right: 0;
+        flex: 1; /* Full width */
+    }
+    .sidebar {
+        flex: 1; /* Full width */
+        margin-top: 20px; /* Beri jarak antara konten dan sidebar */
+    }
+}
+@media screen and (max-width: 768px) {
+    .container-events {
+        flex-direction: column-reverse; /* Sidebar muncul duluan */
+        align-items: center;
+    }
+    .container-events-sidebar {
+        margin-bottom: 3em;
+    }
+    .content {
+        width: 100%;
+    }
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+}
+@media screen and (max-width: 480px) {
+    .sidebar {
+        padding: 10px;
+        font-size: 14px;
+    }
+    .sidebar i {
+        font-size: 16px; /* Perkecil ikon */
+    }
+    .contact-section h3 {
+        font-size: 20px;
+    }
+}
+.container-card-calendar {
+    max-width: 124rem;
+    padding: 0 1rem;
+    margin: 0 auto;
+}
+.text-center {
+    text-align: center;
+}
+.section-heading {
+    font-size: 3rem;
+    color: var(--primary);
+    padding: 2rem 0;
+}
+#tranding {
+    margin-top: -8em;
+    padding: 4rem 0;
+}
+@media (max-width: 1440px) {
+    #tranding {
+        padding: 7rem 0;
+    }
+}
+#tranding .tranding-slider {
+    height: 52rem;
+    padding: 2rem 0;
+    position: relative;
+}
+@media (max-width: 500px) {
+    #tranding .tranding-slider {
+        height: 45rem;
+    }
+}
+.tranding-slide {
+    width: 37rem;
+    height: 42rem;
+    position: relative;
+}
+@media (max-width: 500px) {
+    .tranding-slide {
+        width: 18rem !important;
+        height: 25rem !important;
+    }
+    .tranding-slide .tranding-slide-img img {
+        width: 18rem !important;
+        height: 25rem !important;
+    }
+}
+.tranding-slide .tranding-slide-img img {
+    width: 37rem;
+    height: 42rem;
+    border-radius: 2rem;
+    object-fit: cover;
+}
+.tranding-slide .tranding-slide-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+.tranding-slide-content .food-price {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    color: var(--white);
+    background: #ecad00; /* Warna background bisa disesuaikan */
+    padding: 5px 10px; /* Bikin padding biar kelihatan lebih rapi */
+    border-radius: 5px; /* Biar ada sudut melengkung */
+    font-size: 23px; /* Ukuran font bisa disesuaikan */
+    font-weight: bold;
+    display: inline-block; /* Biar ukurannya menyesuaikan teks */
+}
+.tranding-slide-content .tranding-slide-content-bottom {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    color: var(--white);
+}
+.swiper-slide-shadow-left,
+.swiper-slide-shadow-right {
+    display: none;
+}
+.link-calendar {
+    color: #fff;
+}
+.link-calendar:hover {
+    color: #fff;
+}
+.tranding-slide-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: white;
+    padding: 20px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0)
+    );
+    border-radius: 2rem;
+}
+.desc div {
+    margin-bottom: 5px; /* Sesuaikan jaraknya */
+}
+.location {
+    background: #ff8243;
+    display: inline-flex; /* Agar tetap inline dan bisa pakai gap */
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    gap: 7px; /* Atur jarak antara ikon dan teks */
+}
+.title-calendar {
+    font-size: 35px;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+}
+.title-calendar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: currentColor;
+    transition: width 0.3s ease-in-out;
+}
+.title-calendar:hover::after {
+    width: 100%;
+}
+.time {
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+}
+.time::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: currentColor;
+    transition: width 0.3s ease-in-out;
+}
+.time:hover::after {
+    width: 100%;
+}
+@media (max-width: 500px) {
+    .location {
+        font-size: 12px;
+    }
+    .title-calendar {
+        font-size: 31px;
+    }
+    .time {
+        font-size: 12px;
+    }
+}
+.swiper-button-wp-calendar {
+    position: relative;
+    margin-top: -15px;
     display: flex;
     justify-content: space-between;
     height: 60px;
     align-items: center;
 }
-.swiper-button-wp-news .swiper-button-prev {
+.swiper-button-wp-calendar .swiper-button-prev {
     margin-left: 7em;
 }
-.swiper-button-wp-news .swiper-button-next {
+.swiper-button-wp-calendar .swiper-button-next {
     margin-right: 7em;
-}
-.another-news {
-    margin-top: 5em;
 }

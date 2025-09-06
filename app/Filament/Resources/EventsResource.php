@@ -103,6 +103,13 @@ class EventsResource extends Resource
                                             ->placeholder('Describe your event in detail...')
                                             ->required()
                                             ->columnSpanFull(), // Spans all available columns
+
+                                        Forms\Components\TextInput::make('meta_keywords')
+                                            ->label('Meta Keywords')
+                                            ->placeholder('e.g. festival, food, cultural, Melbourne')
+                                            ->helperText('Comma separated keywords for SEO')
+                                            ->maxLength(255)
+                                            ->columnSpanFull(),
                                     ])
                             ]),
 

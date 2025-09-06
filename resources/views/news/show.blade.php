@@ -38,7 +38,7 @@
     <meta property="twitter:description" content="{{ $description }}">
     <meta property="twitter:image" content="{{ $image }}">
 
-    <title>Taste of Indonesia</title>
+    <title>{{ $title }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
@@ -212,13 +212,13 @@
         </div>
     </section>
 
-    <!-- Contact Want to add your business  -->
+    <!-- Contact Customer Service -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
 
-        <section class="newsletter-sec section pt-0">
+        <section class="newsletter-sec section pt-0" id="contact">
             <div class="sec-wp">
-                <div class="container">
+                <div class="container-calendar">
                     <div class="row">
                         <div class="col-lg-8 m-auto">
                             <div class="newsletter-box text-center back-img white-text"
@@ -226,16 +226,23 @@
                                 <div class="bg-overlay dark-overlay"></div>
                                 <div class="sec-wp">
                                     <div class="newsletter-box-text">
-                                        <h2 class="h2-title">Want to add your business?</h2>
-                                        <p>Please contact us and tell us details about your business.</p>
+                                        <h2 class="h2-title">Contact Customer Service</h2>
+                                        <p>If you have any questions or need assistance,
+                                            please reach out to our customer service team.</p>
                                     </div>
                                     <div class="contact-icons">
-                                        <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
-                                        <a href="mailto:your-email@example.com"><i class="uil uil-envelope"></i></a>
-                                        <a href="https://instagram.com/your-profile" target="_blank"><i class="uil uil-instagram"></i></a>
-                                        <a href="https://facebook.com/your-profile" target="_blank"><i class="uil uil-facebook"></i></a>
-                                        <a href="tel:+1234567890"><i class="uil uil-phone"></i></a>
-                                        <a href="https://t.me/your-profile" target="_blank"><i class="uil uil-telegram"></i></a>
+                                        <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
+                                            <i class="uil uil-facebook-f"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
+                                            <i class="uil uil-instagram"></i>
+                                        </a>
+                                        <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
+                                            <i class="uil uil-youtube"></i>
+                                        </a>
+                                        <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

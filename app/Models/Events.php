@@ -39,6 +39,7 @@ class Events extends Model
         'type_events',       // The type or category of the event (e.g., concert, workshop).
         'image_events',      // Path or URL to the event's promotional image.
         'desc',              // A detailed description of the event.
+        'meta_keywords',     // 
         'contact_organizer', // Contact information for the event organizer.
         'iframe',            // URL for an embedded iframe (e.g., Google Maps, video).
         'start_time',        // The official start date and time of the event.
