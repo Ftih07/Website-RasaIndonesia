@@ -8,6 +8,7 @@ use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\NotificationHelper; // tambahkan di atas
+use Illuminate\Support\Facades\DB;
 
 class BusinessController extends Controller
 {
@@ -28,7 +29,6 @@ class BusinessController extends Controller
         $types = Type::all();
         $typeFilter = $request->get('type', 'all');
 
-        // Retrieve 3 other businesses of the same type (if filtered), and not the one currently displayed
         $otherBusinesses = Business::with('type')
             ->when($typeFilter !== 'all', function ($query) use ($typeFilter) {
                 if ($typeFilter === 'null') {
@@ -41,7 +41,10 @@ class BusinessController extends Controller
             })
             ->where('id', '!=', $business->id)
             ->whereNotNull('slug')
-            ->inRandomOrder()
+            // Prioritaskan orders_status 'approved' (open order)
+            ->orderByRaw("CASE WHEN orders_status = 'approved' THEN 0 ELSE 1 END")
+            // Acak dalam tiap grup status supaya tidak monoton
+            ->orderBy(DB::raw('RAND()'))
             ->take(3)
             ->get();
 

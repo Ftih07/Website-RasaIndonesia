@@ -176,6 +176,19 @@ ul {
     border: none; /* Menghilangkan border */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow hanya di bawah */
 }
+.average-rating {
+    width: 100%;
+    max-width: 420px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin: 0 auto 20px auto;
+}
+.average-rating h4 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
 h1,
 h2,
 h3,
@@ -971,6 +984,8 @@ p {
     width: 500px;
     height: 500px;
     border-radius: 999px;
+    object-fit: cover; /* ✅ Tambahkan ini */
+    aspect-ratio: 1 / 1;
 }
 .sec-img p {
     font-size: 2.5em; /* Sesuaikan ukuran font */

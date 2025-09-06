@@ -442,149 +442,13 @@
         </div>
     </div>
 
-    <!-- Order and Reserve -->
-    <section class="body-order">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="sec-title text-center mb-5">
-                        <p class="sec-sub-title mb-3">{{ $business->name }}</p>
-                        <div class="about_us">
-                            <h2>Delivery and</h2>
-                            <h2>
-                                Reservation Services
-                            </h2>
-                        </div>
-                        <div class="sec-title-shape mb-4">
-                            <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-order-reserve">
-            <div class="order-reserve-wrapper">
-                <!-- ORDER SECTION -->
-                <div class="feature-card order-card">
-                    <div class="feature-header">
-                        <div class="icon-container-order-reserve">
-                            <i class="bi bi-bag-check"></i>
-                        </div>
-                        <h3>Order Your Food</h3>
-                    </div>
-
-                    @if (!empty($business->order))
-                    <!-- Order platforms available -->
-                    <div class="content-wrapper">
-                        <div class="card-body">
-                            @if (is_array($business->order) && count($business->order))
-                            <div class="platforms-grid">
-                                @foreach ($business->order as $item)
-                                <a href="{{ $item['link'] ?? '#' }}" target="_blank" class="platform-item">
-                                    <div class="platform-icon">
-                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
-                                    </div>
-                                    <div class="platform-info">
-                                        <h6>
-                                            {{ $item['platform'] ?? 'Not Available' }}
-                                            @if(!empty($item['name']))
-                                            - {{ $item['name'] }}
-                                            @endif
-                                        </h6>
-                                        <span class="platform-label">Order Now</span>
-                                    </div>
-                                </a>
-                                @endforeach
-                            </div>
-                            @else
-                            <div class="empty-state">
-                                <i class="bi bi-bag-x"></i>
-                                <p>No order options available</p>
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-                    @else
-                    <!-- Order not available -->
-                    <div class="content-wrapper">
-                        <div class="empty-state">
-                            <i class="bi bi-bag-dash"></i>
-                            <p>Online ordering not available</p>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-
-                <!-- DIVIDER -->
-                <div class="section-divider">
-                    <div class="divider-line"></div>
-                    <div class="divider-circle">
-                        <span>OR</span>
-                    </div>
-                    <div class="divider-line"></div>
-                </div>
-
-                <!-- RESERVE SECTION -->
-                <div class="feature-card reserve-card">
-                    <div class="feature-header">
-                        <div class="icon-container-order-reserve">
-                            <i class="bi bi-calendar-check"></i>
-                        </div>
-                        <h3>Make a Reservation</h3>
-                    </div>
-
-                    @if (!empty($business->reserve))
-                    <!-- Reserve platforms available -->
-                    <div class="content-wrapper">
-                        <div class="card-body">
-                            @if (is_array($business->reserve) && count($business->reserve))
-                            <div class="platforms-grid">
-                                @foreach ($business->reserve as $item)
-                                <a href="{{ $item['link'] ?? '#' }}" target="_blank" class="platform-item">
-                                    <div class="platform-icon">
-                                        <img src="{{ asset('images/platforms/' . strtolower($item['platform']) . '.png') }}" alt="{{ $item['platform'] ?? 'Unknown' }}">
-                                    </div>
-                                    <div class="platform-info">
-                                        <h6>
-                                            {{ $item['platform'] ?? 'Not Available' }}
-                                            @if(!empty($item['name']))
-                                            - {{ $item['name'] }}
-                                            @endif
-                                        </h6>
-                                        <span class="platform-label">Reserve Now</span>
-                                    </div>
-                                </a>
-                                @endforeach
-                            </div>
-                            @else
-                            <div class="empty-state">
-                                <i class="bi bi-bag-x"></i>
-                                <p>No reservation options available</p>
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-                    @else
-                    <!-- Reserve not available -->
-                    <div class="content-wrapper">
-                        <div class="empty-state">
-                            <i class="bi bi-bag-dash"></i>
-                            <p>Online reservations not available</p>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Want to add your business  -->
+    <!-- Contact Customer Service -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
 
-        <section class="newsletter-sec section pt-0">
+        <section class="newsletter-sec section pt-0" id="contact">
             <div class="sec-wp">
-                <div class="container">
+                <div class="container-calendar">
                     <div class="row">
                         <div class="col-lg-8 m-auto">
                             <div class="newsletter-box text-center back-img white-text"
@@ -592,16 +456,23 @@
                                 <div class="bg-overlay dark-overlay"></div>
                                 <div class="sec-wp">
                                     <div class="newsletter-box-text">
-                                        <h2 class="h2-title">Want to add your business?</h2>
-                                        <p>Please contact us and tell us details about your business.</p>
+                                        <h2 class="h2-title">Contact Customer Service</h2>
+                                        <p>If you have any questions or need assistance,
+                                            please reach out to our customer service team.</p>
                                     </div>
                                     <div class="contact-icons">
-                                        <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
-                                        <a href="mailto:your-email@example.com"><i class="uil uil-envelope"></i></a>
-                                        <a href="https://instagram.com/your-profile" target="_blank"><i class="uil uil-instagram"></i></a>
-                                        <a href="https://facebook.com/your-profile" target="_blank"><i class="uil uil-facebook"></i></a>
-                                        <a href="tel:+1234567890"><i class="uil uil-phone"></i></a>
-                                        <a href="https://t.me/your-profile" target="_blank"><i class="uil uil-telegram"></i></a>
+                                        <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
+                                            <i class="uil uil-facebook-f"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
+                                            <i class="uil uil-instagram"></i>
+                                        </a>
+                                        <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
+                                            <i class="uil uil-youtube"></i>
+                                        </a>
+                                        <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

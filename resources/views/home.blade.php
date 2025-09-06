@@ -493,13 +493,35 @@
                                 </div>
                                 <!-- Business Title -->
                                 <div class="dish-title">
-                                    <h3 class="h3-title">
+                                    <h3 class="h3-title d-inline-block">
                                         {{ $business->name }}
                                     </h3>
+                                    <br>
+
+                                    {{-- Status buka/tutup toko --}}
+                                    @if ($business->is_open)
+                                        <span class="badge bg-primary text-light ms-2" style="font-size: 0.7rem;">
+                                            Open Now
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary text-light ms-2" style="font-size: 0.7rem;">
+                                            Closed Now
+                                        </span>
+                                    @endif
+
+                                    {{-- Status order di platform --}}
                                     @if ($business->orders_status === 'approved')
-                                    <span class="badge bg-success text-light" style="font-size: 0.7rem; margin-left: 5px;">
-                                        Open Order
-                                    </span>
+                                        <span class="badge bg-success text-light ms-2" style="font-size: 0.7rem;">
+                                            Order Available
+                                        </span>
+                                    @elseif ($business->orders_status === 'pending')
+                                        <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;">
+                                            Order Pending
+                                        </span>
+                                    @else
+                                        <span class="badge bg-dark text-light ms-2" style="font-size: 0.7rem;">
+                                            Not Accepting Orders
+                                        </span>
                                     @endif
                                     <!-- Menampilkan Unique Code -->
                                     <a href="{{ asset('storage/' . $business->document) }}" target="_blank">

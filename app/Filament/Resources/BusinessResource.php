@@ -313,6 +313,7 @@ class BusinessResource extends Resource
                                             ->options([ // Predefined options for services.
                                                 'Dine In' => 'Dine In',
                                                 'Delivery' => 'Delivery',
+                                                'Pickup' => 'Pickup',
                                             ])
                                             ->columns(2), // Arranges checkboxes in two columns.
                                     ]),

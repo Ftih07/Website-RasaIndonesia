@@ -55,10 +55,32 @@
                     <div class="sec-text-hero">
                         <h2>{{ $business->name }}</h2>
 
-                        @if($business->user_id === null)
-                        <span class="badge bg-warning text-dark">Belum diklaim</span>
-                        <p class="text-muted">Bisnis ini belum memiliki pengelola di sistem kami.</p>
+                        {{-- Status Order --}}
+                        @if ($business->orders_status === 'approved')
+                        <span class="badge bg-success text-light" style="font-size: 0.7rem;">
+                            Open for Orders on this platform
+                        </span>
+                        @elseif ($business->orders_status === 'pending')
+                        <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">
+                            Orders Pending Approval
+                        </span>
                         @else
+                        <span class="badge bg-secondary text-light" style="font-size: 0.7rem;">
+                            Not accepting orders on this platform
+                        </span>
+                        @endif
+
+                        {{-- Status Open/Close --}}
+                        @if ($business->is_open)
+                        <span class="badge bg-primary text-light" style="font-size: 0.7rem; margin-top: 5px; margin-bottom: 10px;">
+                            Business is Open Now
+                        </span>
+                        @else
+                        <span class="badge bg-secondary text-light" style="font-size: 0.7rem; margin-top: 5px; margin-bottom: 10px;">
+                            Business is Closed
+                        </span>
+                        @endif
+
                         <h3>
                             {{ $business->type->title ?? 'N/A' }} -
                             @foreach ($business->food_categories as $category)
@@ -67,7 +89,6 @@
                         </h3>
                         <p>Updated On: {{ \Carbon\Carbon::parse($business->updated_at)->format('D F d, Y \a\t gA') }}</p>
                         <p>{{ $business->description }}</p>
-                        @endif
                     </div>
 
 
@@ -78,12 +99,68 @@
                             </div>
                             <div class="content">
                                 <h2>Address</h2>
+
+                                @if($business->address)
+                                {{-- Ada alamat utama --}}
                                 <p>{{ $business->address }}</p>
+
+                                @if($business->pickupLocations->count() > 0)
+                                <small class="text-muted">
+                                    Pickup locations available at:
+                                    @foreach($business->pickupLocations as $pickup)
+                                    {{ $pickup->name }}@if(!$loop->last), @endif
+                                    @endforeach
+                                </small>
+                                @endif
+
+                                @elseif($business->pickupLocations->count() > 0)
+                                {{-- Tidak ada alamat utama, tapi ada pickup location --}}
+                                <p>
+                                    <small class="text-muted">
+                                        No main address available. Pickup locations available at:
+                                    </small>
+                                    @foreach($business->pickupLocations as $pickup)
+                                    {{ $pickup->name }}@if(!$loop->last), @endif
+                                    @endforeach
+                                </p>
+
+                                @else
+                                {{-- Tidak ada apa-apa --}}
+                                <p>No address available</p>
+                                @endif
                             </div>
                         </div>
+
+                        {{-- Iframe hanya tampil jika ada alamat utama / iframe_url --}}
+                        @if($business->iframe_url)
                         <div class="large-box">
                             <iframe src="{{ $business->iframe_url }}" allowfullscreen="" loading="lazy"></iframe>
                         </div>
+                        @else
+                        <div class="average-rating text-center p-4">
+                            {{-- Rating average --}}
+                            <h4 class="mb-2">Average Rating</h4>
+                            <div class="rating d-inline-block">
+                                @php
+                                $rating = $business->average_rating; // ini sudah dari accessor
+                                @endphp
+
+                                {{-- Tampilkan bintang --}}
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if($i <=floor($rating))
+                                    <i class="fas fa-star text-warning"></i>
+                                    @elseif($i - $rating < 1 && $rating - floor($rating)>= 0.5)
+                                        {{-- contoh setengah bintang jika perlu --}}
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                        @else
+                                        <i class="far fa-star text-warning"></i>
+                                        @endif
+                                        @endfor
+
+                                        <span class="ms-2">{{ number_format($rating, 1) }}/5.0</span>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                 </div>
@@ -126,16 +203,22 @@
                 <div class="book-table-info">
                     <div class="row align-items-center">
 
-                        <!-- Open Hours -->
                         <div class="col-lg-4">
-                            <div class="table-title text-center">
+                            <div class="open-hours-card p-4 rounded shadow-sm">
+                                <h4 class="mb-3 text-center">Opening Hours</h4>
                                 @if(!empty($business->open_hours))
-                                @foreach($business->open_hours as $day => $hours)
-                                <h3>{{ ucfirst($day) }}</h3>
-                                <p>{{ $hours }}</p>
-                                @endforeach
+                                <table class="table table-borderless mb-0">
+                                    <tbody>
+                                        @foreach($business->open_hours as $day => $hours)
+                                        <tr>
+                                            <td class="fw-bold">{{ ucfirst($day) }}</td>
+                                            <td class="text-end">{{ $hours }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                                 @else
-                                <p>Open hours are not available.</p>
+                                <p class="text-center mb-0">Open hours are not available.</p>
                                 @endif
                             </div>
                         </div>
@@ -246,11 +329,15 @@
                     </div>
                 </div>
 
+                @if(!empty($business->menu))
                 <div class="catalogue-list">
-                    <a href="{{ asset('storage/' . $business->menu) }}" target="_blank" class="catalogue-link">
+                    <a href="{{ asset('storage/' . $business->menu) }}"
+                        target="_blank"
+                        class="catalogue-link">
                         <ion-icon name="document-outline"></ion-icon> Catalogue List
                     </a>
                 </div>
+                @endif
 
                 @php
                 $allCategories = collect();
@@ -352,10 +439,8 @@
                     <div class="sec-title text-center mb-5">
                         <p class="sec-sub-title mb-3">{{ $business->name }}</p>
                         <div class="about_us">
-                            <h2>Delivery and</h2>
-                            <h2>
-                                Reservation Services
-                            </h2>
+                            <h2>Delivery & Reservation</h2>
+                            <h2>on Other Platforms</h2>
                         </div>
                         <div class="sec-title-shape mb-4">
                             <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
@@ -373,7 +458,7 @@
                         <div class="icon-container-order-reserve">
                             <i class="bi bi-bag-check"></i>
                         </div>
-                        <h3>Order Your Food</h3>
+                        <h3>Order from Other Platforms</h3>
                     </div>
 
                     @if (!empty($business->order))
@@ -433,7 +518,7 @@
                         <div class="icon-container-order-reserve">
                             <i class="bi bi-calendar-check"></i>
                         </div>
-                        <h3>Make a Reservation</h3>
+                        <h3>Reserve via Third-Party Apps</h3>
                     </div>
 
                     @if (!empty($business->reserve))
@@ -534,12 +619,12 @@
         </div>
     </section>
 
-    <!-- Gallery - -->
+    @if($business->galleries && $business->galleries->count() > 0)
+    <!-- Gallery Section -->
     <section class="book-table section bg-light" id="gallery">
         <div class="book-table-shape">
             <img src="assets/images/table-leaves-shape.png" alt="">
         </div>
-
         <div class="book-table-shape book-table-shape2">
             <img src="assets/images/table-leaves-shape.png" alt="">
         </div>
@@ -552,9 +637,7 @@
                             <p class="sec-sub-title mb-3">{{ $business->name }}</p>
                             <div class="about_us">
                                 <h2>Here is the</h2>
-                                <h2>
-                                    Gallery of <span class="rasa-text"> {{ $business->name }}</span>
-                                </h2>
+                                <h2>Gallery of <span class="rasa-text">{{ $business->name }}</span></h2>
                             </div>
                             <div class="sec-title-shape mb-4">
                                 <img src="{{ asset('assets/images/title-shape.svg') }}" alt="">
@@ -568,20 +651,14 @@
                         <div class="book-table-img-slider" id="icon">
                             <div class="swiper-wrapper">
                                 @foreach($business->galleries as $gallery)
-
                                 <a href="{{ asset('storage/' . $gallery->image) }}" data-fancybox="table-slider"
                                     class="book-table-img back-img swiper-slide"
                                     style="background-image: url({{ asset('storage/' . $gallery->image) }})"></a>
                                 @endforeach
-
                             </div>
                             <div class="swiper-button-wp">
-                                <div class="swiper-button-prev swiper-button">
-                                    <i class="uil uil-angle-left"></i>
-                                </div>
-                                <div class="swiper-button-next swiper-button">
-                                    <i class="uil uil-angle-right"></i>
-                                </div>
+                                <div class="swiper-button-prev swiper-button"><i class="uil uil-angle-left"></i></div>
+                                <div class="swiper-button-next swiper-button"><i class="uil uil-angle-right"></i></div>
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
@@ -589,8 +666,8 @@
                 </div>
             </div>
         </div>
-
     </section>
+    @endif
 
     <!-- Testimonial -->
     <section class="testimonials section bg-light">
@@ -1014,25 +1091,86 @@
                                 </div>
                                 <div class="dish-title">
                                     <h3 class="h3-title">{{ $otherBusiness->name }}</h3>
-                                    @if ($business->user_id === null)
-                                    <span class="badge bg-warning text-dark" style="font-size: 0.7rem; margin-left: 5px;">Belum diklaim</span>
+                                    {{-- Status buka/tutup toko --}}
+                                    @if ($otherBusiness->is_open)
+                                        <span class="badge bg-primary text-light ms-2" style="font-size: 0.7rem;">
+                                            Open Now
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary text-light ms-2" style="font-size: 0.7rem;">
+                                            Closed Now
+                                        </span>
                                     @endif
+                                    
+                                    {{-- Status order di platform --}}
+                                    @if ($otherBusiness->orders_status === 'approved')
+                                    <span class="badge bg-success text-light ms-2" style="font-size: 0.7rem;">
+                                        Order Available
+                                    </span>
+                                    @elseif ($otherBusiness->orders_status === 'pending')
+                                    <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;">
+                                        Order Pending
+                                    </span>
+                                    @else
+                                    <span class="badge bg-dark text-light ms-2" style="font-size: 0.7rem;">
+                                        Not Accepting Orders
+                                    </span>
+                                    @endif
+
+                                    <!-- Unique Code (opsional kalau ada dokumen) -->
+                                    @if($otherBusiness->document)
+                                    <a href="{{ asset('storage/' . $otherBusiness->document) }}" target="_blank" class="">
+                                        <p style="font-weight: bold;">{{ $otherBusiness->unique_code ?? '' }}</p>
+                                    </a>
+                                    @endif
+
                                     <p>{{ $otherBusiness->type->title ?? 'N/A' }}</p>
                                 </div>
+
+                                <!-- Business Info -->
                                 <div class="info-container">
                                     <div class="info-item">
                                         <i class="uil uil-location-point"></i>
-                                        <p>{{ $otherBusiness->address }}</p>
+                                        <div>
+                                            @if($otherBusiness->address)
+                                            <p>{{ $otherBusiness->address }}</p>
+                                            @if($otherBusiness->pickupLocations->count() > 0)
+                                            <small class="text-muted">
+                                                Pickup locations available at:
+                                                @foreach($otherBusiness->pickupLocations as $pickup)
+                                                {{ $pickup->name }}@if(!$loop->last), @endif
+                                                @endforeach
+                                            </small>
+                                            @endif
+                                            @elseif($otherBusiness->pickupLocations->count() > 0)
+                                            <p>
+                                                <small class="text-muted">
+                                                    No main address available. Pickup locations available at:
+                                                </small>
+                                                @foreach($otherBusiness->pickupLocations as $pickup)
+                                                {{ $pickup->name }}@if(!$loop->last), @endif
+                                                @endforeach
+                                            </p>
+                                            @else
+                                            <p>No address available</p>
+                                            @endif
+                                        </div>
                                     </div>
+
                                     <div class="info-item">
                                         <i class="uil uil-utensils"></i>
                                         <p>
-                                            @foreach ($otherBusiness->food_categories as $category)
+                                            @forelse ($otherBusiness->food_categories as $category)
                                             {{ $category->title }}{{ !$loop->last ? ', ' : '' }}
-                                            @endforeach
+                                            @empty
+                                            <span class="text-muted" style="font-size: 0.85rem;">
+                                                No categories available
+                                            </span>
+                                            @endforelse
                                         </p>
                                     </div>
                                 </div>
+
                                 <hr>
                                 <div class="menu-tab text-center">
                                     <ul>
@@ -1062,13 +1200,13 @@
         </div>
     </section>
 
-    <!-- Contact Want to add your business  -->
+    <!-- Contact Customer Service -->
     <div class="bg-pattern bg-light repeat-img"
         style="background-image: url(assets/images/blog-pattern-bg.png);">
 
-        <section class="newsletter-sec section pt-0">
+        <section class="newsletter-sec section pt-0" id="contact">
             <div class="sec-wp">
-                <div class="container">
+                <div class="container-calendar">
                     <div class="row">
                         <div class="col-lg-8 m-auto">
                             <div class="newsletter-box text-center back-img white-text"
@@ -1076,16 +1214,23 @@
                                 <div class="bg-overlay dark-overlay"></div>
                                 <div class="sec-wp">
                                     <div class="newsletter-box-text">
-                                        <h2 class="h2-title">Want to add your business?</h2>
-                                        <p>Please contact us and tell us details about your business.</p>
+                                        <h2 class="h2-title">Contact Customer Service</h2>
+                                        <p>If you have any questions or need assistance,
+                                            please reach out to our customer service team.</p>
                                     </div>
                                     <div class="contact-icons">
-                                        <a href="https://wa.me/your-number" target="_blank"><i class="uil uil-whatsapp"></i></a>
-                                        <a href="mailto:your-email@example.com"><i class="uil uil-envelope"></i></a>
-                                        <a href="https://instagram.com/your-profile" target="_blank"><i class="uil uil-instagram"></i></a>
-                                        <a href="https://facebook.com/your-profile" target="_blank"><i class="uil uil-facebook"></i></a>
-                                        <a href="tel:+1234567890"><i class="uil uil-phone"></i></a>
-                                        <a href="https://t.me/your-profile" target="_blank"><i class="uil uil-telegram"></i></a>
+                                        <a href="https://web.facebook.com/TradeAttache?_rdc=1&_rdr#" target="_blank">
+                                            <i class="uil uil-facebook-f"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/atdag_canberra/" target="_blank">
+                                            <i class="uil uil-instagram"></i>
+                                        </a>
+                                        <a href="https://www.youtube.com/@atdag_canberra" target="_blank">
+                                            <i class="uil uil-youtube"></i>
+                                        </a>
+                                        <a href="https://www.tiktok.com/@atdag_canberra" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
