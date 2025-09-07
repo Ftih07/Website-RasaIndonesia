@@ -37,11 +37,54 @@ class CheckoutController extends Controller
             ];
         });
 
+        // 🔹 Hitung total berat, volume, volumetric
+        $totalWeight = 0; // kg
+        $totalVolume = 0; // cm³
+        $totalWeightVolumetric = 0; // kg
+
+        foreach ($cart->items as $item) {
+            $product = $item->product;
+
+            // konversi gram ke kg
+            $weightKg = ($product->weight ?? 0) / 1000;
+
+            // volume cm³
+            $volumeCm3 = $product->volume ?? ($product->length * $product->width * $product->height);
+
+            // berat volumetrik (kg)
+            $weightVolumetricKg = $volumeCm3 / 6000;
+
+            $totalWeight += $weightKg * $item->quantity;
+            $totalVolume += $volumeCm3 * $item->quantity;
+            $totalWeightVolumetric += $weightVolumetricKg * $item->quantity;
+        }
+
+        // chargeable weight
+        $chargeableWeight = max($totalWeight, $totalWeightVolumetric);
+
+        // tarif per kg dari bisnis
+        $business = $cart->business;
+        $pricePerKg = $business->price_per_kg ?? 0;
+
+        // ongkir berdasarkan berat
+        $shippingCost = $pricePerKg * $chargeableWeight;
+
+        // total price (subtotal + shipping cost)
+        $subtotal = $cart->items->sum('total_price');
+        $totalPrice = $subtotal + $shippingCost;
+
         return view('checkout', [
             'cart' => $cart,
             'user' => Auth::user(),
-            'business' => $cart->business, // ✅ tambahin ini
+            'business' => $business,
             'maxDistances' => $maxDistances,
+
+            // lempar variabel tambahan ke view
+            'totalWeight' => $totalWeight,
+            'totalVolume' => $totalVolume,
+            'chargeableWeight' => $chargeableWeight,
+            'shippingCost' => $shippingCost,
+            'totalPrice' => $totalPrice,
         ]);
     }
 
@@ -224,10 +267,46 @@ class CheckoutController extends Controller
             }
         }
 
+        $totalWeightActual = 0;
+        $totalVolume = 0;
+        $totalWeightVolumetric = 0;
+
+        foreach ($cart->items as $item) {
+            $product = $item->product;
+
+            $weightKg = ($product->weight ?? 0) / 1000; // per unit
+            $volumeCm3 = $product->volume ?? ($product->length * $product->width * $product->height);
+            $weightVolumetricKg = $volumeCm3 / 6000; // per unit
+
+            // total untuk order
+            $totalWeightActual += $weightKg * $item->quantity;
+            $totalVolume += $volumeCm3 * $item->quantity;
+            $totalWeightVolumetric += $weightVolumetricKg * $item->quantity;
+
+            // simpan per item (sudah dikali quantity)
+            $item->calculated_weightKg = $weightKg * $item->quantity;
+            $item->calculated_volumeCm3 = $volumeCm3 * $item->quantity;
+            $item->calculated_weightVolumetricKg = $weightVolumetricKg * $item->quantity;
+        }
+
+        // 1️⃣ Hitung chargeable weight
+        $chargeableWeight = max($totalWeightActual, $totalWeightVolumetric);
+
+        // 2️⃣ Ambil tarif per kg bisnis
+        $business = \App\Models\Business::findOrFail($request->business_id);
+        $pricePerKg = $business->price_per_kg ?? 0;
+
+        // 3️⃣ Hitung shipping cost (ongkir berdasar berat)
+        $shipping_cost = $pricePerKg * $chargeableWeight;
+
+        // 5️⃣ Biaya administrasi platform (misalnya 1 AUD)
+        $order_fee = 1;
+
+        // 6️⃣ Hitung subtotal & total
         $subtotal = $cart->items->sum('total_price');
         $tax = 0;
-        $order_fee = 1;
-        $total = $subtotal + $tax + $delivery_fee + $order_fee;
+
+        $total = $subtotal + $tax + $delivery_fee + $shipping_cost + $order_fee;
 
         // ===== Tambahan: Hitung total yang sudah include Stripe fee =====
         $targetNet = $total; // yang kamu mau bersih
@@ -274,6 +353,7 @@ class CheckoutController extends Controller
             'subtotal'           => $subtotal,
             'tax'                => $tax,
             'delivery_fee'       => $delivery_fee,
+            'shipping_cost'      => $shipping_cost, // 🔹 kolom baru di tabel orders
             'order_fee'          => $order_fee,
             'total_price'        => $total,
             'gross_price'        => $grossAmount,
@@ -283,6 +363,12 @@ class CheckoutController extends Controller
             'delivery_note'      => $request->delivery_note,
             'delivery_option'    => $request->delivery_option,
             'delivery_status'    => 'waiting',
+
+            // tambahan berat/volume
+            'total_weight_actual'     => $totalWeightActual,
+            'total_volume'            => $totalVolume,
+            'total_weight_volumetric' => $totalWeightVolumetric,
+            'chargeable_weight'       => $chargeableWeight,
         ]);
 
         foreach ($cart->items as $item) {
@@ -295,6 +381,11 @@ class CheckoutController extends Controller
                 'note' => $item->note,
                 'preference_if_unavailable' => $item->preference_if_unavailable,
                 'options' => $item->options,
+
+                // Tambahan — pakai yang sudah dikali quantity
+                'weight_actual'     => $item->calculated_weightKg,
+                'volume'            => $item->calculated_volumeCm3,
+                'weight_volumetric' => $item->calculated_weightVolumetricKg,
             ]);
         }
 

@@ -195,14 +195,37 @@
                     </div>
                 </div>
 
+                {{-- delivery note --}}
                 @if($order->delivery_note)
-                <div>
+                <div class="mb-3">
                     <label class="fw-semibold text-gray-700 mb-2">Delivery Note:</label>
                     <div class="bg-yellow-50 p-3 rounded-xl border-l-4 border-yellow-400">
                         <p class="text-gray-800 mb-0">{{ $order->delivery_note }}</p>
                     </div>
                 </div>
                 @endif
+
+                {{-- data berat & volume --}}
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-semibold text-gray-700 mb-2">Total Weight:</label>
+                        <div class="bg-gray-50 p-3 rounded-xl">
+                            {{ $order->total_weight_actual !== null ? number_format($order->total_weight_actual, 2) . ' gr' : '-' }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-semibold text-gray-700 mb-2">Total Volume:</label>
+                        <div class="bg-gray-50 p-3 rounded-xl">
+                            {{ $order->total_volume !== null ? number_format($order->total_volume, 0) . ' cm³' : '-' }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-semibold text-gray-700 mb-2">Weight Volumetric:</label>
+                        <div class="bg-gray-50 p-3 rounded-xl">
+                            {{ $order->total_weight_volumetric !== null ? number_format($order->total_weight_volumetric, 2) . ' gr' : '-' }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -231,6 +254,12 @@
                             <i class="fas fa-percentage text-orange-500 me-2"></i>Tax
                         </td>
                         <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->tax, 2) }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="px-4 py-3 fw-semibold text-gray-700">
+                            <i class="fas fa-box-open text-orange-500 me-2"></i>Shipping Cost
+                        </td>
+                        <td class="px-4 py-3 text-end fw-bold">A${{ number_format($order->shipping_cost, 2) }}</td>
                     </tr>
                     <tr class="border-bottom">
                         <td class="px-4 py-3 fw-semibold text-gray-700">
@@ -340,6 +369,30 @@
                         <div class="col-md-2 text-end">
                             <div class="fw-bold text-orange-600 fs-5">A${{ number_format($item->total_price, 2) }}</div>
                             <small class="text-gray-500">Total</small>
+                        </div>
+
+                        {{-- Tambahan weight + volume --}}
+                        <div class="col-12 mt-2">
+                            <div class="bg-gray-50 p-2 rounded-lg d-flex justify-content-between flex-wrap">
+                                @php
+                                $unitWeight = $item->product->weight ?? 0;
+                                $unitVolume = $item->product->volume ?? 0;
+                                $totalWeight = $unitWeight * $item->quantity;
+                                $totalVolume = $unitVolume * $item->quantity;
+                                @endphp
+                                <small class="text-gray-700">
+                                    <strong>Weight per unit:</strong> {{ $unitWeight > 0 ? number_format($unitWeight, 2).' gr' : '-' }}
+                                </small>
+                                <small class="text-gray-700">
+                                    <strong>Volume per unit:</strong> {{ $unitVolume > 0 ? number_format($unitVolume, 0).' cm³' : '-' }}
+                                </small>
+                                <small class="text-gray-700">
+                                    <strong>Total weight ({{ $item->quantity }}x):</strong> {{ $totalWeight > 0 ? number_format($totalWeight, 2).' gr' : '-' }}
+                                </small>
+                                <small class="text-gray-700">
+                                    <strong>Total volume ({{ $item->quantity }}x):</strong> {{ $totalVolume > 0 ? number_format($totalVolume, 0).' cm³' : '-' }}
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>

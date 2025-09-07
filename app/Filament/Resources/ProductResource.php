@@ -67,6 +67,26 @@ class ProductResource extends Resource
                     ->numeric()
                     ->prefix('$'),
 
+                Forms\Components\TextInput::make('weight')
+                    ->numeric()
+                    ->suffix('gr')
+                    ->label('Weight (gr)'),
+
+                Forms\Components\TextInput::make('length')
+                    ->numeric()
+                    ->suffix('cm')
+                    ->label('Length (cm)'),
+
+                Forms\Components\TextInput::make('width')
+                    ->numeric()
+                    ->suffix('cm')
+                    ->label('Width (cm)'),
+
+                Forms\Components\TextInput::make('height')
+                    ->numeric()
+                    ->suffix('cm')
+                    ->label('Height (cm)'),
+
                 Forms\Components\TextInput::make('stock')
                     ->required()
                     ->numeric()
@@ -116,6 +136,11 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('weight')->label('Weight (gr)'),
+                Tables\Columns\TextColumn::make('length')->label('L')->sortable(),
+                Tables\Columns\TextColumn::make('width')->label('W'),
+                Tables\Columns\TextColumn::make('height')->label('H'),
 
                 Tables\Columns\TextColumn::make('stock')
                     ->sortable()

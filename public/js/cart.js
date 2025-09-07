@@ -483,6 +483,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const image = button.getAttribute("data-image");
         const optionsRaw = button.getAttribute("data-options");
         const stock = button.getAttribute("data-stock");
+        const weight = button.getAttribute("data-weight");
+        const weightKg = parseFloat(weight);
+        const length = button.dataset.length; // cm
+        const width = button.dataset.width; // cm
+        const height = button.dataset.height; // cm
 
         // Update modal content
         modal.querySelector("#modal-product-stock").textContent =
@@ -497,6 +502,18 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.querySelector("#modal-product-type").textContent = maxDistance
             ? `${maxDistance} km`
             : "-";
+
+        modal.querySelector("#modal-product-weight").textContent =
+            weightKg && weightKg > 0
+                ? `${(weightKg * 1000).toFixed(0)} g`
+                : "-";
+        modal.querySelector("#modal-product-dimension").textContent =
+            length && width && height
+                ? `${parseFloat(length).toFixed(0)} x ${parseFloat(
+                      width
+                  ).toFixed(0)} x ${parseFloat(height).toFixed(0)} cm`
+                : "-";
+
         modal.querySelector("#modal-product-desc").textContent =
             description || "-";
         modal.querySelector("#modal-product-business").textContent =
@@ -540,9 +557,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const label = document.createElement("label");
                 label.className = "form-label fw-bold";
-                label.textContent = `${group.group_name} ${
+
+                const requiredText = group.is_required
+                    ? `<span class="text-danger">Required</span>` // merah
+                    : "";
+
+                label.innerHTML = `${group.group_name} ${
                     group.max_selection ? `(Max ${group.max_selection})` : ""
-                } ${group.is_required ? "*" : ""}`;
+                } ${requiredText}`;
+
                 groupWrapper.appendChild(label);
 
                 group.options.forEach((option) => {

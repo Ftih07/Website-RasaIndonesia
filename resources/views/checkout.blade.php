@@ -214,7 +214,7 @@
                                     </div>
                                     <h5 class="mb-0 fw-bold text-dark">Order Summary</h5>
                                 </div>
-                                
+
                                 <div class="card border-2" style="border-color: #FFE4D6 !important;">
                                     <div class="card-body p-0">
                                         @foreach($cart->items as $index => $item)
@@ -233,11 +233,19 @@
                                             </div>
                                         </div>
                                         @endforeach
-                                        
+
+                                        {{-- 🟢 Additional Info Section --}}
+                                        <div class="p-3" style="background-color: #FFF5E6;">
+                                            <p class="mb-1"><strong>Total Weight:</strong> {{ number_format($totalWeight, 2) }} kg</p>
+                                            <p class="mb-1"><strong>Total Volume:</strong> {{ number_format($totalVolume, 2) }} cm³</p>
+                                            <p class="mb-1"><strong>Shipping Cost:</strong> ${{ number_format($shippingCost, 2) }}</p>
+                                        </div>
+
+                                        {{-- 🟠 Total Amount Section --}}
                                         <div class="p-3 text-white" style="background: linear-gradient(135deg, #FF6B35, #F7931E);">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-0 fw-bold">Total Amount</h5>
-                                                <h4 class="mb-0 fw-bold">${{ number_format($cart->items->sum('total_price'), 0, ',', '.') }}</h4>
+                                                <h5 class="mb-0 fw-bold">Grand Total</h5>
+                                                <h4 class="mb-0 fw-bold">${{ number_format($totalPrice, 2) }}</h4>
                                             </div>
                                         </div>
                                     </div>

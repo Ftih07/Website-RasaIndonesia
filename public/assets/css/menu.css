@@ -771,6 +771,8 @@ p {
     overflow: hidden;
     width: 250px;
     height: 250px;
+    object-fit: cover; /* ✅ Tambahkan ini */
+    aspect-ratio: 1 / 1;
 }
 
 .dish-rating {
@@ -1943,7 +1945,6 @@ textarea:focus {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-
     .modal-header h2 {
         font-size: 1.3rem;
     }
@@ -2301,7 +2302,6 @@ textarea:focus {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-
     .modal-author-info {
         flex-direction: row; /* Keep horizontal layout on mobile */
         align-items: center;

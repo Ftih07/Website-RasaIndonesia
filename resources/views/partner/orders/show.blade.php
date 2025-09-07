@@ -159,6 +159,10 @@
                             <span class="fw-medium">A${{ number_format($order->tax, 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
+                            <span>Shipping Cost:</span>
+                            <span class="fw-medium">A${{ number_format($order->shipping_cost, 2) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
                             <span>Delivery Fee:</span>
                             <span class="fw-medium">A${{ number_format($order->delivery_fee, 2) }}</span>
                         </div>
@@ -223,6 +227,31 @@
                         </div>
                     </div>
                     @endif
+
+                    {{-- Tambahan total weight & volume --}}
+                    @php
+                    $totalWeight = 0;
+                    $totalVolume = 0;
+                    foreach ($order->items as $item) {
+                    $w = $item->product->weight ?? 0;
+                    $v = $item->product->volume ?? 0;
+                    $totalWeight += $w * $item->quantity;
+                    $totalVolume += $v * $item->quantity;
+                    }
+                    @endphp
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold mb-1">Order Weight & Volume</label>
+                        <div class="bg-light rounded p-3">
+                            <div class="fw-medium text-gray-800 mb-1">
+                                <i class="fas fa-weight text-muted me-2"></i>Total Weight:
+                                <span class="fw-bold">{{ $totalWeight > 0 ? number_format($totalWeight, 2).' gr' : '-' }}</span>
+                            </div>
+                            <div class="fw-medium text-gray-800">
+                                <i class="fas fa-cube text-muted me-2"></i>Total Volume:
+                                <span class="fw-bold">{{ $totalVolume > 0 ? number_format($totalVolume, 0).' cm³' : '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -241,6 +270,8 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="border-0 py-3 px-4">Product</th>
+                            {{-- Kolom baru --}}
+                            <th class="border-0 py-3 px-4">Weight / Volume</th>
                             <th class="border-0 py-3 px-4">Options</th>
                             <th class="border-0 py-3 px-4">Note</th>
                             <th class="border-0 py-3 px-4">Preference</th>
@@ -251,6 +282,12 @@
                     </thead>
                     <tbody>
                         @foreach($order->items as $item)
+                        @php
+                        $unitWeight = $item->product->weight ?? 0;
+                        $unitVolume = $item->product->volume ?? 0;
+                        $totalWeight = $unitWeight * $item->quantity;
+                        $totalVolume = $unitVolume * $item->quantity;
+                        @endphp
                         <tr>
                             <td class="py-3 px-4">
                                 <div class="d-flex align-items-center">
@@ -260,6 +297,21 @@
                                     <div class="fw-medium">{{ $item->product->name ?? 'Product not found' }}</div>
                                 </div>
                             </td>
+
+                            {{-- Kolom baru Weight/Volume --}}
+                            <td class="py-3 px-4">
+                                <small class="d-block text-muted">
+                                    <strong>Per Unit:</strong>
+                                    {{ $unitWeight > 0 ? number_format($unitWeight,2).' gr' : '-' }} /
+                                    {{ $unitVolume > 0 ? number_format($unitVolume,0).' cm³' : '-' }}
+                                </small>
+                                <small class="d-block text-muted">
+                                    <strong>Total ({{ $item->quantity }}x):</strong>
+                                    {{ $totalWeight > 0 ? number_format($totalWeight,2).' gr' : '-' }} /
+                                    {{ $totalVolume > 0 ? number_format($totalVolume,0).' cm³' : '-' }}
+                                </small>
+                            </td>
+
                             <td class="py-3 px-4">
                                 @if(!empty($item->options_for_view))
                                 <div class="small">
@@ -285,14 +337,16 @@
                                 <span class="text-muted">-</span>
                                 @endif
                             </td>
+
                             <td class="py-3 px-4">
                                 @if($item->note)
                                 <small class="text-muted">{{ $item->note }}</small>
+                                @else
                                 <span class="text-muted">-</span>
                                 @endif
                             </td>
                             <td class="py-3 px-4">
-                                @if($item->note)
+                                @if($item->preference_if_unavailable)
                                 <small class="text-info">{{ $item->preference_if_unavailable }}</small>
                                 @else
                                 <span class="text-muted">-</span>
@@ -301,8 +355,12 @@
                             <td class="py-3 px-4 text-center">
                                 <span class="badge bg-warning text-dark">{{ $item->quantity }}</span>
                             </td>
-                            <td class="py-3 px-4 text-end">A${{ number_format($item->unit_price, 2) }}<br><small class="text-muted"></small></td>
-                            <td class="py-3 px-4 text-end fw-bold text-warning">A${{ number_format($item->total_price, 2) }}<br><small class="text-muted"></small></td>
+                            <td class="py-3 px-4 text-end">
+                                A${{ number_format($item->unit_price, 2) }}
+                            </td>
+                            <td class="py-3 px-4 text-end fw-bold text-warning">
+                                A${{ number_format($item->total_price, 2) }}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

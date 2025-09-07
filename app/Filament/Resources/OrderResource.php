@@ -136,6 +136,26 @@ class OrderResource extends Resource
                         ])
                         ->disabled(),
 
+                    Forms\Components\TextInput::make('total_weight_actual')
+                        ->label('Total Actual Weight (kg)')
+                        ->disabled(),
+
+                    Forms\Components\TextInput::make('total_volume')
+                        ->label('Total Volume (cm³)')
+                        ->disabled(),
+
+                    Forms\Components\TextInput::make('total_weight_volumetric')
+                        ->label('Total Volumetric Weight (kg)')
+                        ->disabled(),
+
+                    Forms\Components\TextInput::make('chargeable_weight')
+                        ->label('Chargeable Weight (kg)')
+                        ->disabled(),
+
+                    Forms\Components\TextInput::make('shipping_cost')
+                        ->label('Shipping Cost (A$)')
+                        ->disabled(),
+
                     ToggleButtons::make('delivery_status')
                         ->options([
                             'waiting' => 'Waiting',
@@ -248,6 +268,15 @@ class OrderResource extends Resource
 
                             TextInput::make('quantity')
                                 ->label('Quantity')
+                                ->disabled(),
+
+                            TextInput::make('weight_actual')
+                                ->label('Actual Weight (g)')
+                                ->disabled()
+                                ->formatStateUsing(fn($state) => $state ? number_format($state * 1000, 0) . ' g' : '-'),
+
+                            TextInput::make('volume')
+                                ->label('Volume (cm³)')
                                 ->disabled(),
 
                             TextInput::make('unit_price')
@@ -385,6 +414,25 @@ class OrderResource extends Resource
                     })
                     ->html() // Penting, agar HTML tampil di table
                     ->sortable(false),
+
+                TextColumn::make('total_weight_actual')
+                    ->label('Total Weight')
+                    ->formatStateUsing(fn($state) => $state !== null ? number_format($state, 2) . ' kg' : '-'),
+
+                TextColumn::make('total_volume')
+                    ->label('Total Volume')
+                    ->formatStateUsing(
+                        fn($state) =>
+                        $state !== null ? number_format($state, 0) . ' cm³' : '-'
+                    ),
+
+                TextColumn::make('total_weight_volumetric')
+                    ->label('Total Weight Volumetric')
+                    ->formatStateUsing(fn($state) => $state !== null ? number_format($state, 2) . ' kg' : '-'),
+
+                TextColumn::make('shipping_cost')
+                    ->label('Shipping Cost')
+                    ->money('AUD'), // ini sudah otomatis A$
 
                 Tables\Columns\TextColumn::make('shipping_address')
                     ->label('Alamat')

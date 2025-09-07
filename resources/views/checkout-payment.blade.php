@@ -64,6 +64,16 @@
                                     <span class="fw-semibold">A${{ number_format($order->items->sum('total_price'), 2) }}</span>
                                 </div>
 
+                                {{-- ✅ tampilkan shipping cost (dari kolom shipping_cost) --}}
+                                <div class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted">
+                                        <i class="fas fa-shipping-fast me-2"></i>Shipping Cost
+                                    </span>
+                                    <span class="fw-semibold">
+                                        A${{ number_format($order->shipping_cost, 2) }}
+                                    </span>
+                                </div>
+
                                 <div class="d-flex justify-content-between align-items-center py-2">
                                     <span class="text-muted">
                                         <i class="fas fa-shipping-fast me-2"></i>Delivery Fee

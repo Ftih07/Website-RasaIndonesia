@@ -84,11 +84,13 @@
                     </div>
                 </div>
 
+                @if ($business->menu)
                 <div class="catalogue-list">
                     <a href="{{ asset('storage/' . $business->menu) }}" target="_blank" class="catalogue-link">
                         <ion-icon name="document-outline"></ion-icon> Catalogue List
                     </a>
                 </div>
+                @endif
 
                 @php
                 $allCategories = collect();
@@ -182,6 +184,10 @@
                                                 data-is-sell="{{ $menu->is_sell ? 1 : 0 }}"
                                                 data-desc="{{ $menu->desc }}"
                                                 data-business="{{ $business->name }}"
+                                                data-weight="{{ ($menu->weight ?? 0)/1000 }}"
+                                                data-length="{{ $menu->length }}"
+                                                data-width="{{ $menu->width }}"
+                                                data-height="{{ $menu->height }}"
                                                 data-image="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                                 data-options='@json($menu->option_data)'
                                                 data-categories='@json($categories)'
@@ -276,6 +282,30 @@
                                                     <div class="highlight-info">
                                                         <span class="highlight-label">Stock</span>
                                                         <p id="modal-product-stock" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-weight"></i>
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Weight</span>
+                                                        <p id="modal-product-weight" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-ruler-combined"></i> <!-- icon penggaris -->
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Dimensions</span>
+                                                        <p id="modal-product-dimension" class="highlight-value"></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -619,7 +649,18 @@
 
                             const label = document.createElement("label");
                             label.className = "form-label fw-bold";
-                            label.textContent = `${group.group_name} ${group.max_selection ? `(Max ${group.max_selection})` : ""} ${group.is_required ? "*" : ""}`;
+
+                            // bikin text “Required” warna merah
+                            const requiredText = group.is_required ?
+                                `<span class="text-danger">Required</span>` // pakai bootstrap
+                                :
+                                "";
+
+                            // innerHTML supaya bisa masuk span
+                            label.innerHTML = `${group.group_name} ${
+                                group.max_selection ? `(Max ${group.max_selection})` : ""
+                            } ${requiredText}`;
+
                             groupWrapper.appendChild(label);
 
                             (group.options || []).forEach(option => {

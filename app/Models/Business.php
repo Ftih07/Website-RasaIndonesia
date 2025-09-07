@@ -61,6 +61,7 @@ class Business extends Model
         'supports_delivery',
         'supports_pickup',
         'is_virtual',
+        'price_per_kg',
     ];
 
     /**

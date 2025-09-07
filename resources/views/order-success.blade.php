@@ -120,6 +120,16 @@
                                 <span class="fw-semibold">A${{ number_format($order->items->sum('total_price'), 2) }}</span>
                             </div>
 
+                            <!-- Shipping Cost -->
+                            <div class="d-flex justify-content-between align-items-center py-2">
+                                <span class="text-muted">
+                                    <i class="fas fa-box-open me-2"></i>Shipping Cost
+                                </span>
+                                <span class="fw-semibold">
+                                    A${{ number_format($order->shipping_cost, 2) }}
+                                </span>
+                            </div>
+
                             <!-- Delivery Fee -->
                             <div class="d-flex justify-content-between align-items-center py-2">
                                 <span class="text-muted">

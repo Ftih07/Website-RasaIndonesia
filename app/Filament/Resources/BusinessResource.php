@@ -548,6 +548,27 @@ class BusinessResource extends Resource
                                                     ->image()->directory('product-images'),
                                                 Forms\Components\TextInput::make('price')
                                                     ->numeric()->prefix('$'),
+
+                                                Forms\Components\TextInput::make('weight')
+                                                    ->numeric()
+                                                    ->suffix('gr')
+                                                    ->label('Weight (gr)'),
+
+                                                Forms\Components\TextInput::make('length')
+                                                    ->numeric()
+                                                    ->suffix('cm')
+                                                    ->label('Length (cm)'),
+
+                                                Forms\Components\TextInput::make('width')
+                                                    ->numeric()
+                                                    ->suffix('cm')
+                                                    ->label('Width (cm)'),
+
+                                                Forms\Components\TextInput::make('height')
+                                                    ->numeric()
+                                                    ->suffix('cm')
+                                                    ->label('Height (cm)'),
+
                                                 Forms\Components\TextInput::make('serving'),
                                                 Forms\Components\Textarea::make('desc'),
 
@@ -671,6 +692,12 @@ class BusinessResource extends Resource
                                             ->visible(fn($get) => in_array($get('shipping_type'), ['per_km', 'flat_plus_per_km']))
                                             ->default(1)
                                             ->helperText('Contoh: isi 2 berarti tiap 2 km akan dihitung 1 unit ongkir'),
+
+                                        Forms\Components\TextInput::make('price_per_kg')
+                                            ->numeric()
+                                            ->label('Shipping Price per Kg (AUD)')
+                                            ->prefix('$')
+                                            ->helperText('Leave empty or 0 to disable weight-based pricing'),
                                     ])
                                     ->columns(2)
                             ]),

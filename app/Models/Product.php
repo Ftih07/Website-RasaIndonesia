@@ -13,6 +13,10 @@ class Product extends Model
         'image',
         'type',
         'desc',
+        'weight',
+        'length',
+        'width',
+        'height',
         'variants',
         'serving',
         'price',
@@ -56,5 +60,13 @@ class Product extends Model
                 $product->save();
             }
         }
+    }
+
+    public function getVolumeAttribute()
+    {
+        if ($this->length && $this->width && $this->height) {
+            return $this->length * $this->width * $this->height; // cm³
+        }
+        return 0;
     }
 }
