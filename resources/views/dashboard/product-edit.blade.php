@@ -124,6 +124,50 @@
                                 placeholder="Enter stock quantity">
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="weight" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Weight (gr)
+                                </label>
+                                <input type="number" name="weight" id="weight" step="0.01" min="0"
+                                    class="form-control block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200"
+                                    value="{{ old('weight', $product->weight) }}"
+                                    placeholder="e.g., 500">
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="length" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Length (cm)
+                                </label>
+                                <input type="number" name="length" id="length" step="0.01" min="0"
+                                    class="form-control block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200"
+                                    value="{{ old('length', $product->length) }}"
+                                    placeholder="e.g., 10">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="width" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Width (cm)
+                                </label>
+                                <input type="number" name="width" id="width" step="0.01" min="0"
+                                    class="form-control block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200"
+                                    value="{{ old('width', $product->width) }}"
+                                    placeholder="e.g., 15">
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="height" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Height (cm)
+                                </label>
+                                <input type="number" name="height" id="height" step="0.01" min="0"
+                                    class="form-control block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200"
+                                    value="{{ old('height', $product->height) }}"
+                                    placeholder="e.g., 8">
+                            </div>
+                        </div>
+
                         <!-- Description -->
                         <div class="form-group">
                             <label for="desc" class="block text-sm font-semibold text-gray-700 mb-2">

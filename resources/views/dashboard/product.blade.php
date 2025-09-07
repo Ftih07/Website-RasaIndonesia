@@ -291,6 +291,34 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Weight (gr)</label>
+                                    <input type="number" name="weight" min="0" step="0.01"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Length (cm)</label>
+                                    <input type="number" name="length" min="0" step="0.01"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Width (cm)</label>
+                                    <input type="number" name="width" min="0" step="0.01"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Height (cm)</label>
+                                    <input type="number" name="height" min="0" step="0.01"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Isi 0 jika tidak ada data.</p>
+
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Serving Size</label>
                                     <input type="text" name="serving" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                                 </div>

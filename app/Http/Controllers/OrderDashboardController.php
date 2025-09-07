@@ -294,6 +294,7 @@ class OrderDashboardController extends Controller
             'flat_rate'         => 'nullable|numeric|min:0',
             'per_km_rate'       => 'nullable|numeric|min:0',
             'per_km_unit'       => 'nullable|numeric|min:1',
+            'price_per_kg'      => 'nullable|numeric|min:0',
             'supports_delivery' => 'nullable|boolean',
             'supports_pickup'   => 'nullable|boolean',
         ]);
@@ -304,6 +305,7 @@ class OrderDashboardController extends Controller
             'flat_rate'         => $request->flat_rate,
             'per_km_rate'       => $request->per_km_rate,
             'per_km_unit'       => $request->per_km_unit,
+            'price_per_kg'      => $request->price_per_kg ?? 0,
             'supports_delivery' => $request->has('supports_delivery'),
             'supports_pickup'   => $request->has('supports_pickup'),
         ]);

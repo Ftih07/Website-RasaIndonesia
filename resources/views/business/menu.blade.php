@@ -9,7 +9,57 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taste of Indonesia</title>
+
+    @php
+    $url = Request::fullUrl();
+    $title = $business->name ?? 'Taste of Indonesia Business';
+    $description = strip_tags(Str::limit($business->description ?? '', 160));
+    // default image/logo
+    $image = asset('assets/images/logo/logo.png');
+    if (!empty($business->logo)) {
+    $image = asset('storage/' . $business->logo);
+    }
+    // keywords – kalau ada field meta_keywords kita ambil dari situ,
+    // kalau tidak ada, pakai fallback
+    $keywords = $business->meta_keywords
+    ?? 'Indonesian cuisine, Taste of Indonesia, Indonesian food business, culinary, restaurant';
+    // author optional
+    $author = $business->owner->name ?? 'Taste of Indonesia';
+    @endphp
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ $title }}">
+    <meta name="description" content="{{ $description }}">
+    <meta name="keywords" content="{{ $keywords }}">
+    <meta name="author" content="{{ $author }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $url }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:image" content="{{ $image }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ $url }}">
+    <meta property="twitter:title" content="{{ $title }}">
+    <meta property="twitter:description" content="{{ $description }}">
+    <meta property="twitter:image" content="{{ $image }}">
+
+    @php
+    $pageTitle = '';
+
+    if ($business->type->title === 'Shop') {
+    $pageTitle = 'Products';
+    } elseif ($business->type->title === 'Restaurant') {
+    $pageTitle = 'Menu';
+    } else {
+    $pageTitle = 'Catalogue';
+    }
+    @endphp
+
+    <title>{{ $title }} - {{ $pageTitle }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">

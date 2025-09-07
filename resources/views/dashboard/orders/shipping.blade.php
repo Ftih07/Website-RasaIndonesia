@@ -178,6 +178,31 @@
                 </div>
             </div>
 
+            <!-- Weight-based Rate -->
+            <div id="per-kg-field" class="mb-8">
+                <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800">Shipping Price per Kg</h3>
+                    </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Price per Kg (A$)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">A$</span>
+                        </div>
+                        <input type="number" step="0.01" name="price_per_kg"
+                            value="{{ old('price_per_kg', $business->price_per_kg) }}"
+                            class="form-input block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                            placeholder="0.00">
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">💡 Leave empty or 0 to disable weight-based pricing.</p>
+                </div>
+            </div>
+
             <!-- Submit Button -->
             <div class="flex justify-end pt-6 border-t border-gray-200">
                 <button type="submit" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition duration-200 transform hover:scale-105">

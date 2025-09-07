@@ -190,6 +190,12 @@ class BusinessResource extends Resource
                                     ->image() // Restricts uploads to image files.
                                     ->imageEditor() // Enables an image editor for cropping/resizing.
                                     ->maxSize(5120), // Sets maximum file size to 5MB (5120 KB).
+
+                                Forms\Components\Textarea::make('meta_keywords')
+                                    ->label('Meta Keywords')
+                                    ->rows(3)
+                                    ->placeholder('Enter SEO keywords, separated by commas')
+                                    ->maxLength(500),
                             ]),
 
                         // Tab 2: Location & Contact

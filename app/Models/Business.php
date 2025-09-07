@@ -34,6 +34,7 @@ class Business extends Model
         'country',          // Country where the business is located.
         'city',             // City where the business is located.
         'description',      // Detailed description of the business.
+        'meta_keywords',    // 
         'logo',             // Path or URL to the business logo.
         'address',          // Physical address of the business.
         'iframe_url',       // URL for an embedded iframe (e.g., Google Maps).

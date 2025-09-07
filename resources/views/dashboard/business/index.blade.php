@@ -305,6 +305,12 @@
                             </div>
                             @endif
                         </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Meta Keywords</label>
+                            <textarea name="meta_keywords" class="form-control" rows="3" placeholder="Separate with commas">{{ old('meta_keywords', $business->meta_keywords) }}</textarea>
+                            <small class="text-muted d-block mt-1">Enter SEO keywords, separate with commas</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -464,6 +470,11 @@
                                 <input type="checkbox" name="services[]" value="Delivery" 
                                        {{ in_array('Delivery', $services) ? 'checked' : '' }}>
                                 <i class="fas fa-motorcycle me-2"></i>Delivery
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services[]" value="Pickup" 
+                                       {{ in_array('Pickup', $services) ? 'checked' : '' }}>
+                                <i class="fas fa-motorcycle me-2"></i>Pickup
                             </label>
                         </div>
                     </div>

@@ -125,6 +125,7 @@ class DashboardBusinessController extends Controller
             'name' => 'required|string|max:255',
             'status_mode' => 'required|in:auto,manual_open,manual_closed',
             'description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string|max:500',
             'food_categories' => 'nullable|array',
             'food_categories.*' => 'exists:food_categories,id',
             'logo' => 'nullable|image|max:5120',
@@ -175,6 +176,7 @@ class DashboardBusinessController extends Controller
             'name' => $validated['name'],
             'status_mode' => $validated['status_mode'],
             'description' => $validated['description'] ?? null,
+            'meta_keywords' => $validated['meta_keywords'] ?? null, // ✅ ini
             'country' => $validated['country'] ?? null,
             'city' => $validated['city'] ?? null,
             'address' => $validated['address'],
