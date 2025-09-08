@@ -233,11 +233,16 @@
 
 <!-- Order Summary -->
 <div class="card border-0 shadow-xl rounded-3xl mb-6 overflow-hidden">
-    <div class="card-header bg-gradient-to-r from-purple-50 to-pink-50 border-0 p-4">
+    <div class="card-header bg-gradient-to-r from-purple-50 to-pink-50 border-0 p-4 d-flex justify-content-between align-items-center">
         <h5 class="fw-bold text-gray-800 mb-0 d-flex align-items-center">
             <i class="fas fa-calculator text-purple-500 me-2"></i>
             Order Summary
         </h5>
+        @if($order->invoice_url)
+        <a href="{{ $order->invoice_url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">
+            <i class="fas fa-file-invoice me-1"></i> Invoice
+        </a>
+        @endif
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">

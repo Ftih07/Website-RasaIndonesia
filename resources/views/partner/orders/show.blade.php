@@ -179,6 +179,14 @@
                             <span class="fw-bold">Net Payout:</span>
                             <span class="fw-bold text-warning fs-5">A${{ number_format($order->total_price - $order->order_fee, 2) }}</span>
                         </div>
+
+                        @if($order->invoice_url)
+                        <div class="mt-3">
+                            <a href="{{ $order->invoice_url }}" target="_blank" class="btn btn-primary w-100">
+                                <i class="fas fa-file-invoice me-1"></i> View Invoice
+                            </a>
+                        </div>
+                        @endif
                     </div>
                 </div>
 

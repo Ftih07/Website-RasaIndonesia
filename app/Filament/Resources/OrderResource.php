@@ -23,6 +23,8 @@ use Filament\Notifications\Notification;
 use App\Models\User;
 use App\Services\ChatService;
 use Filament\Forms\Components\DateTimePicker;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Placeholder;
 
 class OrderResource extends Resource
 {
@@ -155,6 +157,17 @@ class OrderResource extends Resource
                     Forms\Components\TextInput::make('shipping_cost')
                         ->label('Shipping Cost (A$)')
                         ->disabled(),
+
+                    Placeholder::make('invoice')
+                        ->label('Invoice')
+                        ->content(
+                            fn($record) => $record?->invoice_url
+                                ? new HtmlString(
+                                    '<a href="' . e($record->invoice_url) . '" target="_blank" class="underline inline-flex items-center gap-2">📄 <span>Download Invoice</span></a>'
+                                )
+                                : '-'
+                        )
+                        ->columnSpan('full'),
 
                     ToggleButtons::make('delivery_status')
                         ->options([
@@ -442,6 +455,13 @@ class OrderResource extends Resource
                     ->openUrlInNewTab()
                     ->formatStateUsing(fn($state) => $state ?: '-'),
 
+                TextColumn::make('invoice') // nama kolom tidak harus ada di DB; kita set state manual
+                    ->label('Invoice')
+                    ->getStateUsing(fn($record) => $record->invoice_url ? '📄 View' : '-')
+                    ->url(fn($record) => $record->invoice_url) // bisa juga route('orders.invoice.download', $record)
+                    ->openUrlInNewTab()
+                    ->sortable(false)
+                    ->wrap(),
             ])
             ->filters([
                 SelectFilter::make('delivery_status')

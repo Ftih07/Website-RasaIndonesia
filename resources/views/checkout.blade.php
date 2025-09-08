@@ -264,6 +264,17 @@
                                         Secure payment powered by Stripe
                                     </small>
                                 </p>
+
+                                {{-- Tempat untuk error message --}}
+                                @if ($errors->any())
+                                    <div class="alert alert-danger mt-3 text-start" role="alert">
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                             </div>
                         </form>
                     </div>

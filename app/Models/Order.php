@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -14,6 +15,7 @@ class Order extends Model
         'business_id',
         'pickup_business_id', // wajib kalau mau mass assignment
         'order_number',
+        'invoice_path', // ✅ tambahin
         'subtotal',
         'tax',
         'total_weight_actual',
@@ -81,5 +83,18 @@ class Order extends Model
     public function pickupBusiness()
     {
         return $this->belongsTo(Business::class, 'pickup_business_id');
+    }
+
+    public function getInvoiceUrlAttribute(): ?string
+    {
+        if (! $this->invoice_path) {
+            return null;
+        }
+
+        // Opsi A: kalau file disimpan di public disk (storage:link)
+        return Storage::disk('public')->url($this->invoice_path);
+
+        // Opsi B (lebih aman): gunakan route terproteksi yang serve file
+        // return route('orders.invoice.download', $this->id);
     }
 }

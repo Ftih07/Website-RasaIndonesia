@@ -945,9 +945,31 @@
             const businessId = document.getElementById('cartSidebar').dataset.businessId;
 
             fetch(`/cart/validate/${businessId}`)
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-                    return res.json();
+                .then(async res => {
+                    const data = await res.json().catch(() => ({}));
+
+                    if (!res.ok) {
+                        // Laravel Validation Error (422 / 400)
+                        if (res.status === 422 || res.status === 400) {
+                            let messages = [];
+
+                            if (data.errors) {
+                                for (const field in data.errors) {
+                                    messages.push(data.errors[field].join("\n"));
+                                }
+                            } else if (data.message) {
+                                messages.push(data.message);
+                            } else {
+                                messages.push(`HTTP error! Status: ${res.status}`);
+                            }
+
+                            throw new Error(messages.join("\n"));
+                        }
+
+                        throw new Error(`HTTP error! Status: ${res.status}`);
+                    }
+
+                    return data;
                 })
                 .then(data => {
                     if (data.success) {
@@ -958,7 +980,7 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Terjadi kesalahan.');
+                    alert(err.message);
                 });
         });
     </script>

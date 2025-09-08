@@ -128,43 +128,12 @@
                             <div class="banner-img banner-img-1"
                                 style="background-image: url('{{ asset('assets/images/home/hero/hero.png') }}');">
                             </div>
-                            <div class="banner-img banner-img-2"
-                                style="background-image: url('{{ asset('assets/images/home/hero/hero2.png') }}');">
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const img1 = document.querySelector('.banner-img-1');
-            const img2 = document.querySelector('.banner-img-2');
-
-            let showingFirst = true;
-
-            // set awal
-            img1.classList.add('active');
-            img2.classList.add('inactive');
-
-            setInterval(() => {
-                if (showingFirst) {
-                    img1.classList.remove('active');
-                    img1.classList.add('inactive');
-                    img2.classList.remove('inactive');
-                    img2.classList.add('active');
-                } else {
-                    img2.classList.remove('active');
-                    img2.classList.add('inactive');
-                    img1.classList.remove('inactive');
-                    img1.classList.add('active');
-                }
-                showingFirst = !showingFirst;
-            }, 3000);
-        });
-    </script>
 
     <!-- Section: Food Category -->
     <section class="book-table section bg-light">
@@ -276,10 +245,7 @@
                     <div class="about-video">
                         <div class="about-video-img-wrap">
                             <div class="about-video-img"
-                                style="background-image: url('{{ asset('assets/images/home/about-us/images.jpg') }}');">
-                            </div>
-                            <div class="about-video-img"
-                                style="background-image: url('{{ asset('assets/images/home/about-us/images2.webp') }}');">
+                                style="background-image: url('{{ asset('assets/images/home/about-us/images.png') }}');">
                             </div>
                         </div>
                     </div>

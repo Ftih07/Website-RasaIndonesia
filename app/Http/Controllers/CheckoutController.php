@@ -17,6 +17,8 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\PaymentIntent;
 use Illuminate\Validation\ValidationException;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
@@ -267,6 +269,24 @@ class CheckoutController extends Controller
             }
         }
 
+        // ✅ Cek apakah bisnis sedang buka
+        if (!$business->is_open) {
+            throw ValidationException::withMessages([
+                'business' => "The business {$business->name} is currently closed and cannot accept orders."
+            ]);
+        }
+
+        // ✅ Cek apakah produk bisa dijual
+        foreach ($cart->items as $item) {
+            $product = $item->product;
+
+            if (!$product->is_sell) {
+                throw ValidationException::withMessages([
+                    'cart' => "The product {$product->name} is not available for sale."
+                ]);
+            }
+        }
+
         $totalWeightActual = 0;
         $totalVolume = 0;
         $totalWeightVolumetric = 0;
@@ -468,6 +488,19 @@ class CheckoutController extends Controller
             $cart->items()->delete();
             $cart->delete();
         }
+
+        // ✅ Generate PDF invoice
+        $pdf = Pdf::loadView('orders.invoice', compact('order'));
+        $filename = "Invoice-{$order->order_number}.pdf";
+        $path = "invoices/{$filename}";
+
+        // simpan ke storage/app/public/invoices
+        Storage::disk('public')->put($path, $pdf->output());
+
+        // update path ke DB
+        $order->update([
+            'invoice_path' => $path
+        ]);
 
         return view('order-success', compact('order'));
     }

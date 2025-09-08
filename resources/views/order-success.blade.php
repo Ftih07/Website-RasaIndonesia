@@ -178,10 +178,14 @@
                         <i class="fas fa-truck me-2"></i>
                         Track Orders
                     </a>
-                    <button onclick="window.print()" class="btn btn-outline-secondary btn-lg px-5 py-3" style="border-radius: 50px;">
-                        <i class="fas fa-print me-2"></i>
-                        Print Receipt
-                    </button>
+                    @if($order->invoice_path)
+                    <a href="{{ asset('storage/' . $order->invoice_path) }}"
+                        target="_blank"
+                        class="btn btn-outline-secondary btn-lg px-5 py-3"
+                        style="border-radius: 50px;">
+                        <i class="fas fa-file-invoice me-2"></i> Download Invoice
+                    </a>
+                    @endif
                 </div>
 
                 <!-- Additional Info -->
