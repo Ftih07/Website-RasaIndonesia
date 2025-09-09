@@ -26,6 +26,11 @@ class BusinessApprovalResource extends Resource
     protected static ?int $navigationSort = 100;
     protected static ?string $slug = 'business-approvals';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Business::count();
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         return true;

@@ -18,7 +18,16 @@ class BusinessClaimResource extends Resource
     protected static ?string $model = BusinessClaim::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-check-circle';
-    protected static ?string $navigationLabel = 'Klaim Bisnis';
+    protected static ?string $navigationLabel = 'Business Claim';
+
+    protected static ?string $navigationGroup = 'Business Management';
+    protected static ?int $navigationSort = 100;
+    protected static ?string $slug = 'business-claim';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return BusinessClaim::count();
+    }
 
     public static function form(Form $form): Form
     {

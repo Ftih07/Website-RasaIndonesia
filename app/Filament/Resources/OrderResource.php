@@ -35,6 +35,11 @@ class OrderResource extends Resource
     protected static ?string $modelLabel = 'Order';
     protected static ?string $navigationGroup = 'Orders';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Order::count();
+    }
+
     // 🔹 Method filter query
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {

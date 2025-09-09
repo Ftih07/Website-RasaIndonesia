@@ -17,9 +17,23 @@ use Maatwebsite\Excel\Facades\Excel;
 class ChatResource extends Resource
 {
     protected static ?string $model = Chat::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
     protected static ?string $navigationLabel = 'Chats';
     protected static ?string $pluralLabel = 'Chats';
+    protected static ?string $navigationGroup = 'Orders';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Chat::whereHas('messages', function ($query) {
+            $query->where('is_read', false)
+                ->where('sender_id', '!=', auth()->id());
+        })->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return self::getNavigationBadge() > 0 ? 'danger' : 'gray';
+    }
 
     public static function form(Form $form): Form
     {

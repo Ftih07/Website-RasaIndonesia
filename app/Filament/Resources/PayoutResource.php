@@ -20,7 +20,7 @@ class PayoutResource extends Resource
 {
     protected static ?string $model = Payout::class;
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationGroup = 'Reports';
+    protected static ?string $navigationGroup = 'Reports & Finance';
 
     public static function form(Form $form): Form
     {

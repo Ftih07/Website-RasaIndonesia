@@ -17,7 +17,8 @@ class RevenueReportResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $navigationGroup = 'Reports';
+    protected static ?string $navigationGroup = 'Reports & Finance';
+    protected static ?string $pluralLabel = 'Order Business Revenue';
 
     public static function form(Forms\Form $form): Forms\Form
     {

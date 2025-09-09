@@ -6,8 +6,8 @@ use App\Models\Business; // Import the Business Eloquent model.
 use App\Models\Events;   // Import the Events Eloquent model.
 use App\Models\FoodCategory; // Import the FoodCategory Eloquent model.
 use App\Models\News;     // Import the News Eloquent model.
-use App\Models\TestimonialUser; // Import the TestimonialUser Eloquent model.
 use App\Models\TrafficLog; // Import the TrafficLog Eloquent model.
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget; // Base class for Filament Stats Overview widgets.
 use Filament\Widgets\StatsOverviewWidget\Stat; // Stat class to define individual statistics.
 use Carbon\Carbon; // Carbon library for date and time manipulation.
@@ -52,11 +52,18 @@ class DashboardOverview extends BaseWidget
         $eventsThisMonth = Events::whereMonth('start_time', now()->month)->count(); // Events starting this month.
 
         // --- User Statistics ---
-        $totalUsers = TestimonialUser::count();
-        $usersThisMonth = TestimonialUser::whereMonth('created_at', now()->month)->count();
-        $usersLastMonth = TestimonialUser::whereMonth('created_at', now()->subMonth()->month)->count();
+        $totalUsers = User::count();
+        $usersThisMonth = User::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year) // biar nggak keambil bulan sama di tahun beda
+            ->count();
+        $usersLastMonth = User::whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+
         // Calculate user growth percentage. Handle division by zero.
-        $userGrowth = $usersLastMonth > 0 ? (($usersThisMonth - $usersLastMonth) / $usersLastMonth) * 100 : 0;
+        $userGrowth = $usersLastMonth > 0
+            ? (($usersThisMonth - $usersLastMonth) / $usersLastMonth) * 100
+            : 0;
 
         // --- Traffic Statistics ---
         $todayTraffic = TrafficLog::whereDate('created_at', today())->count();
