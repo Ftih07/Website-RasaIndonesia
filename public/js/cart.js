@@ -489,6 +489,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const width = button.dataset.width; // cm
         const height = button.dataset.height; // cm
 
+        const serving = button.getAttribute("data-serving");
+
+        // update konten modal
+        modal.querySelector("#modal-product-serving").textContent = serving
+            ? serving
+            : "-";
+
         // Update modal content
         modal.querySelector("#modal-product-stock").textContent =
             stock > 0 ? stock + " left" : "Out of stock";
@@ -551,39 +558,45 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             options.forEach((group) => {
                 const groupWrapper = document.createElement("div");
-                groupWrapper.className = "mb-3";
+                // styling dasar group (border + padding)
+                groupWrapper.className = "mb-3 p-3 border rounded";
                 groupWrapper.dataset.maxSelection = group.max_selection || 0;
                 groupWrapper.dataset.isRequired = group.is_required ? "1" : "0";
 
+                // label group
                 const label = document.createElement("label");
-                label.className = "form-label fw-bold";
+                label.className = "form-label fw-bold d-block";
 
                 const requiredText = group.is_required
-                    ? `<span class="text-danger">Required</span>` // merah
+                    ? `<span class="text-danger ms-2">(Required)</span>` // merah
                     : "";
 
-                label.innerHTML = `${group.group_name} ${
-                    group.max_selection ? `(Max ${group.max_selection})` : ""
-                } ${requiredText}`;
+                const maxText = group.max_selection
+                    ? `<span class="badge bg-secondary ms-2">Max ${group.max_selection}</span>`
+                    : "";
+
+                // nama group + max badge + required
+                label.innerHTML = `${group.group_name} ${maxText} ${requiredText}`;
 
                 groupWrapper.appendChild(label);
 
+                // options (checkbox)
                 group.options.forEach((option) => {
                     const optionWrapper = document.createElement("div");
-                    optionWrapper.className = "form-check";
+                    optionWrapper.className = "form-check mb-1";
 
                     const id = `option-${group.group_name}-${option.id}`;
                     optionWrapper.innerHTML = `
-                        <input class="form-check-input" type="checkbox" name="option_group_${
-                            group.group_name
-                        }" 
-                            id="${id}" value="${option.id}" data-price="${
-                        option.price
-                    }">
+                        <input class="form-check-input" type="checkbox" 
+                            name="option_group_${group.group_name}" 
+                            id="${id}" 
+                            value="${option.id}" 
+                            data-price="${option.price}">
                         <label class="form-check-label" for="${id}">
-                            ${option.name} (${
-                        option.price > 0 ? `+$${option.price}` : "Free"
-                    })
+                            ${option.name}
+                            <small class="text-muted">
+                                ${option.price > 0 ? `+ $${option.price}` : "Free"}
+                            </small>
                         </label>
                     `;
                     groupWrapper.appendChild(optionWrapper);
@@ -591,6 +604,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 optionContainer.appendChild(groupWrapper);
 
+                // logic max selection tetap sama
                 const checkboxes = groupWrapper.querySelectorAll(
                     'input[type="checkbox"]'
                 );

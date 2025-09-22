@@ -320,3 +320,9 @@ Route::get('/prosperity-expo/thank-you/{qr_code}', [ProsperityExpoRegistrationCo
 // passing the QR code value. This method will then handle serving the PDF file for download.
 // This route is named 'prosperity-expo.download'.
 Route::get('/prosperity-expo/download/{qr_code}', [ProsperityExpoRegistrationController::class, 'downloadPdf'])->name('prosperity-expo.download');
+
+Route::get('/export-businesses-word-zip', [BusinessExportController::class, 'exportWordZip'])
+    ->name('export-businesses-word-zip');
+
+Route::get('/export-businesses-pdf', [BusinessExportController::class, 'exportPdf'])
+    ->name('export-businesses-pdf');

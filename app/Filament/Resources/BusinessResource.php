@@ -320,6 +320,7 @@ class BusinessResource extends Resource
                                                 'Dine In' => 'Dine In',
                                                 'Delivery' => 'Delivery',
                                                 'Pickup' => 'Pickup',
+                                                'Takeaway' => 'Takeaway',
                                             ])
                                             ->columns(2), // Arranges checkboxes in two columns.
                                     ]),
@@ -541,127 +542,23 @@ class BusinessResource extends Resource
 
                 Forms\Components\Tabs::make('Business Product Management')
                     ->tabs([
-                        // Tab Produk
-                        Tabs\Tab::make('Product Management')
-                            ->schema([
-                                Forms\Components\Section::make('Menu Products')
-                                    ->schema([
-                                        Forms\Components\Repeater::make('products')
-                                            ->relationship('products')
-                                            ->schema([
-                                                Forms\Components\TextInput::make('name')->required(),
-                                                Forms\Components\FileUpload::make('image')
-                                                    ->image()->directory('product-images'),
-                                                Forms\Components\TextInput::make('price')
-                                                    ->numeric()->prefix('$'),
-
-                                                Forms\Components\TextInput::make('weight')
-                                                    ->numeric()
-                                                    ->suffix('gr')
-                                                    ->label('Weight (gr)'),
-
-                                                Forms\Components\TextInput::make('length')
-                                                    ->numeric()
-                                                    ->suffix('cm')
-                                                    ->label('Length (cm)'),
-
-                                                Forms\Components\TextInput::make('width')
-                                                    ->numeric()
-                                                    ->suffix('cm')
-                                                    ->label('Width (cm)'),
-
-                                                Forms\Components\TextInput::make('height')
-                                                    ->numeric()
-                                                    ->suffix('cm')
-                                                    ->label('Height (cm)'),
-
-                                                Forms\Components\TextInput::make('serving'),
-                                                Forms\Components\Textarea::make('desc'),
-
-                                                Forms\Components\TextInput::make('max_distance')
-                                                    ->label('Max Distance (km)')
-                                                    ->numeric()
-                                                    ->minValue(1)
-                                                    ->helperText('Produk hanya tersedia dalam radius ini dari lokasi user'),
-
-                                                Forms\Components\TextInput::make('stock')
-                                                    ->required()
-                                                    ->numeric()
-                                                    ->minValue(0)
-                                                    ->label('Stock')
-                                                    ->helperText('Available quantity of this product.'),
-
-                                                // ✅ Toggle untuk status jual
-                                                Forms\Components\Toggle::make('is_sell')
-                                                    ->label('Sell this product?')
-                                                    ->default(false) // defaultnya tidak dijual
-                                                    ->helperText('If unchecked, product will be hidden from cart.'),
-
-                                                // OPTION GROUPS (many-to-many)
-                                                MultiSelect::make('optionGroups')
-                                                    ->label('Option Groups')
-                                                    ->relationship(
-                                                        name: 'optionGroups',
-                                                        titleAttribute: 'name',
-                                                        modifyQueryUsing: fn(\Illuminate\Database\Eloquent\Builder $query, callable $get) =>
-                                                        $query->where('business_id', $get('../../id')),
-                                                    ),
-
-
-                                                // CATEGORIES (many-to-many)
-                                                MultiSelect::make('categories')
-                                                    ->label('Categories')
-                                                    ->relationship(
-                                                        name: 'categories',
-                                                        titleAttribute: 'name',
-                                                        modifyQueryUsing: fn(\Illuminate\Database\Eloquent\Builder $query, callable $get) =>
-                                                        $query->where('business_id', $get('../../id')), // Mengambil ID dari parent Business
-                                                    )
-
-                                            ])
-                                            ->collapsed()
-                                            ->columns(1),
-                                    ]),
-                            ]),
-
-
-                        // Tab Option Group
-                        Forms\Components\Tabs\Tab::make('Product Option Groups')
-                            ->schema([
-                                Forms\Components\Section::make('Product Option Groups')
-                                    ->schema([
-                                        Forms\Components\Repeater::make('productOptionGroups')
-                                            ->relationship('productOptionGroups') // <- relasi business -> group
-                                            ->schema([
-                                                Forms\Components\TextInput::make('name')->required(),
-                                                Forms\Components\Toggle::make('is_required'),
-                                                Forms\Components\TextInput::make('max_selection')->numeric(),
-                                                Forms\Components\Repeater::make('options')
-                                                    ->relationship('options') // <- relasi group -> options
-                                                    ->schema([
-                                                        Forms\Components\TextInput::make('name')->required(),
-                                                        Forms\Components\TextInput::make('price')
-                                                            ->label('Additional Price')
-                                                            ->numeric()
-                                                            ->prefix('+ $')
-                                                            ->default(0),
-                                                    ]),
-                                            ]),
-                                    ])
-                            ]),
-
                         // Tab Kategori
                         Forms\Components\Tabs\Tab::make('Categories')
                             ->schema([
                                 Forms\Components\Section::make('Product Categories')
                                     ->schema([
                                         Forms\Components\Repeater::make('categories')
-                                            ->relationship('categories') // <- relasi business -> categories
+                                            ->relationship('categories') // relasi business -> categories
+                                            ->collapsed() // default tertutup
+                                            ->itemLabel(fn(array $state): string => $state['name'] ?? 'New Category')
                                             ->schema([
-                                                Forms\Components\TextInput::make('name')->required(),
+                                                Forms\Components\TextInput::make('name')
+                                                    ->required()
+                                                    ->label('Category Name'),
                                             ])
                                     ]),
                             ]),
+
                         Forms\Components\Tabs\Tab::make('Shipping Settings')
                             ->schema([
                                 Forms\Components\Section::make('Shipping Configuration')
@@ -996,19 +893,33 @@ class BusinessResource extends Resource
                     ->modalSubmitAction(false) // Hides the submit button in the modal
                     ->modalCancelAction(false), // Hides the cancel button in the modal
 
-                // Action group for export options.
                 Tables\Actions\ActionGroup::make([
-                    // Action to export all businesses to an Excel file.
+                    // Export Excel
                     Action::make('export_excel')
-                        ->label('Export Excel') // Button label
-                        ->icon('heroicon-o-table-cells') // Icon for Excel export
-                        ->url(route('export-businesses')) // URL for the export route
-                        ->openUrlInNewTab() // Opens the export link in a new browser tab
-                        ->color('success'), // Button color for success
+                        ->label('Export Excel')
+                        ->icon('heroicon-o-table-cells')
+                        ->url(route('export-businesses'))
+                        ->openUrlInNewTab()
+                        ->color('success'),
+
+                    Action::make('export_word_zip')
+                        ->label('Export Word (ZIP)')
+                        ->icon('heroicon-o-archive-box-arrow-down')
+                        ->url(route('export-businesses-word-zip'))
+                        ->openUrlInNewTab()
+                        ->color('warning'),
+
+                    Action::make('export_pdf')
+                        ->label('Export PDF')
+                        ->icon('heroicon-o-document')
+                        ->url(route('export-businesses-pdf'))
+                        ->openUrlInNewTab()
+                        ->color('danger'),
                 ])
-                    ->label('Export') // Label for the action group dropdown
-                    ->icon('heroicon-o-arrow-down-tray') // Icon for the action group dropdown
-                    ->color('primary'), // Color for the action group dropdown button
+                    ->label('Export')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('primary'),
+
             ])
             // Defines the base query for retrieving records for the table.
             ->query(function () {
@@ -1292,7 +1203,8 @@ class BusinessResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProductsRelationManager::class,
+            RelationManagers\ProductOptionGroupsRelationManager::class,
         ];
     }
 

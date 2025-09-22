@@ -81,14 +81,15 @@
 
 <body class="body-fixed">
     @if (session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: '{{ session('success') }}',
-                showConfirmButton: false,
-                timer: 2000
-            });
-        </script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{ session('
+            success ') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
     @endif
 
     @include('partials.navbar')
@@ -466,28 +467,28 @@
 
                                     {{-- Status buka/tutup toko --}}
                                     @if ($business->is_open)
-                                        <span class="badge bg-primary text-light ms-2" style="font-size: 0.7rem;">
-                                            Open Now
-                                        </span>
+                                    <span class="badge bg-primary text-light ms-2" style="font-size: 0.7rem;">
+                                        Open Now
+                                    </span>
                                     @else
-                                        <span class="badge bg-secondary text-light ms-2" style="font-size: 0.7rem;">
-                                            Closed Now
-                                        </span>
+                                    <span class="badge bg-secondary text-light ms-2" style="font-size: 0.7rem;">
+                                        Closed Now
+                                    </span>
                                     @endif
 
                                     {{-- Status order di platform --}}
                                     @if ($business->orders_status === 'approved')
-                                        <span class="badge bg-success text-light ms-2" style="font-size: 0.7rem;">
-                                            Order Available
-                                        </span>
+                                    <span class="badge bg-success text-light ms-2" style="font-size: 0.7rem;">
+                                        Order Available
+                                    </span>
                                     @elseif ($business->orders_status === 'pending')
-                                        <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;">
-                                            Order Pending
-                                        </span>
+                                    <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;">
+                                        Order Pending
+                                    </span>
                                     @else
-                                        <span class="badge bg-dark text-light ms-2" style="font-size: 0.7rem;">
-                                            Not Accepting Orders
-                                        </span>
+                                    <span class="badge bg-dark text-light ms-2" style="font-size: 0.7rem;">
+                                        Not Accepting Orders
+                                    </span>
                                     @endif
                                     <!-- Menampilkan Unique Code -->
                                     <a href="{{ asset('storage/' . $business->document) }}" target="_blank">
@@ -844,41 +845,26 @@
 
     @include('partials.footer')
 
-    <!-- jquery  -->
-    <script src="assets/js/jquery-3.5.1.min.js"></script>
-    <!-- bootstrap -->
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/jquery-3.5.1.min.js" defer></script>
+    <script src="assets/js/bootstrap.min.js" defer></script>
+    <script src="assets/js/popper.min.js" defer></script>
 
-    <!-- fontawesome  -->
-    <script src="assets/js/font-awesome.min.js"></script>
+    <script src="assets/js/font-awesome.min.js" defer></script>
 
-    <!-- swiper slider  -->
-    <script src="assets/js/swiper-bundle.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js" defer></script>
 
-    <!-- mixitup -- filter  -->
-    <script src="assets/js/jquery.mixitup.min.js"></script>
+    <script src="assets/js/jquery.mixitup.min.js" defer></script>
 
-    <!-- fancy box  -->
-    <script src="assets/js/jquery.fancybox.min.js"></script>
+    <script src="assets/js/jquery.fancybox.min.js" defer></script>
 
-    <!-- parallax  -->
-    <script src="assets/js/parallax.min.js"></script>
+    <script src="assets/js/parallax.min.js" defer></script>
 
-    <!-- gsap  -->
-    <script src="assets/js/gsap.min.js"></script>
+    <script src="assets/js/gsap.min.js" defer></script>
 
-    <!-- scroll trigger  -->
-    <script src="assets/js/ScrollTrigger.min.js"></script>
-    <!-- scroll to plugin  -->
-    <script src="assets/js/ScrollToPlugin.min.js"></script>
-    <!-- rellax  -->
-    <!-- <script src="assets/js/rellax.min.js"></script> -->
-    <!-- <script src="assets/js/rellax-custom.js"></script> -->
-    <!-- smooth scroll  -->
-    <script src="assets/js/smooth-scroll.js"></script>
-    <!-- custom js  -->
-    <script src="assets/main.js"></script>
+    <script src="assets/js/ScrollTrigger.min.js" defer></script>
+    <script src="assets/js/ScrollToPlugin.min.js" defer></script>
+    <script src="assets/js/smooth-scroll.js" defer></script>
+    <script src="assets/main.js" defer></script>
 
     <script>
         let map; // 🔹 Global supaya bisa diakses semua function

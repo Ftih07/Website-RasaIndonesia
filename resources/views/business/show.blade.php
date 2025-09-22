@@ -457,7 +457,14 @@
                             </div>
                         </div>
                         @endforeach
+                    </div>
 
+                    {{-- Tambahkan ini setelah row --}}
+                    <div class="col-12" id="no-data" style="display:none;">
+                        <div class="alert alert-warning text-center py-4">
+                            <h5 class="mt-3 mb-0">No product found for this filter.</h5>
+                            <small class="text-muted">Try changing your search filters.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -882,7 +889,7 @@
 
                                 <div class="testimonials-box-text">
                                     <h3 class="h3-title">
-                                        {{ $testimonial->user->name ?? 'Anonim' }}
+                                        {{ $testimonial->user->name ?? $testimonial->name ?? 'Anonim' }}
                                     </h3>
 
                                     {{-- Produk yang direview --}}

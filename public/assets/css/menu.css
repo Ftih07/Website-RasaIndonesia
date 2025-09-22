@@ -631,12 +631,50 @@ p {
 
 .menu-tab ul {
     padding: 10px;
-    display: inline-block;
     border-radius: 60px;
     background: linear-gradient(145deg, #ececec, #ffffff);
     box-shadow: 28px 28px 55px #d4d4d4, -28px -28px 55px #ffffff;
     position: relative;
     z-index: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-x: auto;
+}
+/* wrapper tiap group */
+.option-group {
+  transition: box-shadow 0.2s ease-in-out;
+}
+.option-group:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* header badges */
+.option-group .badges .badge {
+  font-size: 0.75rem;
+}
+
+/* option list */
+.option-list .option-item {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: background 0.2s;
+}
+.option-list .option-item:hover {
+  background: #f8f9fa;
+}
+
+/* checkbox size */
+.option-list .form-check-input {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+/* price text */
+.option-list .text-muted.small {
+  min-width: 60px;
+  text-align: right;
 }
 
 .menu-tab a {

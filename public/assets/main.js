@@ -371,6 +371,15 @@ $(document).ready(function ($) {
                     load: {
                         filter: ".all, .makanan, .minuman",
                     },
+                    callbacks: {
+                        onMixEnd: function (state) {
+                            if (state.totalShow === 0) {
+                                $("#no-data").show();
+                            } else {
+                                $("#no-data").hide();
+                            }
+                        },
+                    },
                 });
             },
         };

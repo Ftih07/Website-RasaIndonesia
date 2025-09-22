@@ -181,6 +181,50 @@ class ProductResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
 
+                    // 💲 Bulk update price by percentage
+                    Tables\Actions\BulkAction::make('increasePriceByPercent')
+                        ->label('Increase Price (%)')
+                        ->icon('heroicon-o-currency-dollar')
+                        ->form([
+                            Forms\Components\TextInput::make('percent')
+                                ->numeric()
+                                ->required()
+                                ->label('Increase by (%)')
+                                ->helperText('Masukkan angka persen (contoh: 25 untuk +25%)'),
+                        ])
+                        ->action(function (array $data, $records): void {
+                            $percent = (float) $data['percent'];
+                            foreach ($records as $record) {
+                                $record->update([
+                                    // harga baru = harga lama + (harga lama * persentase)
+                                    'price' => $record->price + ($record->price * ($percent / 100)),
+                                ]);
+                            }
+                        }),
+
+                    // 💲 Bulk decrease price by percentage
+                    Tables\Actions\BulkAction::make('decreasePriceByPercent')
+                        ->label('Decrease Price (%)')
+                        ->icon('heroicon-o-currency-dollar')
+                        ->form([
+                            Forms\Components\TextInput::make('percent')
+                                ->numeric()
+                                ->required()
+                                ->label('Decrease by (%)')
+                                ->helperText('Masukkan angka persen (contoh: 25 untuk -25%)'),
+                        ])
+                        ->action(function (array $data, $records): void {
+                            $percent = (float) $data['percent'];
+                            foreach ($records as $record) {
+                                $record->update([
+                                    // harga baru = harga lama - (harga lama * persentase)
+                                    'price' => $record->price - ($record->price * ($percent / 100)),
+                                ]);
+                            }
+                        }),
+
+
+
                     // 🔄 Bulk update status "is_sell"
                     Tables\Actions\BulkAction::make('setSellStatus')
                         ->label('Update Selling Status')

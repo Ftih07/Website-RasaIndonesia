@@ -238,6 +238,7 @@
                                                 data-length="{{ $menu->length }}"
                                                 data-width="{{ $menu->width }}"
                                                 data-height="{{ $menu->height }}"
+                                                data-serving="{{ $menu->serving }}"
                                                 data-image="{{ $menu->image ? asset('storage/' . $menu->image) : ($business->logo ? asset('storage/' . $business->logo) : asset('assets/images/logo/logo.png')) }}"
                                                 data-options='@json($menu->option_data)'
                                                 data-categories='@json($categories)'
@@ -356,6 +357,18 @@
                                                     <div class="highlight-info">
                                                         <span class="highlight-label">Dimensions</span>
                                                         <p id="modal-product-dimension" class="highlight-value"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6 col-md-4">
+                                                <div class="highlight-card">
+                                                    <div class="highlight-icon">
+                                                        <i class="fas fa-balance-scale"></i> <!-- pilih icon yang sesuai -->
+                                                    </div>
+                                                    <div class="highlight-info">
+                                                        <span class="highlight-label">Serving</span>
+                                                        <p id="modal-product-serving" class="highlight-value"></p>
                                                     </div>
                                                 </div>
                                             </div>
