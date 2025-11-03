@@ -75,11 +75,6 @@ class BusinessesExport implements
             'Contact',                  // Contact details for the business (often in JSON format).
             'Latitude',                 // Latitude coordinate of the business location.
             'Longitude',                // Longitude coordinate of the business location.
-            'Document',                 // Link or description of a related document.
-            'Order',                    // Information related to ordering (often in JSON format).
-            'Reserve',                  // Information related to reservations (often in JSON format).
-            'Galleries',                // Titles and URLs of associated gallery images.
-            'Products',                 // Names and prices of associated products.
         ];
     }
 
@@ -119,17 +114,6 @@ class BusinessesExport implements
             json_encode($business->contact),    // Converts 'contact' (assumed JSON) into a JSON string.
             $business->latitude,
             $business->longitude,
-            $business->document,
-            json_encode($business->order),      // Converts 'order' (assumed JSON) into a JSON string.
-            json_encode($business->reserve),    // Converts 'reserve' (assumed JSON) into a JSON string.
-            // Maps through associated 'galleries', formatting each into 'Title (Storage_URL)' and joining.
-            $business->galleries->map(function ($gallery) {
-                return $gallery->title . ' (' . asset('storage/' . $gallery->image) . ')';
-            })->join(', '),
-            // Maps through associated 'products', formatting each into 'Name - Price' and joining.
-            $business->products->map(function ($product) {
-                return $product->name . ' - ' . $product->price;
-            })->join(', '),
         ];
     }
 

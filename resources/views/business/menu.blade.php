@@ -232,7 +232,7 @@
                                                 data-stock="{{ $menu->stock }}"
                                                 data-max_distance="{{ $menu->max_distance }}"
                                                 data-is-sell="{{ $menu->is_sell ? 1 : 0 }}"
-                                                data-desc="{{ $menu->desc }}"
+                                                data-desc="{!! $menu->desc !!}"
                                                 data-business="{{ $business->name }}"
                                                 data-weight="{{ ($menu->weight ?? 0)/1000 }}"
                                                 data-length="{{ $menu->length }}"

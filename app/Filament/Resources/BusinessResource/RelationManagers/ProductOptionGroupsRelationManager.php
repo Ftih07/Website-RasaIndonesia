@@ -58,8 +58,19 @@ class ProductOptionGroupsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(), // form edit termasuk repeater options di atas
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\ReplicateAction::make()
+                    ->label('Duplicate')
+                    ->afterReplicaSaved(function ($replica, $record) {
+                        foreach ($record->options as $option) {
+                            $replica->options()->create([
+                                'name'  => $option->name,
+                                'price' => $option->price,
+                            ]);
+                        }
+                    }),
             ]);
     }
 }

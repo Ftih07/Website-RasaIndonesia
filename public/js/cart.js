@@ -335,16 +335,19 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    openCartBtn.addEventListener("click", () => {
-        currentBusinessId =
-            document.getElementById("currentBusinessId")?.value || null;
-        if (!currentBusinessId) {
-            alert("Business ID not found.");
-            return;
-        }
-        fetchAndRenderCart(currentBusinessId);
-        cartSidebar.classList.add("open");
-    });
+    if (openCartBtn) {
+        // Cek dulu apakah elemennya ada
+        openCartBtn.addEventListener("click", () => {
+            currentBusinessId =
+                document.getElementById("currentBusinessId")?.value || null;
+            if (!currentBusinessId) {
+                alert("Business ID not found.");
+                return;
+            }
+            fetchAndRenderCart(currentBusinessId);
+            cartSidebar.classList.add("open");
+        });
+    }
 
     closeCartBtn.addEventListener("click", () => {
         cartSidebar.classList.remove("open");
@@ -521,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   ).toFixed(0)} x ${parseFloat(height).toFixed(0)} cm`
                 : "-";
 
-        modal.querySelector("#modal-product-desc").textContent =
+        modal.querySelector("#modal-product-desc").innerHTML =
             description || "-";
         modal.querySelector("#modal-product-business").textContent =
             business || "-";
@@ -595,7 +598,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         <label class="form-check-label" for="${id}">
                             ${option.name}
                             <small class="text-muted">
-                                ${option.price > 0 ? `+ $${option.price}` : "Free"}
+                                ${
+                                    option.price > 0
+                                        ? `+ $${option.price}`
+                                        : "Free"
+                                }
                             </small>
                         </label>
                     `;

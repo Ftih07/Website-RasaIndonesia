@@ -84,14 +84,13 @@
     <script>
         Swal.fire({
             icon: 'success',
-            title: '{{ session('
-            success ') }}',
+            title: '{{ session('success') }}', // Spasi dihilangkan
             showConfirmButton: false,
             timer: 2000
         });
     </script>
     @endif
-
+    
     @include('partials.navbar')
 
     <!-- Hero - Main Banner -->

@@ -45,7 +45,20 @@ class ProductsRelationManager extends RelationManager
 
                 Forms\Components\TextInput::make('serving'),
 
-                Forms\Components\Textarea::make('desc'),
+                Forms\Components\RichEditor::make('desc')
+                    ->label('Description')
+                    ->toolbarButtons([
+                        'bold',
+                        'italic',
+                        'strike',
+                        'underline',
+                        'link',
+                        'orderedList',
+                        'bulletList',
+                        'blockquote',
+                        'codeBlock',
+                    ])
+                    ->columnSpanFull(), // biar full width di form
 
                 Forms\Components\TextInput::make('max_distance')
                     ->label('Max Distance (km)')
@@ -117,6 +130,27 @@ class ProductsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+
+                Tables\Actions\BulkAction::make('assignCategories')
+                    ->label('Assign Categories')
+                    ->icon('heroicon-o-tag')
+                    ->form([
+                        Forms\Components\MultiSelect::make('categories')
+                            ->label('Select Categories')
+                            ->options(
+                                \App\Models\Category::query()
+                                    ->where('business_id', $this->getOwnerRecord()->id)
+                                    ->pluck('name', 'id')
+                            )
+                            ->required(),
+                    ])
+                    ->action(function (array $data, $records): void {
+                        foreach ($records as $product) {
+                            // Attach categories ke masing-masing product
+                            $product->categories()->syncWithoutDetaching($data['categories']);
+                        }
+                    })
+                    ->deselectRecordsAfterCompletion(), // otomatis uncheck setelah selesai
             ]);
     }
 }

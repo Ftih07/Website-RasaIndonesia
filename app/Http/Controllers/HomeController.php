@@ -163,8 +163,12 @@ class HomeController extends Controller
 
         // Sort businesses
         if ($request->filled('sort')) {
+            // Jika ada filter sort dari user (oldest/newest)
             $order = $request->sort === 'oldest' ? 'asc' : 'desc';
             $query->orderBy('created_at', $order);
+        } else {
+            // Jika tidak ada filter, default-nya adalah data terbaru
+            $query->orderBy('created_at', 'desc');
         }
 
         $businesses = $query->get();
